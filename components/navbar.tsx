@@ -21,23 +21,14 @@ import { siteConfig } from "@/config/site";
 // import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
 import { sidebarTheme } from "@/config/colors";
+import { useState } from "react";
 
-interface SidebarProps {
-  isActive: (path: string) => boolean;
-}
-
-export const Navbar = () => {
-  const pathname = usePathname();
-
-  const isActive = (path: string) => pathname === path;
-
-  return (
-    <>
-      <MobileNavbar />
-      <Sidebar isActive={isActive} />
-    </>
-  );
-};
+export const Navbar = () => (
+  <>
+    <MobileNavbar />
+    <Sidebar />
+  </>
+);
 
 const Icon = () => (
   <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -76,62 +67,79 @@ const MobileNavbar = () => {
   );
 };
 
-const Sidebar = ({ isActive }: SidebarProps) => (
-  <div
-    className={`hidden sm:flex flex-col fixed gap-4 w-72 justify-between h-full`}
-    style={{
-      backgroundColor: sidebarTheme.sidebarBackground,
-    }}
-  >
-    <div className="flex flex-col gap-8">
-      <div className="flex items-center justify-start py-6 px-9 text-md font-semibold text-gray-200">
-        <Icon />
-      </div>
-      <nav className="flex flex-col gap-2">
-        {siteConfig.menuItems.map((item) => (
-          <NextLink
-            key={item.href}
-            className="flex w-full space-x-2 text-sm py-3 font-medium"
-            color="foreground"
-            href={item.href}
+const Sidebar = () => {
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path;
+
+  const activeIndex = siteConfig.menuItems.findIndex(
+    (item) => item.href === pathname,
+  );
+
+  return (
+    <div
+      className={`hidden sm:flex flex-col fixed gap-4 w-72 justify-between h-full`}
+      style={{
+        backgroundColor: sidebarTheme.sidebarBackground,
+      }}
+    >
+      <div className="flex flex-col gap-8">
+        <div className="flex items-center justify-start py-6 px-9 text-md font-semibold text-gray-200">
+          <Icon />
+        </div>
+        <div className="relative">
+          <div
+            className="flex h-14 items-center absolute left-0 transition-all duration-300 ease-in-out"
+            style={{
+              top: `${activeIndex !== 0 ? activeIndex * 3.5 : 0}rem`,
+            }}
           >
             <div
-              className="w-1 h-full rounded-r-lg transition-colors duration-300 ease-in-out"
+              className="w-1 py-4 rounded-r-lg"
               style={{
-                backgroundColor: isActive(item.href)
-                  ? sidebarTheme.linkIndicator
-                  : sidebarTheme.sidebarBackground,
+                backgroundColor: sidebarTheme.linkIndicator,
               }}
             />
-            <div
-              style={{
-                color: sidebarTheme.linkText,
-              }}
-              className={`flex items-center gap-2 py-1 px-8 transition-colors duration-300 ease-in-out ${isActive(item.href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
-            >
-              {item.icon}
-              {item.label}
-            </div>
-          </NextLink>
-        ))}
-      </nav>
-    </div>
-    <div className="py-6 px-6">
-      <div className="py-2 px-2 bg-white/5 rounded-full flex flex-row items-center justify-between gap-2">
-        <Avatar
-          showFallback
-          name="Joko Purwadi"
-          src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-        />
-        <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-          <p className="text-sm font-medium truncate">Joko Purwadi</p>
-          <p className="text-xs text-gray-400 truncate">jkoput@gmail.com</p>
+          </div>
+          <nav className="flex flex-col">
+            {siteConfig.menuItems.map((item) => (
+              <NextLink
+                key={item.href}
+                className="flex w-full space-x-2 text-sm py-3 font-medium"
+                color="foreground"
+                href={item.href}
+              >
+                <div
+                  style={{
+                    color: sidebarTheme.linkText,
+                  }}
+                  className={`flex items-center gap-2 py-1 px-8 transition-colors duration-300 ease-in-out ${isActive(item.href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
+                >
+                  {item.icon}
+                  {item.label}
+                </div>
+              </NextLink>
+            ))}
+          </nav>
         </div>
-        <OtherMenuPopover />
+      </div>
+      <div className="py-6 px-6">
+        <div className="py-2 px-2 bg-white/5 rounded-full flex flex-row items-center justify-between gap-2">
+          <Avatar
+            showFallback
+            name="Joko Purwadi"
+            src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+          />
+          <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
+            <p className="text-sm font-medium truncate">Joko Purwadi</p>
+            <p className="text-xs text-gray-400 truncate">jkoput@gmail.com</p>
+          </div>
+          <OtherMenuPopover />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 //TODO: change action with router or use link instead of listbox
 const OtherMenuPopover = () => (
@@ -148,10 +156,15 @@ const OtherMenuPopover = () => (
       </Button>
     </PopoverTrigger>
     <PopoverContent>
-    <Listbox aria-label="Actions" onAction={(key) => alert(key)}>
-      {siteConfig.settingsItems.map((item, index) => (
-        <ListboxItem key={item.href} className={`${index === siteConfig.settingsItems.length - 1 ? "text-danger" : ""}`}>{item.label}</ListboxItem>
-      ))}
+      <Listbox aria-label="Actions" onAction={(key) => alert(key)}>
+        {siteConfig.settingsItems.map((item, index) => (
+          <ListboxItem
+            key={item.href}
+            className={`${index === siteConfig.settingsItems.length - 1 ? "text-danger" : ""}`}
+          >
+            {item.label}
+          </ListboxItem>
+        ))}
       </Listbox>
     </PopoverContent>
   </Popover>
