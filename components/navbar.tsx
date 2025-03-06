@@ -26,7 +26,9 @@ import { useState } from "react";
 export const Navbar = () => (
   <>
     <MobileNavbar />
-    <Sidebar />
+    <div className="px-2 shadow-lg">
+      <Sidebar />
+    </div>
   </>
 );
 
@@ -78,7 +80,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`hidden sm:flex flex-col fixed gap-4 w-72 justify-between h-full`}
+      className="hidden sm:flex flex-col fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-2xl"
       style={{
         backgroundColor: sidebarTheme.sidebarBackground,
       }}
