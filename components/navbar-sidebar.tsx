@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
 import NextLink from "next/link";
+import { redirect } from "next/navigation";
 import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Listbox, ListboxItem } from "@heroui/listbox";
@@ -122,6 +123,8 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     onAction={(key) => {
                       if (key === "/logout") {
                         onLogout();
+                      } else {
+                        redirect(key as string);
                       }
                     }}
                   >

@@ -30,11 +30,11 @@ export default function LoginPage() {
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoginError(null);
-    const data = buildFormData(e);
+    const formData = buildFormData(e);
     setIsLoginButtonLoading(true);
 
     try {
-      const result = await login(supabase, data);
+      const result = await login(supabase, formData);
       if (result.data) {
         router.push("/");
       }
@@ -47,15 +47,13 @@ export default function LoginPage() {
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = buildFormData(e);
+    const formData = buildFormData(e);
     setIsRegisterButtonLoading(true);
 
     const passwordMismatchErrors = validateConfirmPassword(
-      data.get("password") as string,
-      data.get("confirm-password") as string,
+      formData.get("password") as string,
+      formData.get("confirm-password") as string,
     );
-
-    console.log(passwordMismatchErrors);
 
     if (passwordMismatchErrors) {
       setRegistrationFormErrors({ "confirm-password": passwordMismatchErrors });
@@ -64,24 +62,43 @@ export default function LoginPage() {
     }
 
     try {
-      const result = await register(supabase, data);
-      if (!result.data.session) {
-        setRegistrationFormErrors({ email: "Email telah digunakan. Mohon gunakan email lain." });
+      const { data } = await register(supabase, formData);
+      if (data.user?.identities?.length === 0) {
+        setRegistrationFormErrors({
+          email: "Email telah terdaftar. Mohon gunakan email lain.",
+        });
+        return;
+      }
+      if (data.user?.user_metadata.email_verified === false) {
+        setRegistrationFormErrors({
+          email:
+            "Email telah terdaftar. Mohon verifikasi email Anda untuk mengaktivasi akun.",
+        });
         return;
       }
 
-      if (result.data) {
+      if (data) {
         router.push("/");
       }
     } catch (error: any) {
       const message = translateRegisterErrorMessage(
         error.message,
-        data.get("email") as string,
+        formData.get("email") as string,
       );
       setRegistrationFormErrors({ email: message });
     } finally {
       setIsRegisterButtonLoading(false);
     }
+  };
+
+  const resetErrors = () => {
+    setLoginError(null);
+    setRegistrationFormErrors({});
+  };
+
+  const handleTabChange = (key: string) => {
+    setTab(key as "login" | "register");
+    resetErrors();
   };
 
   return (
@@ -97,7 +114,7 @@ export default function LoginPage() {
               aria-label="Login tabs"
               selectedKey={tab}
               variant="underlined"
-              onSelectionChange={(key) => setTab(key as "login" | "register")}
+              onSelectionChange={(key) => handleTabChange(key as string)}
             >
               <Tab key="login" title="Masuk">
                 <LoginForm

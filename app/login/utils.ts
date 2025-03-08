@@ -53,7 +53,7 @@ const buildFormData = (event: FormEvent<HTMLFormElement>) => {
 const translateLoginErrorMessage = (message: string) => {
   switch (message) {
     case "Email not confirmed":
-      return "Email belum dikonfirmasi.";
+      return "Email belum terverifikasi. Silakan verifikasi email Anda.";
     case "Invalid login credentials":
       return "Email atau password salah, mohon masukkan kembali email dan password yang benar.";
     default:
