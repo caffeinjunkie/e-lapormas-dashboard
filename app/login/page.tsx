@@ -14,7 +14,7 @@ import {
   validateConfirmPassword,
   translateLoginErrorMessage,
 } from "./utils";
-import { useSupabase } from "@/providers/supabase-provider";
+import { useSupabase } from "@/app/providers/supabase-provider";
 // import { ThemeSwitch } from "@/components/theme-switch";
 
 export default function LoginPage() {

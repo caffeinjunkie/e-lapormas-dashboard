@@ -6,7 +6,7 @@ import * as React from "react";
 import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { SupabaseProvider } from "@/providers/supabase-provider";
+import { SupabaseProvider } from "@/app/providers/supabase-provider";
 
 export interface ProvidersProps {
   children: React.ReactNode;

@@ -43,8 +43,6 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
     (item) => item.href === pathname,
   );
 
-  console.log(isLoaded, 'is loaded', user, 'data', isLoaded && user, 'both')
-
   return (
     <div
       className="hidden sm:flex flex-col fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-2xl"

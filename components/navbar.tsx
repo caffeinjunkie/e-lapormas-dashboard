@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 // import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
-import { useSupabase } from "@/providers/supabase-provider";
+import { useSupabase } from "@/app/providers/supabase-provider";
 import { logout } from "@/app/api/login/handlers";
 import { fetchUserData } from "@/app/api/users/handlers";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ export const Navbar = () => {
   const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(true);
   const [user, setUser] = useState<ProfileData | null>(null);
 
-  const isPublicPage = pathname === "/login" || pathname === "/error";
+  // const isPublicPage = pathname === "/login" || pathname === "/error";
 
   const getUserData = async () => {
     setIsNavbarFullyLoaded(false);
@@ -79,21 +79,17 @@ export const Navbar = () => {
 
   return (
     <>
-      {!isPublicPage && (
-        <MobileNavbar onLogout={openLogoutConfirmModal}>{icon}</MobileNavbar>
-      )}
-      {!isPublicPage && (
-        <div className="px-2 shadow-lg">
-          <Sidebar
-            pathname={pathname}
-            isLoaded={isNavbarFullyLoaded}
-            user={user}
-            onLogout={openLogoutConfirmModal}
-          >
-            {icon}
-          </Sidebar>
-        </div>
-      )}
+      <MobileNavbar onLogout={openLogoutConfirmModal}>{icon}</MobileNavbar>
+      <div className="px-2 shadow-lg">
+        <Sidebar
+          pathname={pathname}
+          isLoaded={isNavbarFullyLoaded}
+          user={user}
+          onLogout={openLogoutConfirmModal}
+        >
+          {icon}
+        </Sidebar>
+      </div>
       <Modal
         backdrop="opaque"
         isOpen={isLogoutConfirmModalOpen}
