@@ -1,0 +1,64 @@
+"use client";
+
+import { redirect } from "next/navigation";
+import { SupabaseClient } from "@supabase/supabase-js";
+
+export const login = async (client: SupabaseClient, formData: FormData) => {
+  const loginData = {
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+  };
+
+  const { data, error } = await client.auth.signInWithPassword(loginData);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  console.log("User signed in:", data);
+  //   redirect("/");
+  return {
+    success: true,
+    data,
+  };
+};
+
+export const register = async (client: SupabaseClient, formData: FormData) => {
+  //TODO: create a safer way to pass data here
+  const registrationData = {
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+    options: {
+      data: {
+        fullName: formData.get("full-name") as string,
+      },
+      emailRedirectTo: "http://localhost:3000/auth/confirm",
+    },
+  };
+
+  const { data, error } = await client.auth.signUp(registrationData);
+  //TODO: connect pekerja AI admin services to save admin
+  //personal data such as full name, email, and image.
+
+  console.log(error, "csek");
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  console.log("User registered:", data);
+  return {
+    success: true,
+    data,
+  };
+};
+
+export const logout = async (client: SupabaseClient) => {
+  const { error } = await client.auth.signOut();
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {
+    success: true,
+  };
+};

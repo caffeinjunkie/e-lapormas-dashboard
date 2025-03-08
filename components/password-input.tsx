@@ -8,12 +8,15 @@ interface PasswordInputProps {
   isRequired?: boolean;
   variant?: "flat" | "bordered" | "faded" | "underlined";
   validate?: (value: string) => string | null;
+  ariaLabel?: string;
+  errorMessage?: string | null;
 }
 
 export const PasswordInput = ({
   label,
   isRequired = false,
   variant = "flat",
+  ariaLabel = "password",
   ...props
 }: PasswordInputProps) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,6 +26,8 @@ export const PasswordInput = ({
   return (
     <Input
       label={label}
+      aria-label={ariaLabel}
+      name={ariaLabel}
       type={isVisible ? "text" : "password"}
       variant={variant}
       isRequired={isRequired}

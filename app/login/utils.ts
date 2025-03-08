@@ -1,6 +1,8 @@
+import { FormEvent } from "react";
+
 const validateIsRequired = (value: string, label: string) => {
   if (!value) {
-    return `Mohon masukkan ${label}`;
+    return `Mohon masukkan ${label} anda`;
   }
 
   return null;
@@ -19,10 +21,10 @@ const validateCreatePassword = (value: string) => {
     return "Kata sandi harus memiliki minimal 6 karakter";
   }
 
-  const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
-  console.log(regex.test(value));
+  const regex =
+    /^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{6,}$/;
   if (!regex.test(value)) {
-    return "Kata sandi harus mengandung huruf, angka, dan simbol";
+    return "Kata sandi harus mengandung huruf besar, huruf kecil, angka, dan simbol";
   }
 
   return null;
@@ -36,7 +38,32 @@ const validateConfirmPassword = (value: string, password: string) => {
   return null;
 };
 
+const buildFormData = (event: FormEvent<HTMLFormElement>) => {
+  let data = new FormData();
+
+  Object.entries(event.currentTarget).forEach(([_, formItem]) => {
+    if (formItem.localName === "input") {
+      data.append(formItem.name, formItem.value);
+    }
+  });
+
+  return data;
+};
+
+const translateLoginErrorMessage = (message: string) => {
+  switch (message) {
+    case "Email not confirmed":
+      return "Email belum dikonfirmasi";
+    case "Invalid login credentials":
+      return "Email atau password salah, mohon masukkan kembali email dan password yang benar.";
+    default:
+      return "Terjadi kesalahan. Mohon coba sesaat lagi.";
+  }
+};
+
 export {
+  buildFormData,
+  translateLoginErrorMessage,
   validateIsRequired,
   validateEmail,
   validateCreatePassword,

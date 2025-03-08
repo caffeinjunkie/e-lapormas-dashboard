@@ -1,61 +1,114 @@
 "use client";
 
-import { FormEvent, useState, Dispatch, SetStateAction } from "react";
+import { FormEvent, useState } from "react";
 import { Card, CardBody } from "@heroui/card";
 import { Tab, Tabs } from "@heroui/tabs";
+import { useRouter } from "next/navigation";
 
-import { register } from "./actions";
+import { login, register } from "@/app/api/login/handlers";
 import { ResetPasswordForm } from "./reset-password-form";
 import { LoginForm } from "./login-form";
 import { RegisterForm } from "./register-form";
+import {
+  buildFormData,
+  validateConfirmPassword,
+  translateLoginErrorMessage,
+} from "./utils";
+import { useSupabase } from "@/providers/supabase-provider";
+// import { ThemeSwitch } from "@/components/theme-switch";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const supabase = useSupabase();
   const [tab, setTab] = useState<"login" | "register">("login");
   const [isResetPassword, setIsResetPassword] = useState(false);
+  const [isLoginButtonLoading, setIsLoginButtonLoading] = useState(false);
+  const [isRegisterButtonLoading, setIsRegisterButtonLoading] = useState(false);
+  const [registrationFormErrors, setRegistrationFormErrors] = useState({});
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const formData = new FormData(e.currentTarget);
+    const data = buildFormData(e);
+    setIsLoginButtonLoading(true);
 
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    console.log(e.currentTarget);
-    // await login(new FormData(e.currentTarget))
+    try {
+      const result = await login(supabase, data);
+      if (result.success) {
+        router.push("/");
+      }
+    } catch (error: any) {
+      setLoginError(translateLoginErrorMessage(error.message));
+    } finally {
+      setIsLoginButtonLoading(false);
+    }
   };
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
-    console.log(e);
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    await register(data);
+    const data = buildFormData(e);
+    setIsRegisterButtonLoading(true);
+
+    const passwordMismatchErrors = validateConfirmPassword(
+      data.get("password") as string,
+      data.get("confirm-password") as string,
+    );
+
+    if (passwordMismatchErrors) {
+      setRegistrationFormErrors({ "confirm-password": passwordMismatchErrors });
+      setIsRegisterButtonLoading(false);
+      return;
+    }
+
+    try {
+      const result = await register(supabase, data);
+      if (result.success) {
+        router.push("/");
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsRegisterButtonLoading(false);
+    }
   };
 
   return (
-    <Card className="max-w-md w-full">
-      <CardBody className="overflow-hidden">
-        {isResetPassword && (
-          <ResetPasswordForm setIsResetPassword={setIsResetPassword} />
-        )}
-        {!isResetPassword && (
-          <Tabs
-            fullWidth
-            size="lg"
-            aria-label="Login tabs"
-            selectedKey={tab}
-            onSelectionChange={(key) => setTab(key as "login" | "register")}
-          >
-            <Tab key="login" title="Masuk">
-              <LoginForm
-                handleLogin={handleLogin}
-                setTab={setTab}
-                setIsResetPassword={setIsResetPassword}
-              />
-            </Tab>
-            <Tab key="register" title="Daftar">
-              <RegisterForm handleRegister={handleRegister} setTab={setTab} />
-            </Tab>
-          </Tabs>
-        )}
-      </CardBody>
-    </Card>
+    <div className="flex flex-col items-center justify-center w-full h-screen px-6 py-6">
+      <Card className="max-w-md w-full">
+        {/* <ThemeSwitch /> */}
+        <CardBody className="overflow-hidden">
+          {isResetPassword && (
+            <ResetPasswordForm setIsResetPassword={setIsResetPassword} />
+          )}
+          {!isResetPassword && (
+            <Tabs
+              size="md"
+              aria-label="Login tabs"
+              selectedKey={tab}
+              variant="underlined"
+              onSelectionChange={(key) => setTab(key as "login" | "register")}
+            >
+              <Tab key="login" title="Masuk">
+                <LoginForm
+                  handleLogin={handleLogin}
+                  setTab={setTab}
+                  setIsResetPassword={setIsResetPassword}
+                  submissionError={loginError}
+                  isLoading={isLoginButtonLoading}
+                />
+              </Tab>
+              <Tab key="register" title="Daftar">
+                <RegisterForm
+                  errors={registrationFormErrors}
+                  handleRegister={handleRegister}
+                  setTab={setTab}
+                  isLoading={isRegisterButtonLoading}
+                />
+              </Tab>
+            </Tabs>
+          )}
+        </CardBody>
+      </Card>
+    </div>
   );
 }

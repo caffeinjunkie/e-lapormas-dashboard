@@ -19,14 +19,15 @@ export const ResetPasswordForm = ({
         variant="light"
         onPress={() => setIsResetPassword(false)}
       >
-        <ArrowLeftIcon className="size-5" />
+        <ArrowLeftIcon className="size-4" />
       </Button>
-      <h3 className="text-lg font-semibold">Reset kata sandi</h3>
+      <h3 className="text-md font-semibold">Reset kata sandi</h3>
     </div>
     <Form className="flex flex-col gap-4">
       <Input
         label="Masukkan email anda"
         type="email"
+        aria-label="email"
         variant="flat"
         isRequired
         validate={(value) =>

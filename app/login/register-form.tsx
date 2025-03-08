@@ -15,25 +15,34 @@ import {
 interface RegisterTabProps {
   handleRegister: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   setTab: Dispatch<SetStateAction<"login" | "register">>;
+  errors?: Record<string, string>;
+  isLoading?: boolean;
 }
 
-export const RegisterForm = ({ handleRegister, setTab }: RegisterTabProps) => (
-  <Form className="flex flex-col gap-4 mt-8" onSubmit={handleRegister}>
+export const RegisterForm = ({
+  handleRegister,
+  setTab,
+  errors,
+  isLoading,
+}: RegisterTabProps) => (
+  <Form
+    validationErrors={errors}
+    className="flex flex-col gap-4 mt-8"
+    onSubmit={handleRegister}
+  >
     <Input
-      label="Nama Depan"
+      label="Nama Lengkap"
       variant="flat"
+      aria-label="full-name"
+      name="full-name"
       isRequired
-      validate={(value) => validateIsRequired(value, "nama depan")}
-    />
-    <Input
-      label="Nama Belakang"
-      variant="flat"
-      isRequired
-      validate={(value) => validateIsRequired(value, "nama belakang")}
+      validate={(value) => validateIsRequired(value, "nama")}
     />
     <Input
       label="Email"
       type="email"
+      aria-label="email"
+      name="email"
       variant="flat"
       isRequired
       validate={(value) =>
@@ -43,6 +52,7 @@ export const RegisterForm = ({ handleRegister, setTab }: RegisterTabProps) => (
     <PasswordInput
       label="Kata sandi"
       isRequired
+      ariaLabel="password"
       validate={(value) =>
         validateIsRequired(value, "kata sandi") || validateCreatePassword(value)
       }
@@ -50,6 +60,7 @@ export const RegisterForm = ({ handleRegister, setTab }: RegisterTabProps) => (
     <PasswordInput
       label="Konfirmasi Kata sandi"
       isRequired
+      ariaLabel="confirm-password"
       validate={(value) =>
         validateIsRequired(value, "konfirmasi kata sandi") ||
         validateCreatePassword(value)
@@ -61,7 +72,12 @@ export const RegisterForm = ({ handleRegister, setTab }: RegisterTabProps) => (
         Langsung masuk aja!
       </Link>
     </p>
-    <Button color="primary" className="w-full mt-4" type="submit">
+    <Button
+      color="primary"
+      isLoading={isLoading}
+      className="w-full mt-4"
+      type="submit"
+    >
       Daftar
     </Button>
   </Form>

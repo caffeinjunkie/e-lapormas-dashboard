@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -12,27 +13,90 @@ import { Button } from "@heroui/button";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Link } from "@heroui/link";
 import { Avatar } from "@heroui/avatar";
+import { Modal, ModalContent, ModalHeader, ModalFooter } from "@heroui/modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import NextLink from "next/link";
-
 import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 // import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
 import { sidebarTheme } from "@/config/colors";
+import { useSupabase } from "@/providers/supabase-provider";
+import { logout } from "@/app/api/login/handlers";
+import { useRouter } from "next/navigation";
+
+interface MobileNavbarProps {
+  onLogout: () => void;
+}
+
+interface SidebarProps extends MobileNavbarProps {
+  pathname: string;
+}
 
 export const Navbar = () => {
+  const router = useRouter();
+  const [isLogoutConfirmModalOpen, setIsLogoutConfirmModalOpen] =
+    useState(false);
+  const closeLogoutConfirmModal = () => setIsLogoutConfirmModalOpen(false);
+  const openLogoutConfirmModal = () => setIsLogoutConfirmModalOpen(true);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+
+  const supabase = useSupabase();
   const pathname = usePathname();
   const isPublicPage = pathname === "/login" || pathname === "/error";
+
+  const handleLogout = async () => {
+    setIsButtonLoading(true);
+    try {
+      const result = await logout(supabase);
+      if (result.success) {
+        router.push("/login");
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsButtonLoading(false);
+      closeLogoutConfirmModal();
+    }
+  };
+
   return (
     <>
-      {!isPublicPage && <MobileNavbar />}
+      {!isPublicPage && <MobileNavbar onLogout={openLogoutConfirmModal} />}
       {!isPublicPage && (
         <div className="px-2 shadow-lg">
-          <Sidebar pathname={pathname} />
+          <Sidebar pathname={pathname} onLogout={openLogoutConfirmModal} />
         </div>
       )}
+      <Modal
+        backdrop="opaque"
+        isOpen={isLogoutConfirmModalOpen}
+        onClose={closeLogoutConfirmModal}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Apakah anda yakin ingin keluar?
+              </ModalHeader>
+              <ModalFooter>
+                <Button
+                  color="danger"
+                  variant="light"
+                  isLoading={isButtonLoading}
+                  onPress={handleLogout}
+                >
+                  Ya, keluar
+                </Button>
+                <Button color="primary" onPress={onClose}>
+                  Tidak
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };
@@ -44,7 +108,7 @@ const Icon = () => (
   </NextLink>
 );
 
-const MobileNavbar = () => {
+const MobileNavbar = ({ onLogout }: MobileNavbarProps) => {
   const mobileMenu = [...siteConfig.menuItems, ...siteConfig.settingsItems];
   return (
     <HeroUINavbar maxWidth="xl" position="sticky" className="flex sm:hidden">
@@ -74,7 +138,7 @@ const MobileNavbar = () => {
   );
 };
 
-const Sidebar = ({ pathname }: { pathname: string }) => {
+const Sidebar = ({ pathname, onLogout }: SidebarProps) => {
   const isActive = (path: string) => pathname === path;
 
   const activeIndex = siteConfig.menuItems.findIndex(
@@ -139,38 +203,40 @@ const Sidebar = ({ pathname }: { pathname: string }) => {
             <p className="text-sm font-medium truncate">Joko Purwadi</p>
             <p className="text-xs text-gray-400 truncate">jkoput@gmail.com</p>
           </div>
-          <OtherMenuPopover />
+          <Popover placement="right">
+            <PopoverTrigger>
+              <Button
+                variant="light"
+                size="sm"
+                radius="full"
+                isIconOnly
+                aria-label="Setting"
+              >
+                <EllipsisHorizontalIcon className="size-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Listbox
+                aria-label="Actions"
+                onAction={(key) => {
+                  if (key === "/logout") {
+                    onLogout();
+                  }
+                }}
+              >
+                {siteConfig.settingsItems.map((item, index) => (
+                  <ListboxItem
+                    key={item.href}
+                    className={`${index === siteConfig.settingsItems.length - 1 ? "text-danger" : ""}`}
+                  >
+                    {item.label}
+                  </ListboxItem>
+                ))}
+              </Listbox>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
   );
 };
-
-//TODO: change action with router or use link instead of listbox
-const OtherMenuPopover = () => (
-  <Popover placement="right">
-    <PopoverTrigger>
-      <Button
-        variant="light"
-        size="sm"
-        radius="full"
-        isIconOnly
-        aria-label="Setting"
-      >
-        <EllipsisHorizontalIcon className="size-5" />
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent>
-      <Listbox aria-label="Actions" onAction={(key) => alert(key)}>
-        {siteConfig.settingsItems.map((item, index) => (
-          <ListboxItem
-            key={item.href}
-            className={`${index === siteConfig.settingsItems.length - 1 ? "text-danger" : ""}`}
-          >
-            {item.label}
-          </ListboxItem>
-        ))}
-      </Listbox>
-    </PopoverContent>
-  </Popover>
-);
