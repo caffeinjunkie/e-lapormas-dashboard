@@ -34,7 +34,7 @@ export default function LoginPage() {
 
     try {
       const result = await login(supabase, data);
-      if (result.success) {
+      if (result.data) {
         router.push("/");
       }
     } catch (error: any) {
@@ -62,7 +62,7 @@ export default function LoginPage() {
 
     try {
       const result = await register(supabase, data);
-      if (result.success) {
+      if (result.data) {
         router.push("/");
       }
     } catch (error) {

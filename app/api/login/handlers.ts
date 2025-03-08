@@ -1,6 +1,5 @@
 "use client";
 
-import { redirect } from "next/navigation";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export const login = async (client: SupabaseClient, formData: FormData) => {
@@ -16,11 +15,7 @@ export const login = async (client: SupabaseClient, formData: FormData) => {
   }
 
   console.log("User signed in:", data);
-  //   redirect("/");
-  return {
-    success: true,
-    data,
-  };
+  return { data };
 };
 
 export const register = async (client: SupabaseClient, formData: FormData) => {
@@ -40,16 +35,12 @@ export const register = async (client: SupabaseClient, formData: FormData) => {
   //TODO: connect pekerja AI admin services to save admin
   //personal data such as full name, email, and image.
 
-  console.log(error, "csek");
   if (error) {
     throw new Error(error.message);
   }
 
   console.log("User registered:", data);
-  return {
-    success: true,
-    data,
-  };
+  return { data };
 };
 
 export const logout = async (client: SupabaseClient) => {
