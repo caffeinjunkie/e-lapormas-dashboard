@@ -56,7 +56,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
         </div>
         <div className="relative">
           <div
-            className="flex h-14 items-center absolute left-0 transition-all duration-300 ease-in-out"
+            className={`${activeIndex === -1 ? "hidden" : "flex"} h-14 items-center absolute left-0 transition-all duration-300 ease-in-out`}
             style={{
               top: `${activeIndex !== 0 ? activeIndex * 3.5 : 0}rem`,
             }}
