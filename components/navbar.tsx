@@ -21,16 +21,21 @@ import { siteConfig } from "@/config/site";
 // import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
 import { sidebarTheme } from "@/config/colors";
-import { useState } from "react";
 
-export const Navbar = () => (
-  <>
-    <MobileNavbar />
-    <div className="px-2 shadow-lg">
-      <Sidebar />
-    </div>
-  </>
-);
+export const Navbar = () => {
+  const pathname = usePathname();
+  const isLogin = pathname === "/login";
+  return (
+    <>
+      {!isLogin && <MobileNavbar />}
+      {!isLogin && (
+        <div className="px-2 shadow-lg">
+          <Sidebar pathname={pathname} />
+        </div>
+      )}
+    </>
+  );
+};
 
 const Icon = () => (
   <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -69,9 +74,7 @@ const MobileNavbar = () => {
   );
 };
 
-const Sidebar = () => {
-  const pathname = usePathname();
-
+const Sidebar = ({ pathname }: { pathname: string }) => {
   const isActive = (path: string) => pathname === path;
 
   const activeIndex = siteConfig.menuItems.findIndex(
