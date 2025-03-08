@@ -7,7 +7,6 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Logo } from "@/components/icons";
-import { useSupabase } from "@/app/providers/supabase-provider";
 import { logout } from "@/app/api/login/handlers";
 import { fetchUserData } from "@/app/api/users/handlers";
 import { useRouter } from "next/navigation";
@@ -17,7 +16,6 @@ import { ProfileData } from "@/app/types/user";
 
 export const Navbar = () => {
   const router = useRouter();
-  const supabase = useSupabase();
   const pathname = usePathname();
 
   const [isLogoutConfirmModalOpen, setIsLogoutConfirmModalOpen] =
@@ -31,7 +29,7 @@ export const Navbar = () => {
   const getUserData = async () => {
     setIsNavbarFullyLoaded(false);
     try {
-      const { data } = await fetchUserData(supabase);
+      const { data } = await fetchUserData();
       const {
         id,
         user_metadata: { fullName, email },
@@ -55,7 +53,7 @@ export const Navbar = () => {
   const handleLogout = async () => {
     setIsButtonLoading(true);
     try {
-      const result = await logout(supabase);
+      const result = await logout();
       if (result.success) {
         router.push("/login");
       }

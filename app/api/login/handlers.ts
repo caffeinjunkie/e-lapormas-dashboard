@@ -1,8 +1,9 @@
-"use client";
+"use server";
 
-import { SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@/utils/supabase/server";
 
-export const login = async (client: SupabaseClient, formData: FormData) => {
+export const login = async (formData: FormData) => {
+  const client = await createClient();
   const loginData = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
@@ -18,7 +19,8 @@ export const login = async (client: SupabaseClient, formData: FormData) => {
   return { data };
 };
 
-export const register = async (client: SupabaseClient, formData: FormData) => {
+export const register = async (formData: FormData) => {
+  const client = await createClient();
   //TODO: create a safer way to pass data here
   const registrationData = {
     email: formData.get("email") as string,
@@ -43,7 +45,8 @@ export const register = async (client: SupabaseClient, formData: FormData) => {
   return { data };
 };
 
-export const logout = async (client: SupabaseClient) => {
+export const logout = async () => {
+  const client = await createClient();
   const { error } = await client.auth.signOut();
   if (error) {
     throw new Error(error.message);

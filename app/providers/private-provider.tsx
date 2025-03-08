@@ -2,8 +2,8 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useSupabase } from "./supabase-provider";
 import { Navbar } from "@/components/navbar";
+import { createClient } from "@/utils/supabase/client";
 
 interface PrivateLayoutProps {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ export const usePrivate = () => {
 export function PrivateProvider({ children }: PrivateLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = useSupabase();
+  const supabase = createClient();
   const [isLoading, setIsLoading] = useState(true);
 
   const isPublicPath = publicPaths.includes(pathname);

@@ -3,10 +3,8 @@ import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
-
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { SupabaseProvider } from "@/app/providers/supabase-provider";
 import { PrivateProvider } from "@/app/providers/private-provider";
 
 export const metadata: Metadata = {
@@ -27,11 +25,13 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // const { session } = await checkUser();
+
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -42,15 +42,11 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <SupabaseProvider>
-            <div className="relative flex flex-col sm:flex-row h-screen bg-white">
-              <PrivateProvider>
-                <main className="light overflow-auto flex-grow">
-                  {children}
-                </main>
-              </PrivateProvider>
-            </div>
-          </SupabaseProvider>
+          <div className="relative flex flex-col sm:flex-row h-screen bg-white">
+            <PrivateProvider>
+              <main className="light overflow-auto flex-grow">{children}</main>
+            </PrivateProvider>
+          </div>
         </Providers>
       </body>
     </html>

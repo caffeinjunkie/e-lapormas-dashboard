@@ -1,9 +1,17 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardBody } from "@heroui/card";
 import { Tab, Tabs } from "@heroui/tabs";
-import { useRouter } from "next/navigation";
+import { Button } from "@heroui/button";
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalContent,
+} from "@heroui/modal";
 
 import { login, register } from "@/app/api/login/handlers";
 import { ResetPasswordForm } from "./reset-password-form";
@@ -15,17 +23,22 @@ import {
   translateLoginErrorMessage,
   translateRegisterErrorMessage,
 } from "./utils";
-import { useSupabase } from "@/app/providers/supabase-provider";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = useSupabase();
   const [tab, setTab] = useState<"login" | "register">("login");
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [isLoginButtonLoading, setIsLoginButtonLoading] = useState(false);
   const [isRegisterButtonLoading, setIsRegisterButtonLoading] = useState(false);
   const [registrationFormErrors, setRegistrationFormErrors] = useState({});
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalProps, setModalProps] = useState({
+    title: "",
+    message: "",
+  });
+
+  const closeModal = () => setIsModalOpen(false);
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,7 +47,7 @@ export default function LoginPage() {
     setIsLoginButtonLoading(true);
 
     try {
-      const result = await login(supabase, formData);
+      const result = await login(formData);
       if (result.data) {
         router.push("/");
       }
@@ -62,23 +75,27 @@ export default function LoginPage() {
     }
 
     try {
-      const { data } = await register(supabase, formData);
-      if (data.user?.identities?.length === 0) {
+      const { data } = await register(formData);
+      const identities = data.user?.identities;
+      if (identities?.length === 0) {
         setRegistrationFormErrors({
           email: "Email telah terdaftar. Mohon gunakan email lain.",
         });
         return;
       }
-      if (data.user?.user_metadata.email_verified === false) {
-        setRegistrationFormErrors({
-          email:
-            "Email telah terdaftar. Mohon verifikasi email Anda untuk mengaktivasi akun.",
+
+      const unverifiedIdentities = identities?.filter(
+        (identity) => identity.identity_data?.email_verified === false,
+      );
+
+      if (identities?.length !== 0 && unverifiedIdentities?.length !== 0) {
+        setIsModalOpen(true);
+        setModalProps({
+          title: "Email Berhasil Didaftarkan",
+          message:
+            "Mohon verifikasi email Anda untuk melanjutkan proses pendaftaran.",
         });
         return;
-      }
-
-      if (data) {
-        router.push("/");
       }
     } catch (error: any) {
       const message = translateRegisterErrorMessage(
@@ -137,6 +154,28 @@ export default function LoginPage() {
           )}
         </CardBody>
       </Card>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>{modalProps.title}</ModalHeader>
+              <ModalBody>{modalProps.message}</ModalBody>
+              <ModalFooter>
+                <Button
+                  className="w-full"
+                  variant="light"
+                  onPress={() => {
+                    onClose();
+                    handleTabChange("login");
+                  }}
+                >
+                  Tutup
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
