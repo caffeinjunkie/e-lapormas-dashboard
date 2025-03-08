@@ -24,11 +24,11 @@ import { sidebarTheme } from "@/config/colors";
 
 export const Navbar = () => {
   const pathname = usePathname();
-  const isLogin = pathname === "/login";
+  const isPublicPage = pathname === "/login" || pathname === "/error";
   return (
     <>
-      {!isLogin && <MobileNavbar />}
-      {!isLogin && (
+      {!isPublicPage && <MobileNavbar />}
+      {!isPublicPage && (
         <div className="px-2 shadow-lg">
           <Sidebar pathname={pathname} />
         </div>
