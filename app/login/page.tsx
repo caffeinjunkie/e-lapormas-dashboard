@@ -13,9 +13,9 @@ import {
   buildFormData,
   validateConfirmPassword,
   translateLoginErrorMessage,
+  translateRegisterErrorMessage,
 } from "./utils";
 import { useSupabase } from "@/app/providers/supabase-provider";
-// import { ThemeSwitch } from "@/components/theme-switch";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,6 +29,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoginError(null);
     const data = buildFormData(e);
     setIsLoginButtonLoading(true);
 
@@ -54,6 +55,8 @@ export default function LoginPage() {
       data.get("confirm-password") as string,
     );
 
+    console.log(passwordMismatchErrors);
+
     if (passwordMismatchErrors) {
       setRegistrationFormErrors({ "confirm-password": passwordMismatchErrors });
       setIsRegisterButtonLoading(false);
@@ -62,11 +65,20 @@ export default function LoginPage() {
 
     try {
       const result = await register(supabase, data);
+      if (!result.data.session) {
+        setRegistrationFormErrors({ email: "Email telah digunakan. Mohon gunakan email lain." });
+        return;
+      }
+
       if (result.data) {
         router.push("/");
       }
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      const message = translateRegisterErrorMessage(
+        error.message,
+        data.get("email") as string,
+      );
+      setRegistrationFormErrors({ email: message });
     } finally {
       setIsRegisterButtonLoading(false);
     }
@@ -75,7 +87,6 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen px-6 py-6">
       <Card className="max-w-md w-full">
-        {/* <ThemeSwitch /> */}
         <CardBody className="overflow-hidden">
           {isResetPassword && (
             <ResetPasswordForm setIsResetPassword={setIsResetPassword} />

@@ -6,7 +6,6 @@ import { Modal, ModalContent, ModalHeader, ModalFooter } from "@heroui/modal";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 
-// import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
 import { useSupabase } from "@/app/providers/supabase-provider";
 import { logout } from "@/app/api/login/handlers";
@@ -28,8 +27,6 @@ export const Navbar = () => {
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(true);
   const [user, setUser] = useState<ProfileData | null>(null);
-
-  // const isPublicPage = pathname === "/login" || pathname === "/error";
 
   const getUserData = async () => {
     setIsNavbarFullyLoaded(false);

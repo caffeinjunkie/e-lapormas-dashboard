@@ -2,7 +2,7 @@ import { FormEvent } from "react";
 
 const validateIsRequired = (value: string, label: string) => {
   if (!value) {
-    return `Mohon masukkan ${label} anda`;
+    return `Mohon masukkan ${label} anda.`;
   }
 
   return null;
@@ -10,7 +10,7 @@ const validateIsRequired = (value: string, label: string) => {
 
 const validateEmail = (value: string) => {
   if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-    return "Email tidak sesuai format";
+    return "Email tidak sesuai format.";
   }
 
   return null;
@@ -18,13 +18,13 @@ const validateEmail = (value: string) => {
 
 const validateCreatePassword = (value: string) => {
   if (value.length < 6) {
-    return "Kata sandi harus memiliki minimal 6 karakter";
+    return "Kata sandi harus memiliki minimal 6 karakter.";
   }
 
   const regex =
     /^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{6,}$/;
   if (!regex.test(value)) {
-    return "Kata sandi harus mengandung huruf besar, huruf kecil, angka, dan simbol";
+    return "Kata sandi harus mengandung huruf besar, huruf kecil, angka, dan simbol.";
   }
 
   return null;
@@ -32,7 +32,7 @@ const validateCreatePassword = (value: string) => {
 
 const validateConfirmPassword = (value: string, password: string) => {
   if (value !== password) {
-    return "Kata sandi tidak cocok";
+    return "Kata sandi tidak cocok.";
   }
 
   return null;
@@ -53,7 +53,7 @@ const buildFormData = (event: FormEvent<HTMLFormElement>) => {
 const translateLoginErrorMessage = (message: string) => {
   switch (message) {
     case "Email not confirmed":
-      return "Email belum dikonfirmasi";
+      return "Email belum dikonfirmasi.";
     case "Invalid login credentials":
       return "Email atau password salah, mohon masukkan kembali email dan password yang benar.";
     default:
@@ -61,8 +61,18 @@ const translateLoginErrorMessage = (message: string) => {
   }
 };
 
+const translateRegisterErrorMessage = (message: string, value?: string) => {
+  switch (message) {
+    case `Email address "${value}" is invalid`:
+      return `Email "${value}" tidak valid.`;
+    default:
+      return "Terjadi kesalahan. Mohon coba sesaat lagi.";
+  }
+};
+
 export {
   buildFormData,
+  translateRegisterErrorMessage,
   translateLoginErrorMessage,
   validateIsRequired,
   validateEmail,
