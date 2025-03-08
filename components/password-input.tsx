@@ -5,12 +5,16 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 interface PasswordInputProps {
   label: string;
+  isRequired?: boolean;
   variant?: "flat" | "bordered" | "faded" | "underlined";
+  validate?: (value: string) => string | null;
 }
 
 export const PasswordInput = ({
   label,
+  isRequired = false,
   variant = "flat",
+  ...props
 }: PasswordInputProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -21,6 +25,7 @@ export const PasswordInput = ({
       label={label}
       type={isVisible ? "text" : "password"}
       variant={variant}
+      isRequired={isRequired}
       endContent={
         <button
           aria-label="toggle password visibility"
@@ -35,6 +40,7 @@ export const PasswordInput = ({
           )}
         </button>
       }
+      {...props}
     />
   );
 };
