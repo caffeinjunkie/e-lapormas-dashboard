@@ -27,7 +27,6 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
-  const [isLoading, setIsLoading] = useState(true);
 
   const isPublicPath = publicPaths.includes(pathname);
 
@@ -46,8 +45,6 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
       } catch (error) {
         console.error("Error checking auth status:", error);
         router.replace("/error");
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -65,10 +62,6 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
       subscription.unsubscribe();
     };
   }, [pathname, router, supabase]);
-
-  if (isLoading) {
-    return null; // Or a loading spinner
-  }
 
   return (
     <PrivateContext.Provider value={{ isPrivate: !isPublicPath }}>

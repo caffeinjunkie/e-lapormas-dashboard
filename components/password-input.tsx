@@ -1,15 +1,10 @@
 import { useState } from "react";
-import { Input } from "@heroui/input";
+import { Input, InputProps } from "@heroui/input";
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
-interface PasswordInputProps {
-  label: string;
-  isRequired?: boolean;
-  variant?: "flat" | "bordered" | "faded" | "underlined";
-  validate?: (value: string) => string | null;
+interface PasswordInputProps extends InputProps {
   ariaLabel?: string;
-  errorMessage?: string | null;
 }
 
 export const PasswordInput = ({

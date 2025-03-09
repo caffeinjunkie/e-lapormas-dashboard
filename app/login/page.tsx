@@ -13,16 +13,11 @@ import {
   ModalContent,
 } from "@heroui/modal";
 
-import { login, register } from "@/app/api/login/handlers";
 import { ResetPasswordForm } from "./reset-password-form";
 import { LoginForm } from "./login-form";
 import { RegisterForm } from "./register-form";
-import {
-  buildFormData,
-  validateConfirmPassword,
-  translateLoginErrorMessage,
-  translateRegisterErrorMessage,
-} from "./utils";
+import { buildFormData } from "./utils";
+import { handleLogin, handleRegister } from "./handlers";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +26,7 @@ export default function LoginPage() {
   const [isLoginButtonLoading, setIsLoginButtonLoading] = useState(false);
   const [isRegisterButtonLoading, setIsRegisterButtonLoading] = useState(false);
   const [registrationFormErrors, setRegistrationFormErrors] = useState({});
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalProps, setModalProps] = useState({
     title: "",
@@ -40,76 +35,33 @@ export default function LoginPage() {
 
   const closeModal = () => setIsModalOpen(false);
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoginError(null);
     const formData = buildFormData(e);
-    setIsLoginButtonLoading(true);
 
-    try {
-      const result = await login(formData);
-      if (result.data) {
-        router.push("/");
-      }
-    } catch (error: any) {
-      setLoginError(translateLoginErrorMessage(error.message));
-    } finally {
-      setIsLoginButtonLoading(false);
-    }
+    handleLogin({
+      formData,
+      setSubmissionError,
+      setIsLoginButtonLoading,
+      router,
+    });
   };
 
-  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
+  const onRegisterSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = buildFormData(e);
-    setIsRegisterButtonLoading(true);
 
-    const passwordMismatchErrors = validateConfirmPassword(
-      formData.get("password") as string,
-      formData.get("confirm-password") as string,
-    );
-
-    if (passwordMismatchErrors) {
-      setRegistrationFormErrors({ "confirm-password": passwordMismatchErrors });
-      setIsRegisterButtonLoading(false);
-      return;
-    }
-
-    try {
-      const { data } = await register(formData);
-      const identities = data.user?.identities;
-      if (identities?.length === 0) {
-        setRegistrationFormErrors({
-          email: "Email telah terdaftar. Mohon gunakan email lain.",
-        });
-        return;
-      }
-
-      const unverifiedIdentities = identities?.filter(
-        (identity) => identity.identity_data?.email_verified === false,
-      );
-
-      if (identities?.length !== 0 && unverifiedIdentities?.length !== 0) {
-        setIsModalOpen(true);
-        setModalProps({
-          title: "Email Berhasil Didaftarkan",
-          message:
-            "Mohon verifikasi email Anda untuk melanjutkan proses pendaftaran.",
-        });
-        return;
-      }
-    } catch (error: any) {
-      const message = translateRegisterErrorMessage(
-        error.message,
-        formData.get("email") as string,
-      );
-      setRegistrationFormErrors({ email: message });
-    } finally {
-      setIsRegisterButtonLoading(false);
-    }
+    handleRegister({
+      formData,
+      setRegistrationFormErrors,
+      setIsRegisterButtonLoading,
+      setIsModalOpen,
+      setModalProps,
+    });
   };
 
   const resetErrors = () => {
-    setLoginError(null);
+    setSubmissionError(null);
     setRegistrationFormErrors({});
   };
 
@@ -121,7 +73,21 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen px-6 py-6">
       <Card className="max-w-md w-full">
-        <CardBody className="overflow-hidden">
+        <CardBody
+          className="overflow-hidden transition-max-h transition-min-h duration-500 linear"
+          style={{
+            maxHeight: isResetPassword
+              ? "240px"
+              : tab === "login"
+                ? "380px"
+                : "580px",
+            minHeight: isResetPassword
+              ? "100px"
+              : tab === "login"
+                ? "280px"
+                : "380px",
+          }}
+        >
           {isResetPassword && (
             <ResetPasswordForm setIsResetPassword={setIsResetPassword} />
           )}
@@ -135,22 +101,26 @@ export default function LoginPage() {
             >
               <Tab key="login" title="Masuk">
                 <LoginForm
-                  handleLogin={handleLogin}
+                  onSubmit={onLoginSubmit}
                   setTab={setTab}
                   setIsResetPassword={setIsResetPassword}
-                  submissionError={loginError}
                   isLoading={isLoginButtonLoading}
                 />
               </Tab>
               <Tab key="register" title="Daftar">
                 <RegisterForm
                   errors={registrationFormErrors}
-                  handleRegister={handleRegister}
+                  onSubmit={onRegisterSubmit}
                   setTab={setTab}
                   isLoading={isRegisterButtonLoading}
                 />
               </Tab>
             </Tabs>
+          )}
+          {submissionError && (
+            <p className="text-danger w-full text-center text-xs pt-2 pb-2">
+              {submissionError}
+            </p>
           )}
         </CardBody>
       </Card>

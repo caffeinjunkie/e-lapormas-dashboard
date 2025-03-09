@@ -11,8 +11,8 @@ export const ResetPasswordForm = ({
 }: {
   setIsResetPassword: Dispatch<SetStateAction<boolean>>;
 }) => (
-  <div className="flex flex-col gap-4">
-    <div className="flex items-center gap-2 mb-4">
+  <div className="flex flex-col gap-4 p-1">
+    <div className="flex items-center gap-2">
       <Button
         isIconOnly
         size="sm"
@@ -23,18 +23,19 @@ export const ResetPasswordForm = ({
       </Button>
       <h3 className="text-md font-semibold">Reset kata sandi</h3>
     </div>
-    <Form className="flex flex-col gap-4">
+    <Form className="flex flex-col gap-4 pt-2">
       <Input
         label="Masukkan email anda"
         type="email"
         aria-label="email"
         variant="flat"
+        radius="sm"
         isRequired
         validate={(value) =>
           validateIsRequired(value, "email") || validateEmail(value)
         }
       />
-      <Button color="primary" className="w-full mt-8" type="submit">
+      <Button color="primary" radius="sm" className="w-full mt-4" type="submit">
         Kirim
       </Button>
     </Form>
