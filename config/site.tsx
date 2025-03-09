@@ -7,6 +7,9 @@ import {
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 
+import { DashboardIcon } from "@/components/icons";
+import { IconSvgProps } from "@/types";
+
 export type SiteConfig = typeof siteConfig;
 
 const iconClassname = "h-6 w-6";
@@ -18,22 +21,30 @@ export const siteConfig = {
     {
       label: "Ikhtisar",
       href: "/",
-      icon: <RectangleGroupIcon className={iconClassname} />,
+      Icon: (props: IconSvgProps) => (
+        <DashboardIcon {...props} height={25} width={25} />
+      ),
     },
     {
       label: "Laporan",
       href: "/reports",
-      icon: <DocumentTextIcon className={iconClassname} />,
+      Icon: (props: IconSvgProps) => (
+        <DocumentTextIcon className={iconClassname} {...props} />
+      ),
     },
     {
       label: "Statistik",
       href: "/statistics",
-      icon: <ChartBarSquareIcon className={iconClassname} />,
+      Icon: (props: IconSvgProps) => (
+        <ChartBarSquareIcon className={iconClassname} {...props} />
+      ),
     },
     {
       label: "Pengumuman",
       href: "/announcements",
-      icon: <MegaphoneIcon className={iconClassname} />,
+      Icon: (props: IconSvgProps) => (
+        <MegaphoneIcon className={iconClassname} {...props} />
+      ),
     },
   ],
   settingsItems: [

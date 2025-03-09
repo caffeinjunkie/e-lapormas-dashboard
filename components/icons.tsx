@@ -120,3 +120,41 @@ export const SearchIcon = (props: IconSvgProps) => (
     />
   </svg>
 );
+
+export const DashboardIcon = ({
+  width = "1em",
+  height = "1em",
+  color = "currentColor",
+  stroke = color,
+  ...props
+}: IconSvgProps) => (
+  <svg
+    viewBox="0 0 25 25"
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    fill="none"
+    {...props}
+  >
+    <path
+      d="M17.5 10.32C19.433 10.32 21 8.753 21 6.82001C21 4.88701 19.433 3.32001 17.5 3.32001C15.567 3.32001 14 4.88701 14 6.82001C14 8.753 15.567 10.32 17.5 10.32Z"
+      stroke={stroke}
+      strokeWidth="1.8"
+    />
+    <path
+      d="M8 3.32H5C3.895 3.32 3 4.215 3 5.32V8.32C3 9.425 3.895 10.32 5 10.32H8C9.105 10.32 10 9.425 10 8.32V5.32C10 4.215 9.105 3.32 8 3.32Z"
+      stroke={stroke}
+      strokeWidth="1.8"
+    />
+    <path
+      d="M19 14.32H16C14.895 14.32 14 15.215 14 16.32V19.32C14 20.425 14.895 21.32 16 21.32H19C20.105 21.32 21 20.425 21 19.32V16.32C21 15.215 20.105 14.32 19 14.32Z"
+      stroke={stroke}
+      strokeWidth="1.8"
+    />
+    <path
+      d="M6.5 21.32C8.433 21.32 10 19.753 10 17.82C10 15.887 8.433 14.32 6.5 14.32C4.567 14.32 3 15.887 3 17.82C3 19.753 4.567 21.32 6.5 21.32Z"
+      stroke={stroke}
+      strokeWidth="1.8"
+    />
+  </svg>
+);

@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { Button } from "@heroui/button";
-import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 
@@ -19,7 +19,7 @@ export const ResetPasswordForm = ({
         variant="light"
         onPress={() => setIsResetPassword(false)}
       >
-        <ArrowLeftIcon className="size-4" />
+        <ArrowLeftIcon className="size-4" strokeWidth="2" />
       </Button>
       <h3 className="text-md font-semibold">Reset kata sandi</h3>
     </div>

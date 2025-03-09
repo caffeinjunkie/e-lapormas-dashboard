@@ -70,21 +70,21 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
             />
           </div>
           <nav className="flex flex-col">
-            {siteConfig.menuItems.map((item) => (
+            {siteConfig.menuItems.map(({ href, label, Icon }) => (
               <NextLink
-                key={item.href}
-                className="flex w-full space-x-2 text-sm py-3 font-medium"
+                key={href}
+                className="flex w-full space-x-2 text-sm py-3 font-semibold"
                 color="foreground"
-                href={item.href}
+                href={href}
               >
                 <div
                   style={{
                     color: sidebarTheme.linkText,
                   }}
-                  className={`flex items-center gap-2 py-1 px-8 transition-colors duration-300 ease-in-out ${isActive(item.href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
+                  className={`flex items-center gap-2 py-1 px-8 transition-colors duration-300 ease-in-out ${isActive(href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
                 >
-                  {item.icon}
-                  {item.label}
+                  <Icon color={sidebarTheme.linkText} />
+                  {label}
                 </div>
               </NextLink>
             ))}
@@ -102,7 +102,9 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                 src=""
               />
               <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-                <p className="text-sm font-medium truncate">{user?.fullName}</p>
+                <p className="text-sm font-semibold truncate">
+                  {user?.fullName}
+                </p>
                 <p className="text-xs text-gray-400 truncate">{user?.email}</p>
               </div>
               <Popover placement="right">
