@@ -33,6 +33,8 @@ export default function LoginPage() {
     title: "",
     message: "",
   });
+  const logoSrc =
+    "https://chnpxcvhzxlwdaqhbhqp.supabase.co/storage/v1/object/sign/photos/openart-image_1g1deKbR_1741562295689_raw-removebg-preview.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwaG90b3Mvb3BlbmFydC1pbWFnZV8xZzFkZUtiUl8xNzQxNTYyMjk1Njg5X3Jhdy1yZW1vdmViZy1wcmV2aWV3LnBuZyIsImlhdCI6MTc0MTU2MjM5NywiZXhwIjoxODA0NjM0Mzk3fQ.0QOgUolCbwL2WQkmypEXGuuSX0HEuzZDPX8eCCADxPo";
 
   const closeModal = () => setIsModalOpen(false);
 
@@ -80,8 +82,22 @@ export default function LoginPage() {
         height={1080}
         className="w-full h-full object-cover absolute top-0 left-0"
       />
-      <div className="relative flex flex-col items-center justify-center py-6 px-6 w-full h-screen">
-        <Card className="max-w-md w-full min-w-[320px]">
+      <div className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen">
+        <div className="w-full flex justify-center items-center gap-1">
+          <NextImage
+            src={logoSrc}
+            alt="Logo"
+            className="object-contain"
+            width={80}
+            height={80}
+          />
+          <div className="flex flex-col text-sm text-black">
+            <p>Dashboard</p>
+            <p>Sistem Laporan Elektronik</p>
+            <p>Bandung Barat</p>
+          </div>
+        </div>
+        <Card className="max-w-md w-full min-w-[320px] overflow-scroll">
           <CardBody
             className="overflow-hidden transition-max-h transition-min-h duration-500 linear"
             style={{
@@ -94,7 +110,7 @@ export default function LoginPage() {
                 ? "100px"
                 : tab === "login"
                   ? "280px"
-                  : "380px",
+                  : "468px",
             }}
           >
             {isResetPassword && (
