@@ -5,7 +5,7 @@ import { Link } from "@heroui/link";
 import { Button } from "@heroui/button";
 
 import { PasswordInput } from "@/components/password-input";
-import { validateEmail } from "./utils";
+import { validateEmail } from "@/utils/string";
 
 interface LoginFormProps {
   onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;

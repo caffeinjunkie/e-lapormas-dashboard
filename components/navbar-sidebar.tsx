@@ -10,7 +10,7 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
 import { siteConfig } from "@/config/site";
 import { sidebarTheme } from "@/config/colors";
-import { ProfileData } from "@/app/types/user";
+import { ProfileData } from "@/types/user";
 
 interface SidebarProps {
   onLogout: () => void;

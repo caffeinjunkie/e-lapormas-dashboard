@@ -1,11 +1,11 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-import { login, register } from "@/app/api/login/handlers";
+import { login, register } from "@/api/login/handlers";
+import { validateConfirmPassword } from "@/utils/string";
 import {
-  validateConfirmPassword,
-  translateLoginErrorMessage,
   translateRegisterErrorMessage,
-} from "./utils";
+  translateLoginErrorMessage,
+} from "@/app/login/utils";
 
 interface HandleLoginProps {
   formData: FormData;

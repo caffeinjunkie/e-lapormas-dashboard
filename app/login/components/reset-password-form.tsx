@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 
-import { validateEmail, validateIsRequired } from "./utils";
+import { validateEmail, validateIsRequired } from "@/utils/string";
 
 export const ResetPasswordForm = ({
   setIsResetPassword,

@@ -14,11 +14,12 @@ import {
   ModalContent,
 } from "@heroui/modal";
 
-import { ResetPasswordForm } from "./reset-password-form";
-import { LoginForm } from "./login-form";
-import { RegisterForm } from "./register-form";
-import { buildFormData, loginImages } from "./utils";
-import { handleLogin, handleRegister } from "./handlers";
+import { buildFormData } from "@/utils/form";
+import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
+import { LoginForm } from "@/app/login/components/login-form";
+import { RegisterForm } from "./components/register-form";
+import { loginImages } from "@/app/login/utils";
+import { handleLogin, handleRegister } from "@/app/login/handlers";
 
 export default function LoginPage() {
   const router = useRouter();

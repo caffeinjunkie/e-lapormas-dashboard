@@ -9,8 +9,8 @@ import { PasswordInput } from "@/components/password-input";
 import {
   validateEmail,
   validateIsRequired,
-  validateCreatePassword,
-} from "./utils";
+  validatePassword,
+} from "@/utils/string";
 
 interface RegisterFormProps {
   onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
@@ -58,8 +58,7 @@ export const RegisterForm = ({
         radius="sm"
         ariaLabel="password"
         validate={(value) =>
-          validateIsRequired(value, "kata sandi") ||
-          validateCreatePassword(value)
+          validateIsRequired(value, "kata sandi") || validatePassword(value)
         }
       />
       <PasswordInput
@@ -69,7 +68,7 @@ export const RegisterForm = ({
         ariaLabel="confirm-password"
         validate={(value) =>
           validateIsRequired(value, "konfirmasi kata sandi") ||
-          validateCreatePassword(value)
+          validatePassword(value)
         }
       />
       <p className="text-center text-small w-full">

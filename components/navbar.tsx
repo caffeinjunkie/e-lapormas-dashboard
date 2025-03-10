@@ -7,12 +7,12 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Logo } from "@/components/icons";
-import { logout } from "@/app/api/login/handlers";
-import { fetchUserData } from "@/app/api/users/handlers";
+import { logout } from "@/api/login/handlers";
+import { fetchUserData } from "@/api/users/handlers";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "./navbar-sidebar";
 import { MobileNavbar } from "./navbar-mobile";
-import { ProfileData } from "@/app/types/user";
+import { ProfileData } from "@/types/user";
 
 export const Navbar = () => {
   const router = useRouter();
