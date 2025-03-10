@@ -6,7 +6,7 @@ export const fetchUserData = async () => {
   const { data, error } = await client.auth.getUser();
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
 
   return { data };
@@ -15,13 +15,25 @@ export const fetchUserData = async () => {
 export const resetPassword = async (email: string) => {
   const client = createClient();
 
-  const result = await client.auth.resetPasswordForEmail(email, {
+  const { error } = await client.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_HOSTNAME}/forgot-password`,
   });
 
-  if (result.error) {
-    throw new Error(result.error.message);
+  if (error) {
+    throw error;
   }
 
-  return result;
+  return { success: true };
+};
+
+export const updatePassword = async (password: string) => {
+  const client = createClient();
+
+  const { error } = await client.auth.updateUser({ password });
+
+  if (error) {
+    throw error;
+  }
+
+  return { success: true };
 };

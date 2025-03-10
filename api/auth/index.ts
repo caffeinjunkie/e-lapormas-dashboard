@@ -12,10 +12,9 @@ export const login = async (formData: FormData) => {
   const { data, error } = await client.auth.signInWithPassword(loginData);
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
 
-  console.log("User signed in:", data);
   return { data };
 };
 
@@ -38,10 +37,9 @@ export const register = async (formData: FormData) => {
   //personal data such as full name, email, and image.
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
 
-  console.log("User registered:", data);
   return { data };
 };
 
@@ -49,7 +47,7 @@ export const logout = async () => {
   const client = await createClient();
   const { error } = await client.auth.signOut();
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
 
   return {
