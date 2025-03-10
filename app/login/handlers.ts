@@ -115,7 +115,6 @@ const handleResetPassword = async ({
 
   try {
     const result = await resetPassword(email);
-    console.log(result, "res");
     if (result.success) {
       setSuccess(true);
     }

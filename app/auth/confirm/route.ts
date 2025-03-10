@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
   const error = searchParams.get("error");
   const errorCode = searchParams.get("error_code");
   const errorDescription = searchParams.get("error_description");
-  console.log(searchParams, "tess");
 
   // If there's an error, redirect to error page with the error details
   if (error || errorCode || errorDescription) {

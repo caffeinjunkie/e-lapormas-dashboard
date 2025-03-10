@@ -29,6 +29,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   const supabase = createClient();
 
   const isPublicPath = publicPaths.includes(pathname);
+  const isForgotPasswordPath = pathname === "/forgot-password";
 
   useEffect(() => {
     const checkUser = async () => {
@@ -65,7 +66,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
 
   return (
     <PrivateContext.Provider value={{ isPrivate: !isPublicPath }}>
-      {!isPublicPath && <Navbar />}
+      {!(isPublicPath || isForgotPasswordPath) && <Navbar />}
       {children}
     </PrivateContext.Provider>
   );

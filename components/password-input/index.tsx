@@ -10,6 +10,7 @@ interface PasswordInputProps extends InputProps {
 export const PasswordInput = ({
   label,
   isRequired = false,
+  radius = "sm",
   variant = "flat",
   ariaLabel = "password",
   ...props
@@ -25,6 +26,7 @@ export const PasswordInput = ({
       name={ariaLabel}
       type={isVisible ? "text" : "password"}
       variant={variant}
+      radius={radius}
       isRequired={isRequired}
       endContent={
         <button

@@ -2,9 +2,9 @@ import { Dispatch, SetStateAction, FormEvent } from "react";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Link } from "@heroui/link";
-import { Input } from "@heroui/input";
 
 import { PasswordInput } from "@/components/password-input";
+import { Input } from "@/components/input";
 
 import {
   validateEmail,
@@ -33,8 +33,6 @@ export const RegisterForm = ({
     <div className="flex flex-col gap-4 w-full">
       <Input
         label="Nama Lengkap"
-        radius="sm"
-        variant="flat"
         aria-label="full-name"
         name="full-name"
         isRequired
@@ -43,10 +41,8 @@ export const RegisterForm = ({
       <Input
         label="Email"
         type="email"
-        radius="sm"
         aria-label="email"
         name="email"
-        variant="flat"
         isRequired
         validate={(value) =>
           validateIsRequired(value, "email") || validateEmail(value)
@@ -55,7 +51,6 @@ export const RegisterForm = ({
       <PasswordInput
         label="Kata sandi"
         isRequired
-        radius="sm"
         ariaLabel="password"
         validate={(value) =>
           validateIsRequired(value, "kata sandi") || validatePassword(value)
@@ -64,7 +59,6 @@ export const RegisterForm = ({
       <PasswordInput
         label="Konfirmasi Kata sandi"
         isRequired
-        radius="sm"
         ariaLabel="confirm-password"
         validate={(value) =>
           validateIsRequired(value, "konfirmasi kata sandi") ||

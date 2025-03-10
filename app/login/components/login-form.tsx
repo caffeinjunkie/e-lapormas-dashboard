@@ -1,10 +1,10 @@
 import { FormEvent, Dispatch, SetStateAction } from "react";
 import { Form } from "@heroui/form";
-import { Input } from "@heroui/input";
 import { Link } from "@heroui/link";
 import { Button } from "@heroui/button";
 
 import { PasswordInput } from "@/components/password-input";
+import { Input } from "@/components/input";
 import { validateEmail } from "@/utils/string";
 
 interface LoginFormProps {
@@ -28,13 +28,11 @@ export const LoginForm = ({
       <Input
         aria-label="email"
         label="Email"
-        radius="sm"
         type="email"
         name="email"
-        variant="flat"
         validate={validateEmail}
       />
-      <PasswordInput radius="sm" label="Kata sandi" />
+      <PasswordInput label="Kata sandi" />
       <div className="flex justify-between items-center w-full">
         <Link href="#" size="sm" onPress={() => setTab("register")}>
           Daftar sekarang!

@@ -3,8 +3,8 @@ import { Button } from "@heroui/button";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { Form } from "@heroui/form";
-import { Input } from "@heroui/input";
 
+import { Input } from "@/components/input";
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 interface ResetPasswordFormProps {
@@ -32,10 +32,7 @@ export const ResetPasswordForm = ({
         label="Masukkan email anda"
         type="email"
         name="email"
-        aria-label="email"
         disabled={isSuccess}
-        variant="flat"
-        radius="sm"
         isRequired
         validate={(value) =>
           validateIsRequired(value, "email") || validateEmail(value)
