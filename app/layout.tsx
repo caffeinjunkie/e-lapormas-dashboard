@@ -1,13 +1,11 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@heroui/link";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
-
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/navbar";
+import { PrivateProvider } from "@/app/providers/private-provider";
 
 export const metadata: Metadata = {
   title: {
@@ -27,11 +25,13 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // const { session } = await checkUser();
+
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -41,12 +41,11 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col sm:flex-row h-screen bg-white">
-            <Navbar />
-            <main className="container sm:ml-72 overflow-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
+            <PrivateProvider>
+              <main className="light overflow-auto flex-grow">{children}</main>
+            </PrivateProvider>
           </div>
         </Providers>
       </body>
