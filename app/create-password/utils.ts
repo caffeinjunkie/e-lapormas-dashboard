@@ -9,8 +9,6 @@ const translateCreatePasswordErrorMessage = (message: string) => {
 
 const translateTokenErrorMessage = (name: string) => {
   switch (name) {
-    case "JsonWebTokenError":
-      return "Link kadaluarsa atau tidak valid, mohon ajukan permintaan baru.";
     case "AuthApiError":
       return "Link kadaluarsa atau tidak valid, mohon ajukan permintaan baru.";
     default:

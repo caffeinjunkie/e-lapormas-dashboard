@@ -6,6 +6,7 @@ import { Link } from "@heroui/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
+import NextImage from "next/image";
 import {
   Modal,
   ModalContent,
@@ -27,6 +28,7 @@ import {
   translateTokenErrorMessage,
 } from "@/app/create-password/utils";
 import { logout } from "@/api/auth";
+import { siteConfig } from "@/config/site";
 
 export default function CreatePasswordPage() {
   const [inputErrors, setInputErrors] = useState<
@@ -42,6 +44,7 @@ export default function CreatePasswordPage() {
   });
   const searchParams = useSearchParams();
   const closeModal = () => setIsModalOpen(false);
+  const { backgroundImageSrcs } = siteConfig;
 
   const verifyToken = async () => {
     const tokenHash = searchParams.get("token_hash");
@@ -141,100 +144,114 @@ export default function CreatePasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center p-6">
-      <Card className="max-w-md w-full min-w-[360px] overflow-scroll">
-        {tokenError && (
-          <CardHeader className="flex p-4 gap-2 items-center justify-center">
-            <p className="text-lg font-semibold">Terjadi Kesalahan</p>
-          </CardHeader>
-        )}
-        <CardBody className="flex flex-col p-4 gap-4">
+    <div className="w-full h-screen flex flex-col items-center justify-center relative">
+      <NextImage
+        src={backgroundImageSrcs[0]}
+        alt="Login"
+        width={2688}
+        height={1536}
+        className="w-full h-full object-cover absolute top-0 left-0"
+      />
+      <div className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen">
+        <Card className="max-w-md w-full min-w-[360px] overflow-scroll">
           {tokenError && (
-            <p className="text-sm text-center text-default-500">{tokenError}</p>
+            <CardHeader className="flex p-4 gap-2 items-center justify-center">
+              <p className="text-lg font-semibold">Terjadi Kesalahan</p>
+            </CardHeader>
           )}
-          {!tokenError && (
-            <>
-              <h3 className="text-md text-center font-semibold">
-                Buat Kata Sandi
-              </h3>
-              <Form
-                className="flex flex-col items-center justify-between pt-2 gap-4"
-                validationErrors={inputErrors}
-                onSubmit={onSubmit}
+          <CardBody className="flex flex-col p-4 gap-4">
+            {tokenError && (
+              <p className="text-sm text-center text-default-500">
+                {tokenError}
+              </p>
+            )}
+            {!tokenError && (
+              <>
+                <h3 className="text-md text-center font-semibold">
+                  Buat Kata Sandi
+                </h3>
+                <Form
+                  className="flex flex-col items-center justify-between pt-2 gap-4"
+                  validationErrors={inputErrors}
+                  onSubmit={onSubmit}
+                >
+                  <div className="flex flex-col gap-4 w-full">
+                    <PasswordInput
+                      label="Kata sandi"
+                      isRequired
+                      radius="sm"
+                      ariaLabel="password"
+                      validate={(value) =>
+                        validateIsRequired(value, "kata sandi") ||
+                        validatePassword(value)
+                      }
+                    />
+                    <PasswordInput
+                      label="Konfirmasi Kata sandi"
+                      isRequired
+                      radius="sm"
+                      ariaLabel="confirm-password"
+                      validate={(value) =>
+                        validateIsRequired(value, "konfirmasi kata sandi") ||
+                        validatePassword(value)
+                      }
+                    />
+                  </div>
+                  <Button
+                    color="primary"
+                    radius="sm"
+                    isLoading={isLoading}
+                    className="w-full mt-4"
+                    type="submit"
+                  >
+                    Simpan Kata Sandi Baru
+                  </Button>
+                </Form>
+              </>
+            )}
+          </CardBody>
+          {tokenError && (
+            <CardFooter className="pt-4">
+              <Button
+                as={Link}
+                href="/login"
+                color="primary"
+                radius="sm"
+                className="w-full"
               >
-                <div className="flex flex-col gap-4 w-full">
-                  <PasswordInput
-                    label="Kata sandi"
-                    isRequired
-                    radius="sm"
-                    ariaLabel="password"
-                    validate={(value) =>
-                      validateIsRequired(value, "kata sandi") ||
-                      validatePassword(value)
-                    }
-                  />
-                  <PasswordInput
-                    label="Konfirmasi Kata sandi"
-                    isRequired
-                    radius="sm"
-                    ariaLabel="confirm-password"
-                    validate={(value) =>
-                      validateIsRequired(value, "konfirmasi kata sandi") ||
-                      validatePassword(value)
-                    }
-                  />
-                </div>
-                <Button
-                  color="primary"
-                  radius="sm"
-                  isLoading={isLoading}
-                  className="w-full mt-4"
-                  type="submit"
-                >
-                  Simpan Kata Sandi Baru
-                </Button>
-              </Form>
-            </>
+                Kembali ke halaman login
+              </Button>
+            </CardFooter>
           )}
-        </CardBody>
-        {tokenError && (
-          <CardFooter className="pt-4">
-            <Button
-              as={Link}
-              href="/login"
-              color="primary"
-              radius="sm"
-              className="w-full"
-            >
-              Kembali ke halaman login
-            </Button>
-          </CardFooter>
-        )}
-      </Card>
-      <Modal isOpen={isModalOpen} onClose={onCloseModal} className="bg-white">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="text-black">
-                {modalProps.title}
-              </ModalHeader>
-              <ModalBody className="text-default-500">
-                {modalProps.message}
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  className="w-full"
-                  variant="light"
-                  color="primary"
-                  onPress={onClose}
-                >
-                  Tutup
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        </Card>
+        <Modal isOpen={isModalOpen} onClose={onCloseModal} className="bg-white">
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-black">
+                  {modalProps.title}
+                </ModalHeader>
+                <ModalBody className="text-default-500">
+                  {modalProps.message}
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    className="w-full"
+                    variant="light"
+                    color="primary"
+                    onPress={onClose}
+                  >
+                    Tutup
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </div>
     </div>
+    // <div className="flex min-h-screen w-full items-center justify-center p-6">
+
+    // </div>
   );
 }
