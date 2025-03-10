@@ -80,6 +80,8 @@ export default function LoginPage() {
       setLoading: setIsResetPasswordButtonLoading,
       setError: setSubmissionError,
       setSuccess: setSubmissionSuccess,
+      setIsModalOpen,
+      setModalProps,
     });
   };
 
@@ -87,6 +89,10 @@ export default function LoginPage() {
     setSubmissionError(null);
     setRegistrationFormErrors({});
     setSubmissionSuccess(false);
+    setModalProps({
+      title: "",
+      message: "",
+    });
   };
 
   const handleTabChange = (key: string) => {
@@ -179,20 +185,33 @@ export default function LoginPage() {
             )}
           </CardBody>
         </Card>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => {
+            closeModal();
+            if (isResetPassword) {
+              setIsResetPassword(false);
+            }
+            handleTabChange("login");
+            handleReset();
+          }}
+          className="bg-white"
+        >
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalHeader>{modalProps.title}</ModalHeader>
-                <ModalBody>{modalProps.message}</ModalBody>
+                <ModalHeader className="text-black">
+                  {modalProps.title}
+                </ModalHeader>
+                <ModalBody className="text-default-500">
+                  {modalProps.message}
+                </ModalBody>
                 <ModalFooter>
                   <Button
                     className="w-full"
                     variant="light"
-                    onPress={() => {
-                      onClose();
-                      handleTabChange("login");
-                    }}
+                    color="primary"
+                    onPress={onClose}
                   >
                     Tutup
                   </Button>
