@@ -29,7 +29,7 @@ export const register = async (formData: FormData) => {
       data: {
         fullName: formData.get("full-name") as string,
       },
-      emailRedirectTo: "http://localhost:3000/auth/confirm",
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_HOSTNAME}/auth/confirm`,
     },
   };
 

@@ -19,7 +19,11 @@ import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
 import { LoginForm } from "@/app/login/components/login-form";
 import { RegisterForm } from "./components/register-form";
 import { loginImages } from "@/app/login/utils";
-import { handleLogin, handleRegister } from "@/app/login/handlers";
+import {
+  handleLogin,
+  handleRegister,
+  handleResetPassword,
+} from "@/app/login/handlers";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,6 +31,8 @@ export default function LoginPage() {
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [isLoginButtonLoading, setIsLoginButtonLoading] = useState(false);
   const [isRegisterButtonLoading, setIsRegisterButtonLoading] = useState(false);
+  const [isResetPasswordButtonLoading, setIsResetPasswordButtonLoading] =
+    useState(false);
   const [registrationFormErrors, setRegistrationFormErrors] = useState({});
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,6 +40,7 @@ export default function LoginPage() {
     title: "",
     message: "",
   });
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const logoSrc =
     "https://chnpxcvhzxlwdaqhbhqp.supabase.co/storage/v1/object/sign/photos/openart-image_1g1deKbR_1741562295689_raw-removebg-preview.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwaG90b3Mvb3BlbmFydC1pbWFnZV8xZzFkZUtiUl8xNzQxNTYyMjk1Njg5X3Jhdy1yZW1vdmViZy1wcmV2aWV3LnBuZyIsImlhdCI6MTc0MTU2MjM5NywiZXhwIjoxODA0NjM0Mzk3fQ.0QOgUolCbwL2WQkmypEXGuuSX0HEuzZDPX8eCCADxPo";
 
@@ -45,8 +52,8 @@ export default function LoginPage() {
 
     handleLogin({
       formData,
-      setSubmissionError,
-      setIsLoginButtonLoading,
+      setError: setSubmissionError,
+      setLoading: setIsLoginButtonLoading,
       router,
     });
   };
@@ -57,21 +64,35 @@ export default function LoginPage() {
 
     handleRegister({
       formData,
-      setRegistrationFormErrors,
-      setIsRegisterButtonLoading,
+      setError: setRegistrationFormErrors,
+      setLoading: setIsRegisterButtonLoading,
       setIsModalOpen,
       setModalProps,
     });
   };
 
-  const resetErrors = () => {
+  const onResetPasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = buildFormData(e);
+    const email = formData.get("email") as string;
+
+    handleResetPassword({
+      email,
+      setLoading: setIsResetPasswordButtonLoading,
+      setError: setSubmissionError,
+      setSuccess: setSubmissionSuccess,
+    });
+  };
+
+  const handleReset = () => {
     setSubmissionError(null);
     setRegistrationFormErrors({});
+    setSubmissionSuccess(false);
   };
 
   const handleTabChange = (key: string) => {
     setTab(key as "login" | "register");
-    resetErrors();
+    handleReset();
   };
 
   return (
@@ -115,7 +136,15 @@ export default function LoginPage() {
             }}
           >
             {isResetPassword && (
-              <ResetPasswordForm setIsResetPassword={setIsResetPassword} />
+              <ResetPasswordForm
+                onBackPress={() => {
+                  handleReset();
+                  setIsResetPassword(false);
+                }}
+                isSuccess={submissionSuccess}
+                onSubmit={onResetPasswordSubmit}
+                isLoading={isResetPasswordButtonLoading}
+              />
             )}
             {!isResetPassword && (
               <Tabs

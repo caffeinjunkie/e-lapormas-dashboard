@@ -7,8 +7,8 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Logo } from "@/components/icons";
-import { logout } from "@/api/login/handlers";
-import { fetchUserData } from "@/api/users/handlers";
+import { logout } from "@/api/auth";
+import { fetchUserData } from "@/api/users";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "./navbar-sidebar";
 import { MobileNavbar } from "./navbar-mobile";

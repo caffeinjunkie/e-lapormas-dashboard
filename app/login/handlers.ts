@@ -1,6 +1,7 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-import { login, register } from "@/api/login/handlers";
+import { login, register } from "@/api/auth";
+import { resetPassword } from "@/api/users";
 import { validateConfirmPassword } from "@/utils/string";
 import {
   translateRegisterErrorMessage,
@@ -10,18 +11,18 @@ import {
 interface HandleLoginProps {
   formData: FormData;
   router: AppRouterInstance;
-  setSubmissionError: (error: string | null) => void;
-  setIsLoginButtonLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  setLoading: (loading: boolean) => void;
 }
 
 const handleLogin = async ({
   formData,
   router,
-  setSubmissionError,
-  setIsLoginButtonLoading,
+  setError,
+  setLoading,
 }: HandleLoginProps) => {
-  setSubmissionError(null);
-  setIsLoginButtonLoading(true);
+  setError(null);
+  setLoading(true);
 
   try {
     const { data } = await login(formData);
@@ -29,28 +30,28 @@ const handleLogin = async ({
       router.push("/");
     }
   } catch (error: any) {
-    setSubmissionError(translateLoginErrorMessage(error.message));
+    setError(translateLoginErrorMessage(error.message));
   } finally {
-    setIsLoginButtonLoading(false);
+    setLoading(false);
   }
 };
 
 interface HandleRegisterProps {
   formData: FormData;
-  setRegistrationFormErrors: (errors: Record<string, string>) => void;
-  setIsRegisterButtonLoading: (loading: boolean) => void;
+  setError: (errors: Record<string, string>) => void;
+  setLoading: (loading: boolean) => void;
   setIsModalOpen: (open: boolean) => void;
   setModalProps: (props: { title: string; message: string }) => void;
 }
 
 const handleRegister = async ({
   formData,
-  setRegistrationFormErrors,
-  setIsRegisterButtonLoading,
+  setError,
+  setLoading,
   setIsModalOpen,
   setModalProps,
 }: HandleRegisterProps) => {
-  setIsRegisterButtonLoading(true);
+  setLoading(true);
 
   const passwordMismatchErrors = validateConfirmPassword(
     formData.get("password") as string,
@@ -58,8 +59,8 @@ const handleRegister = async ({
   );
 
   if (passwordMismatchErrors) {
-    setRegistrationFormErrors({ "confirm-password": passwordMismatchErrors });
-    setIsRegisterButtonLoading(false);
+    setError({ "confirm-password": passwordMismatchErrors });
+    setLoading(false);
     return;
   }
 
@@ -67,7 +68,7 @@ const handleRegister = async ({
     const { data } = await register(formData);
     const identities = data.user?.identities;
     if (identities?.length === 0) {
-      setRegistrationFormErrors({
+      setError({
         email: "Email telah terdaftar. Mohon gunakan email lain.",
       });
       return;
@@ -91,10 +92,38 @@ const handleRegister = async ({
       error.message,
       formData.get("email") as string,
     );
-    setRegistrationFormErrors({ email: message });
+    setError({ email: message });
   } finally {
-    setIsRegisterButtonLoading(false);
+    setLoading(false);
   }
 };
 
-export { handleLogin, handleRegister };
+interface HandleResetPasswordProps {
+  email: string;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  setSuccess: (success: boolean) => void;
+}
+
+const handleResetPassword = async ({
+  email,
+  setLoading,
+  setError,
+  setSuccess,
+}: HandleResetPasswordProps) => {
+  setLoading(true);
+
+  try {
+    const result = await resetPassword(email);
+    console.log(result, "res");
+    if (result.success) {
+      setSuccess(true);
+    }
+  } catch (error: any) {
+    setError("Terjadi kesalahan. Mohon coba sesaat lagi.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+export { handleLogin, handleRegister, handleResetPassword };
