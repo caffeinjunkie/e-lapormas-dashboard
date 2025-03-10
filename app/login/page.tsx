@@ -18,7 +18,7 @@ import { buildFormData } from "@/utils/form";
 import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
 import { LoginForm } from "@/app/login/components/login-form";
 import { RegisterForm } from "./components/register-form";
-import { loginImages } from "@/app/login/utils";
+import { siteConfig } from "@/config/site";
 import {
   handleLogin,
   handleRegister,
@@ -41,8 +41,7 @@ export default function LoginPage() {
     message: "",
   });
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
-  const logoSrc =
-    "https://chnpxcvhzxlwdaqhbhqp.supabase.co/storage/v1/object/sign/photos/openart-image_1g1deKbR_1741562295689_raw-removebg-preview.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwaG90b3Mvb3BlbmFydC1pbWFnZV8xZzFkZUtiUl8xNzQxNTYyMjk1Njg5X3Jhdy1yZW1vdmViZy1wcmV2aWV3LnBuZyIsImlhdCI6MTc0MTU2MjM5NywiZXhwIjoxODA0NjM0Mzk3fQ.0QOgUolCbwL2WQkmypEXGuuSX0HEuzZDPX8eCCADxPo";
+  const { logoSrc, backgroundImageSrcs } = siteConfig;
 
   const closeModal = () => setIsModalOpen(false);
 
@@ -98,10 +97,10 @@ export default function LoginPage() {
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center relative">
       <NextImage
-        src={loginImages[0]}
+        src={backgroundImageSrcs[0]}
         alt="Login"
-        width={1920}
-        height={1080}
+        width={2688}
+        height={1536}
         className="w-full h-full object-cover absolute top-0 left-0"
       />
       <div className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen">
@@ -116,7 +115,7 @@ export default function LoginPage() {
           <div className="flex flex-col text-sm text-black">
             <p>Dashboard</p>
             <p>Sistem Laporan Elektronik</p>
-            <p>Bandung Barat</p>
+            <p>{siteConfig.organizationName}</p>
           </div>
         </div>
         <Card className="max-w-md w-full min-w-[320px] overflow-scroll">

@@ -9,7 +9,6 @@ import { Skeleton } from "@heroui/skeleton";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
 import { siteConfig } from "@/config/site";
-import { sidebarTheme } from "@/config/colors";
 import { ProfileData } from "@/types/user";
 
 interface SidebarProps {
@@ -39,6 +38,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
   children,
 }) => {
   const isActive = (path: string) => pathname === path;
+  const { sidebarTheme } = siteConfig;
 
   const activeIndex = siteConfig.menuItems.findIndex(
     (item) => item.href === pathname,

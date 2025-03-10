@@ -21,6 +21,7 @@ export const Input = ({
     variant={variant}
     aria-label={name}
     name={name}
+    isRequired={isRequired}
     {...props}
   />
 );
