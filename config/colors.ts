@@ -6,9 +6,3 @@ export const colors = {
   background: "#f5f5f5",
   foreground: "#333",
 };
-
-export const sidebarTheme = {
-  sidebarBackground: "#1a1c1e",
-  linkText: "#ffffff",
-  linkIndicator: "#ffffff",
-};

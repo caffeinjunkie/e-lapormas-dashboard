@@ -28,7 +28,9 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  const isPublicPath = publicPaths.includes(pathname);
+  const isRegularPublicPath = publicPaths.includes(pathname);
+  const isCreatePasswordPath = pathname.includes("/create-password");
+  const isPublicPath = isRegularPublicPath || isCreatePasswordPath;
 
   useEffect(() => {
     const checkUser = async () => {
@@ -43,7 +45,6 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
           router.replace("/");
         }
       } catch (error) {
-        console.error("Error checking auth status:", error);
         router.replace("/error");
       }
     };

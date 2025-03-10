@@ -1,23 +1,23 @@
 import { FormEvent, Dispatch, SetStateAction } from "react";
 import { Form } from "@heroui/form";
-import { Input } from "@heroui/input";
 import { Link } from "@heroui/link";
 import { Button } from "@heroui/button";
 
 import { PasswordInput } from "@/components/password-input";
-import { validateEmail } from "./utils";
+import { Input } from "@/components/input";
+import { validateEmail } from "@/utils/string";
 
 interface LoginFormProps {
   onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   setTab: Dispatch<SetStateAction<"login" | "register">>;
-  setIsResetPassword: Dispatch<SetStateAction<boolean>>;
+  onResetPasswordPress: () => void;
   isLoading?: boolean;
 }
 
 export const LoginForm = ({
   onSubmit,
   setTab,
-  setIsResetPassword,
+  onResetPasswordPress,
   isLoading,
 }: LoginFormProps) => (
   <Form
@@ -28,23 +28,16 @@ export const LoginForm = ({
       <Input
         aria-label="email"
         label="Email"
-        radius="sm"
         type="email"
         name="email"
-        variant="flat"
         validate={validateEmail}
       />
-      <PasswordInput radius="sm" label="Kata sandi" />
+      <PasswordInput label="Kata sandi" />
       <div className="flex justify-between items-center w-full">
         <Link href="#" size="sm" onPress={() => setTab("register")}>
           Daftar sekarang!
         </Link>
-        <Link
-          href="#"
-          color="danger"
-          size="sm"
-          onPress={() => setIsResetPassword(true)}
-        >
+        <Link href="#" color="danger" size="sm" onPress={onResetPasswordPress}>
           Lupa kata sandi?
         </Link>
       </div>

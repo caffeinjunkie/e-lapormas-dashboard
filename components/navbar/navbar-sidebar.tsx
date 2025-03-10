@@ -9,8 +9,7 @@ import { Skeleton } from "@heroui/skeleton";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
 import { siteConfig } from "@/config/site";
-import { sidebarTheme } from "@/config/colors";
-import { ProfileData } from "@/app/types/user";
+import { ProfileData } from "@/types/user";
 
 interface SidebarProps {
   onLogout: () => void;
@@ -39,6 +38,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
   children,
 }) => {
   const isActive = (path: string) => pathname === path;
+  const { sidebarTheme } = siteConfig;
 
   const activeIndex = siteConfig.menuItems.findIndex(
     (item) => item.href === pathname,
@@ -102,7 +102,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                 src=""
               />
               <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-                <p className="text-sm font-semibold truncate">
+                <p className="text-sm font-semibold text-white truncate">
                   {user?.fullName}
                 </p>
                 <p className="text-xs text-gray-400 truncate">{user?.email}</p>
@@ -116,7 +116,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     isIconOnly
                     aria-label="Setting"
                   >
-                    <EllipsisHorizontalIcon className="size-5" />
+                    <EllipsisHorizontalIcon className="size-5" color="white" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>
