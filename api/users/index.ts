@@ -1,3 +1,5 @@
+import { EmailOtpType } from "@supabase/supabase-js";
+
 import { createClient } from "@/utils/supabase/client";
 
 export const fetchUserData = async () => {
@@ -36,4 +38,19 @@ export const updatePassword = async (password: string) => {
   }
 
   return { success: true };
+};
+
+export const validateToken = async (type: EmailOtpType, token_hash: string) => {
+  const client = createClient();
+
+  const { data, error } = await client.auth.verifyOtp({
+    type,
+    token_hash,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return { data };
 };
