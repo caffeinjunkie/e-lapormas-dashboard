@@ -164,7 +164,10 @@ export default function LoginPage() {
                   <LoginForm
                     onSubmit={onLoginSubmit}
                     setTab={setTab}
-                    setIsResetPassword={setIsResetPassword}
+                    onResetPasswordPress={() => {
+                      setIsResetPassword(true);
+                      handleReset();
+                    }}
                     isLoading={isLoginButtonLoading}
                   />
                 </Tab>

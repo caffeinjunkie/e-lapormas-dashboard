@@ -10,14 +10,14 @@ import { validateEmail } from "@/utils/string";
 interface LoginFormProps {
   onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   setTab: Dispatch<SetStateAction<"login" | "register">>;
-  setIsResetPassword: Dispatch<SetStateAction<boolean>>;
+  onResetPasswordPress: () => void;
   isLoading?: boolean;
 }
 
 export const LoginForm = ({
   onSubmit,
   setTab,
-  setIsResetPassword,
+  onResetPasswordPress,
   isLoading,
 }: LoginFormProps) => (
   <Form
@@ -37,12 +37,7 @@ export const LoginForm = ({
         <Link href="#" size="sm" onPress={() => setTab("register")}>
           Daftar sekarang!
         </Link>
-        <Link
-          href="#"
-          color="danger"
-          size="sm"
-          onPress={() => setIsResetPassword(true)}
-        >
+        <Link href="#" color="danger" size="sm" onPress={onResetPasswordPress}>
           Lupa kata sandi?
         </Link>
       </div>
