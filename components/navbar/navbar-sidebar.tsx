@@ -102,7 +102,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                 src=""
               />
               <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-                <p className="text-sm font-semibold truncate">
+                <p className="text-sm font-semibold text-white truncate">
                   {user?.fullName}
                 </p>
                 <p className="text-xs text-gray-400 truncate">{user?.email}</p>
@@ -116,7 +116,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     isIconOnly
                     aria-label="Setting"
                   >
-                    <EllipsisHorizontalIcon className="size-5" />
+                    <EllipsisHorizontalIcon className="size-5" color="white" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>

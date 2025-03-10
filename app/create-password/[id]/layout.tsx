@@ -1,4 +1,4 @@
-export default function ForgotPasswordLayout({
+export default function CreatePasswordLayout({
   children,
 }: {
   children: React.ReactNode;

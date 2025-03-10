@@ -16,7 +16,7 @@ export const resetPassword = async (email: string) => {
   const client = createClient();
 
   const { error } = await client.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_HOSTNAME}/forgot-password`,
+    redirectTo: `${process.env.NEXT_PUBLIC_HOSTNAME}/create-password`,
   });
 
   if (error) {
