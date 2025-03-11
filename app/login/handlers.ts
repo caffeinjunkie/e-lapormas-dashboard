@@ -40,7 +40,7 @@ interface HandleRegisterProps {
   formData: FormData;
   setError: (errors: Record<string, string>) => void;
   setLoading: (loading: boolean) => void;
-  setIsModalOpen: (open: boolean) => void;
+  openModal: () => void;
   setModalProps: (props: { title: string; message: string }) => void;
 }
 
@@ -48,7 +48,7 @@ const handleRegister = async ({
   formData,
   setError,
   setLoading,
-  setIsModalOpen,
+  openModal,
   setModalProps,
 }: HandleRegisterProps) => {
   setLoading(true);
@@ -79,7 +79,7 @@ const handleRegister = async ({
     );
 
     if (identities?.length !== 0 && unverifiedIdentities?.length !== 0) {
-      setIsModalOpen(true);
+      openModal();
       setModalProps({
         title: "Email Berhasil Didaftarkan",
         message:
@@ -103,7 +103,7 @@ interface HandleResetPasswordProps {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   setSuccess: (success: boolean) => void;
-  setIsModalOpen: (open: boolean) => void;
+  openModal: () => void;
   setModalProps: (props: { title: string; message: string }) => void;
 }
 
@@ -112,7 +112,7 @@ const handleResetPassword = async ({
   setLoading,
   setError,
   setSuccess,
-  setIsModalOpen,
+  openModal,
   setModalProps,
 }: HandleResetPasswordProps) => {
   setLoading(true);
@@ -132,7 +132,7 @@ const handleResetPassword = async ({
         "Link untuk reset password telah dikirim ke email Anda. Silakan cek email Anda untuk melanjutkan.",
     });
     setTimeout(() => {
-      setIsModalOpen(true);
+      openModal();
     }, 500);
   }
 };

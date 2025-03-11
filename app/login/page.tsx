@@ -5,14 +5,7 @@ import { useRouter } from "next/navigation";
 import NextImage from "next/image";
 import { Card, CardBody } from "@heroui/card";
 import { Tab, Tabs } from "@heroui/tabs";
-import { Button } from "@heroui/button";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalContent,
-} from "@heroui/modal";
+import { ModalHeader, ModalBody } from "@heroui/modal";
 
 import { buildFormData } from "@/utils/form";
 import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
@@ -24,6 +17,8 @@ import {
   handleRegister,
   handleResetPassword,
 } from "@/app/login/handlers";
+import { useModal } from "@/hooks/use-modal";
+import { Modal } from "@/components/modal";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,15 +30,13 @@ export default function LoginPage() {
     useState(false);
   const [registrationFormErrors, setRegistrationFormErrors] = useState({});
   const [submissionError, setSubmissionError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen, openModal, closeModal } = useModal();
   const [modalProps, setModalProps] = useState({
     title: "",
     message: "",
   });
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const { logoSrc, backgroundImageSrcs } = siteConfig;
-
-  const closeModal = () => setIsModalOpen(false);
 
   const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,7 +58,7 @@ export default function LoginPage() {
       formData,
       setError: setRegistrationFormErrors,
       setLoading: setIsRegisterButtonLoading,
-      setIsModalOpen,
+      openModal,
       setModalProps,
     });
   };
@@ -80,7 +73,7 @@ export default function LoginPage() {
       setLoading: setIsResetPasswordButtonLoading,
       setError: setSubmissionError,
       setSuccess: setSubmissionSuccess,
-      setIsModalOpen,
+      openModal,
       setModalProps,
     });
   };
@@ -189,7 +182,7 @@ export default function LoginPage() {
           </CardBody>
         </Card>
         <Modal
-          isOpen={isModalOpen}
+          isOpen={isOpen}
           onClose={() => {
             closeModal();
             if (isResetPassword) {
@@ -198,30 +191,11 @@ export default function LoginPage() {
             handleTabChange("login");
             handleReset();
           }}
-          className="bg-white"
         >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="text-black">
-                  {modalProps.title}
-                </ModalHeader>
-                <ModalBody className="text-default-500">
-                  {modalProps.message}
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    className="w-full"
-                    variant="light"
-                    color="primary"
-                    onPress={onClose}
-                  >
-                    Tutup
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
+          <ModalHeader className="text-black">{modalProps.title}</ModalHeader>
+          <ModalBody className="text-default-500">
+            {modalProps.message}
+          </ModalBody>
         </Modal>
       </div>
     </div>

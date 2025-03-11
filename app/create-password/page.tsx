@@ -7,13 +7,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import NextImage from "next/image";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@heroui/modal";
+import { Modal } from "@/components/modal";
+import { ModalHeader, ModalBody } from "@heroui/modal";
 
 import { PasswordInput } from "@/components/password-input";
 import {
@@ -29,6 +24,7 @@ import {
 } from "@/app/create-password/utils";
 import { logout } from "@/api/auth";
 import { siteConfig } from "@/config/site";
+import { useModal } from "@/hooks/use-modal";
 
 export default function CreatePasswordPage() {
   const [inputErrors, setInputErrors] = useState<
@@ -37,13 +33,12 @@ export default function CreatePasswordPage() {
   const [tokenError, setTokenError] = useState<string | undefined>(undefined);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen, openModal, closeModal } = useModal();
   const [modalProps, setModalProps] = useState({
     title: "",
     message: "",
   });
   const searchParams = useSearchParams();
-  const closeModal = () => setIsModalOpen(false);
   const { backgroundImageSrcs } = siteConfig;
 
   const verifyToken = async () => {
@@ -58,33 +53,29 @@ export default function CreatePasswordPage() {
 
     try {
       const result = await validateToken("recovery", tokenHash);
-      return result;
+      const identities = result.data.user?.identities;
+
+      const unverifiedIdentities = identities?.filter(
+        (identity) => identity.identity_data?.email_verified === false,
+      );
+
+      if (unverifiedIdentities?.length !== 0) {
+        setModalProps({
+          title: "Email Belum Diverifikasi",
+          message: "Mohon verifikasi email Anda.",
+        });
+        openModal();
+      }
     } catch (error: any) {
       setTokenError(translateTokenErrorMessage(error.name));
     }
   };
 
   const handleSubmit = async (password: string) => {
-    const result = await verifyToken();
-    if (!result?.data) {
-      return;
-    }
-    const identities = result.data.user?.identities;
-
-    const unverifiedIdentities = identities?.filter(
-      (identity) => identity.identity_data?.email_verified === false,
-    );
-
-    if (unverifiedIdentities?.length !== 0) {
-      setModalProps({
-        title: "Email Belum Diverifikasi",
-        message: "Mohon verifikasi email Anda.",
-      });
-      setIsModalOpen(true);
-      return;
-    }
+    await verifyToken();
 
     const { success } = await updatePassword(password);
+    console.log(success, "success");
     if (!success) {
       setIsLoading(false);
       throw new Error("Gagal mengubah kata sandi"); // create submission error
@@ -95,7 +86,7 @@ export default function CreatePasswordPage() {
       message:
         "Kata sandi baru berhasil dibuat. Anda dapat login dengan kata sandi baru.",
     });
-    setIsModalOpen(true);
+    openModal();
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -119,6 +110,7 @@ export default function CreatePasswordPage() {
     try {
       await handleSubmit(password);
     } catch (error: any) {
+      console.log(error, "error");
       setInputErrors({
         password: translateCreatePasswordErrorMessage(error.message),
       });
@@ -224,34 +216,13 @@ export default function CreatePasswordPage() {
             </CardFooter>
           )}
         </Card>
-        <Modal isOpen={isModalOpen} onClose={onCloseModal} className="bg-white">
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="text-black">
-                  {modalProps.title}
-                </ModalHeader>
-                <ModalBody className="text-default-500">
-                  {modalProps.message}
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    className="w-full"
-                    variant="light"
-                    color="primary"
-                    onPress={onClose}
-                  >
-                    Tutup
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
+        <Modal isOpen={isOpen} title={modalProps.title} onClose={onCloseModal}>
+          <ModalHeader className="text-black">{modalProps.title}</ModalHeader>
+          <ModalBody className="text-default-500">
+            {modalProps.message}
+          </ModalBody>
         </Modal>
       </div>
     </div>
-    // <div className="flex min-h-screen w-full items-center justify-center p-6">
-
-    // </div>
   );
 }
