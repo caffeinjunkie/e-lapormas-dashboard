@@ -17,7 +17,7 @@ import {
   validateConfirmPassword,
 } from "@/utils/string";
 import { buildFormData } from "@/utils/form";
-import { updatePassword, validateToken } from "@/api/users";
+import { updateAuthUser, validateToken } from "@/api/users";
 import {
   translateCreatePasswordErrorMessage,
   translateTokenErrorMessage,
@@ -74,8 +74,7 @@ export default function CreatePasswordPage() {
   const handleSubmit = async (password: string) => {
     await verifyToken();
 
-    const { success } = await updatePassword(password);
-    console.log(success, "success");
+    const { success } = await updateAuthUser({ password });
     if (!success) {
       setIsLoading(false);
       throw new Error("Gagal mengubah kata sandi"); // create submission error

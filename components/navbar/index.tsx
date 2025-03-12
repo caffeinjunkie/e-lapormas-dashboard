@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 import { Logo } from "@/components/icons";
 import { logout } from "@/api/auth";
-import { fetchUserData } from "@/api/users";
+import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "./navbar-sidebar";
 import { MobileNavbar } from "./navbar-mobile";
@@ -36,12 +36,21 @@ export const Navbar = () => {
       const { data } = await fetchUserData();
       const {
         id,
-        user_metadata: { fullName, email },
+        email,
+        user_metadata: { fullName },
       } = data.user;
+
+      let displayName = fullName;
+
+      if (!fullName) {
+        displayName = await generateFakeName();
+        await updateAuthUser({ data: { fullName: displayName } });
+      }
+
       setUser({
         id,
-        email,
-        fullName,
+        email: email as string,
+        fullName: displayName,
       });
     } catch (error) {
       await handleLogout();

@@ -28,10 +28,18 @@ export const resetPassword = async (email: string) => {
   return { success: true };
 };
 
-export const updatePassword = async (password: string) => {
+type UpdateAuthUserData = {
+  email?: string;
+  data?: {
+    fullName?: string;
+  };
+  password?: string;
+};
+
+export const updateAuthUser = async (updatedData: UpdateAuthUserData) => {
   const client = createClient();
 
-  const { error } = await client.auth.updateUser({ password });
+  const { error } = await client.auth.updateUser(updatedData);
 
   if (error) {
     throw error;
@@ -53,4 +61,11 @@ export const validateToken = async (type: EmailOtpType, token_hash: string) => {
   }
 
   return { data };
+};
+
+export const generateFakeName = async () => {
+  const data = await fetch("https://randomuser.me/api/?inc=name&nat=US");
+  const { results } = await data.json();
+
+  return `${results[0].name.first} ${results[0].name.last}`;
 };
