@@ -9,6 +9,7 @@ import { Form } from "@heroui/form";
 import NextImage from "next/image";
 import { Modal } from "@/components/modal";
 import { ModalHeader, ModalBody } from "@heroui/modal";
+import { useTranslations } from "next-intl";
 
 import { PasswordInput } from "@/components/password-input";
 import {
@@ -19,8 +20,8 @@ import {
 import { buildFormData } from "@/utils/form";
 import { updateAuthUser, validateToken } from "@/api/users";
 import {
-  translateCreatePasswordErrorMessage,
-  translateTokenErrorMessage,
+  getCreatePasswordErrorMessage,
+  getTokenErrorMessage,
 } from "@/app/create-password/utils";
 import { logout } from "@/api/auth";
 import { siteConfig } from "@/config/site";
@@ -40,14 +41,13 @@ export default function CreatePasswordPage() {
   });
   const searchParams = useSearchParams();
   const { backgroundImageSrcs } = siteConfig;
+  const t = useTranslations("CreatePasswordPage");
 
-  const verifyToken = async () => {
+  const verifyIdentity = async () => {
     const tokenHash = searchParams.get("token_hash");
 
     if (!tokenHash) {
-      setTokenError(
-        "Tidak dapat mengakses halaman ini. Mohon kembali ke halaman login.",
-      );
+      setTokenError(t("no-access-error-message"));
       return;
     }
 
@@ -59,20 +59,25 @@ export default function CreatePasswordPage() {
         (identity) => identity.identity_data?.email_verified === false,
       );
 
-      if (unverifiedIdentities?.length !== 0) {
-        setModalProps({
-          title: "Email Belum Diverifikasi",
-          message: "Mohon verifikasi email Anda.",
-        });
-        openModal();
-      }
+      return unverifiedIdentities?.length !== 0;
     } catch (error: any) {
-      setTokenError(translateTokenErrorMessage(error.name));
+      setTokenError(t(getTokenErrorMessage(error.name)));
     }
+
+    return false;
   };
 
   const handleSubmit = async (password: string) => {
-    await verifyToken();
+    const isIdentityVerified = await verifyIdentity();
+
+    if (!isIdentityVerified) {
+      setModalProps({
+        title: t("create-password-unverified-identity-error-title"),
+        message: t("create-password-unverified-identity-error-message"),
+      });
+      openModal();
+      return;
+    }
 
     const { success } = await updateAuthUser({ password });
     if (!success) {
@@ -81,9 +86,8 @@ export default function CreatePasswordPage() {
     }
 
     setModalProps({
-      title: "Kata Sandi Baru Berhasil Dibuat",
-      message:
-        "Kata sandi baru berhasil dibuat. Anda dapat login dengan kata sandi baru.",
+      title: t("create-password-success-title"),
+      message: t("create-password-success-message"),
     });
     openModal();
   };
@@ -95,6 +99,7 @@ export default function CreatePasswordPage() {
     const confirmPassword = formData.get("confirm-password") as string;
 
     const confirmPasswordError = validateConfirmPassword(
+      t,
       password,
       confirmPassword,
     );
@@ -109,9 +114,8 @@ export default function CreatePasswordPage() {
     try {
       await handleSubmit(password);
     } catch (error: any) {
-      console.log(error, "error");
       setInputErrors({
-        password: translateCreatePasswordErrorMessage(error.message),
+        password: t(getCreatePasswordErrorMessage(error.message)),
       });
     } finally {
       setIsLoading(false);
@@ -147,7 +151,9 @@ export default function CreatePasswordPage() {
         <Card className="max-w-md w-full min-w-[360px] overflow-scroll">
           {tokenError && (
             <CardHeader className="flex p-4 gap-2 items-center justify-center">
-              <p className="text-lg font-semibold">Terjadi Kesalahan</p>
+              <p className="text-lg font-semibold">
+                {t("default-error-message-title")}
+              </p>
             </CardHeader>
           )}
           <CardBody className="flex flex-col p-4 gap-4">
@@ -159,7 +165,7 @@ export default function CreatePasswordPage() {
             {!tokenError && (
               <>
                 <h3 className="text-md text-center font-semibold">
-                  Buat Kata Sandi
+                  {t("create-password-title")}
                 </h3>
                 <Form
                   className="flex flex-col items-center justify-between pt-2 gap-4"
@@ -168,23 +174,23 @@ export default function CreatePasswordPage() {
                 >
                   <div className="flex flex-col gap-4 w-full">
                     <PasswordInput
-                      label="Kata sandi"
+                      label={t("create-password-password-input-label")}
                       isRequired
                       radius="sm"
                       ariaLabel="password"
                       validate={(value) =>
-                        validateIsRequired(value, "kata sandi") ||
-                        validatePassword(value)
+                        validateIsRequired(t, value, "password") ||
+                        validatePassword(t, value)
                       }
                     />
                     <PasswordInput
-                      label="Konfirmasi Kata sandi"
+                      label={t("create-password-confirm-password-input-label")}
                       isRequired
                       radius="sm"
                       ariaLabel="confirm-password"
                       validate={(value) =>
-                        validateIsRequired(value, "konfirmasi kata sandi") ||
-                        validatePassword(value)
+                        validateIsRequired(t, value, "confirm-password") ||
+                        validatePassword(t, value)
                       }
                     />
                   </div>
@@ -195,7 +201,7 @@ export default function CreatePasswordPage() {
                     className="w-full mt-4"
                     type="submit"
                   >
-                    Simpan Kata Sandi Baru
+                    {t("create-password-submit-button-text")}
                   </Button>
                 </Form>
               </>
@@ -210,7 +216,7 @@ export default function CreatePasswordPage() {
                 radius="sm"
                 className="w-full"
               >
-                Kembali ke halaman login
+                {t("create-password-error-link-text")}
               </Button>
             </CardFooter>
           )}

@@ -1,21 +1,29 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-import { login, register } from "@/api/auth";
+import { login } from "@/api/auth";
 import { resetPassword } from "@/api/users";
-import { validateConfirmPassword } from "@/utils/string";
-import {
-  translateRegisterErrorMessage,
-  translateLoginErrorMessage,
-} from "@/app/login/utils";
 
 interface HandleLoginProps {
+  t: (key: string) => string;
   formData: FormData;
   router: AppRouterInstance;
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
 }
 
+const getErrorMessageKey = (message: string) => {
+  switch (message) {
+    case "Email not confirmed":
+      return "verify-email-error-message";
+    case "Invalid login credentials":
+      return "invalid-credentials-error-message";
+    default:
+      return "default-error-message";
+  }
+};
+
 const handleLogin = async ({
+  t,
   formData,
   router,
   setError,
@@ -30,7 +38,8 @@ const handleLogin = async ({
       router.push("/");
     }
   } catch (error: any) {
-    setError(translateLoginErrorMessage(error.message));
+    const errorMessageKey = getErrorMessageKey(error.message);
+    setError(t(errorMessageKey));
   } finally {
     setLoading(false);
   }
@@ -53,49 +62,49 @@ const handleRegister = async ({
 }: HandleRegisterProps) => {
   setLoading(true);
 
-  const passwordMismatchErrors = validateConfirmPassword(
-    formData.get("password") as string,
-    formData.get("confirm-password") as string,
-  );
+  // const passwordMismatchErrors = validateConfirmPassword(
+  //   formData.get("password") as string,
+  //   formData.get("confirm-password") as string,
+  // );
 
-  if (passwordMismatchErrors) {
-    setError({ "confirm-password": passwordMismatchErrors });
-    setLoading(false);
-    return;
-  }
+  // if (passwordMismatchErrors) {
+  //   setError({ "confirm-password": passwordMismatchErrors });
+  //   setLoading(false);
+  //   return;
+  // }
 
-  try {
-    const { data } = await register(formData);
-    const identities = data.user?.identities;
-    if (identities?.length === 0) {
-      setError({
-        email: "Email telah terdaftar. Mohon gunakan email lain.",
-      });
-      return;
-    }
+  // try {
+  //   const { data } = await register(formData);
+  //   const identities = data.user?.identities;
+  //   if (identities?.length === 0) {
+  //     setError({
+  //       email: "Email telah terdaftar. Mohon gunakan email lain.",
+  //     });
+  //     return;
+  //   }
 
-    const unverifiedIdentities = identities?.filter(
-      (identity) => identity.identity_data?.email_verified === false,
-    );
+  //   const unverifiedIdentities = identities?.filter(
+  //     (identity) => identity.identity_data?.email_verified === false,
+  //   );
 
-    if (identities?.length !== 0 && unverifiedIdentities?.length !== 0) {
-      openModal();
-      setModalProps({
-        title: "Email Berhasil Didaftarkan",
-        message:
-          "Mohon verifikasi email Anda untuk melanjutkan proses pendaftaran.",
-      });
-      return;
-    }
-  } catch (error: any) {
-    const message = translateRegisterErrorMessage(
-      error.message,
-      formData.get("email") as string,
-    );
-    setError({ email: message });
-  } finally {
-    setLoading(false);
-  }
+  //   if (identities?.length !== 0 && unverifiedIdentities?.length !== 0) {
+  //     openModal();
+  //     setModalProps({
+  //       title: "Email Berhasil Didaftarkan",
+  //       message:
+  //         "Mohon verifikasi email Anda untuk melanjutkan proses pendaftaran.",
+  //     });
+  //     return;
+  //   }
+  // } catch (error: any) {
+  //   const message = translateRegisterErrorMessage(
+  //     error.message,
+  //     formData.get("email") as string,
+  //   );
+  //   setError({ email: message });
+  // } finally {
+  //   setLoading(false);
+  // }
 };
 
 interface HandleResetPasswordProps {

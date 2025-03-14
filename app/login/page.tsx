@@ -38,6 +38,7 @@ export default function LoginPage() {
     const formData = buildFormData(e);
 
     handleLogin({
+      t,
       formData,
       setError: setSubmissionError,
       setLoading: setIsLoginButtonLoading,
@@ -105,7 +106,7 @@ export default function LoginPage() {
               maxHeight: isResetPassword
                 ? "240px"
                 : tab === "login"
-                  ? "380px"
+                  ? "400px"
                   : "230px",
               minHeight: isResetPassword
                 ? "100px"

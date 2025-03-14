@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@heroui/button";
-// import { Modal, ModalContent, ModalHeader, ModalFooter } from "@heroui/modal";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Logo } from "@/components/icons";
 import { logout } from "@/api/auth";
@@ -20,11 +19,7 @@ import { ModalHeader } from "@heroui/modal";
 export const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
-
-  // const [isLogoutConfirmModalOpen, setIsLogoutConfirmModalOpen] =
-  //   useState(false);
-  // const closeLogoutConfirmModal = () => setIsLogoutConfirmModalOpen(false);
-  // const openLogoutConfirmModal = () => setIsLogoutConfirmModalOpen(true);
+  const t = useTranslations("Navbar");
   const { isOpen, openModal, closeModal } = useModal();
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(true);
@@ -103,14 +98,14 @@ export const Navbar = () => {
         onClose={closeModal}
         buttons={[
           {
-            title: "Ya, keluar",
+            title: t("logout-confirmation-button-text"),
             onPress: handleLogout,
             color: "danger",
             variant: "light",
             isLoading: isButtonLoading,
           },
           {
-            title: "Tidak",
+            title: t("logout-cancellation-button-text"),
             onPress: closeModal,
             color: "primary",
             variant: "solid",
@@ -118,7 +113,7 @@ export const Navbar = () => {
         ]}
       >
         <ModalHeader className="text-black">
-          Apakah anda yakin ingin keluar?
+          {t("logout-confirmation-title")}
         </ModalHeader>
       </Modal>
     </>

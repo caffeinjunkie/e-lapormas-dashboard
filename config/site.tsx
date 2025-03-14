@@ -19,28 +19,28 @@ const sidebarTheme = {
 
 const sidebarMenuItems = [
   {
-    label: "Ikhtisar",
+    label: "navbar-dashboard-label",
     href: "/",
     Icon: (props: IconSvgProps) => (
       <DashboardIcon {...props} height={25} width={25} />
     ),
   },
   {
-    label: "Laporan",
+    label: "navbar-reports-label",
     href: "/reports",
     Icon: (props: IconSvgProps) => (
       <DocumentTextIcon className={iconClassname} {...props} />
     ),
   },
   {
-    label: "Statistik",
+    label: "navbar-statistics-label",
     href: "/statistics",
     Icon: (props: IconSvgProps) => (
       <ChartBarSquareIcon className={iconClassname} {...props} />
     ),
   },
   {
-    label: "Pengumuman",
+    label: "navbar-announcements-label",
     href: "/announcements",
     Icon: (props: IconSvgProps) => (
       <MegaphoneIcon className={iconClassname} {...props} />
@@ -50,11 +50,11 @@ const sidebarMenuItems = [
 
 const additionalMenuItems = [
   {
-    label: "Pengaturan",
+    label: "navbar-settings-label",
     href: "/settings",
   },
   {
-    label: "Keluar",
+    label: "navbar-logout-label",
     href: "/logout",
   },
 ];

@@ -6,6 +6,7 @@ import {
   ModalFooter,
   ModalProps as HeroUIModalProps,
 } from "@heroui/modal";
+import { useTranslations } from "next-intl";
 
 interface ModalButtonProps extends ButtonProps {
   title: string;
@@ -24,6 +25,8 @@ export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({
   buttons = [],
   ...props
 }) => {
+  const t = useTranslations("Modal");
+
   return (
     <HeroUIModal
       isOpen={isOpen}
@@ -50,7 +53,7 @@ export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({
                   color="primary"
                   onPress={onClose}
                 >
-                  Tutup
+                  {t("default-button-text")}
                 </Button>
               )}
             </ModalFooter>
