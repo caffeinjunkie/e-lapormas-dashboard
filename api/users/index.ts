@@ -1,6 +1,6 @@
 import { EmailOtpType } from "@supabase/supabase-js";
 
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase-auth/client";
 
 export const fetchUserData = async () => {
   const client = createClient();

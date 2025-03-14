@@ -52,6 +52,7 @@
     "navbar-dashboard-label": "Dashboard",
     "navbar-reports-label": "Laporan",
     "navbar-statistics-label": "Statistik",
+    "navbar-admin-management-label": "Manajemen Admin",
     "navbar-announcements-label": "Pengumuman",
     "navbar-settings-label": "Pengaturan",
     "navbar-logout-label": "Keluar"

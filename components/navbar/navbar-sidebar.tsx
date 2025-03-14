@@ -9,10 +9,11 @@ import { Skeleton } from "@heroui/skeleton";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { useTranslations } from "next-intl";
 
-import { siteConfig } from "@/config/site";
-import { ProfileData } from "@/types/user";
+import { siteConfig, adminManagementItem } from "@/config/site";
+import { ProfileData } from "@/types/user.types";
 
 interface SidebarProps {
+  isSuperAdmin: boolean;
   onLogout: () => void;
   pathname: string;
   user?: ProfileData | null;
@@ -32,6 +33,7 @@ const ProfileSkeleton = () => (
 );
 
 export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
+  isSuperAdmin,
   pathname,
   user,
   onLogout,
@@ -40,11 +42,13 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
 }) => {
   const t = useTranslations("Navbar");
   const isActive = (path: string) => pathname === path;
-  const { sidebarTheme } = siteConfig;
+  const { sidebarTheme, menuItems, settingsItems } = siteConfig;
+  const sidebarItems = [
+    ...menuItems,
+    ...(isSuperAdmin ? [adminManagementItem] : []),
+  ];
 
-  const activeIndex = siteConfig.menuItems.findIndex(
-    (item) => item.href === pathname,
-  );
+  const activeIndex = sidebarItems.findIndex((item) => item.href === pathname);
 
   return (
     <div
@@ -72,7 +76,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
             />
           </div>
           <nav className="flex flex-col">
-            {siteConfig.menuItems.map(({ href, label, Icon }) => (
+            {sidebarItems.map(({ href, label, Icon }) => (
               <NextLink
                 key={href}
                 className="flex w-full space-x-2 text-sm py-3 font-semibold"
@@ -132,10 +136,10 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                       }
                     }}
                   >
-                    {siteConfig.settingsItems.map((item, index) => (
+                    {settingsItems.map((item, index) => (
                       <ListboxItem
                         key={item.href}
-                        className={`${index === siteConfig.settingsItems.length - 1 ? "text-danger" : ""}`}
+                        className={`${index === settingsItems.length - 1 ? "text-danger" : ""}`}
                       >
                         {t(item.label)}
                       </ListboxItem>

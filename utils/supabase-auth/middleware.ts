@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+import { fetchAdmins } from "@/api/admin";
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -38,9 +40,16 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const admins = await fetchAdmins();
+
+  const isSuperAdmin = admins.find(
+    (admin) => admin.user_id === user?.id,
+  )?.is_super_admin;
 
   const isLoginPage = request.nextUrl.pathname === "/login";
   const isErrorPage = request.nextUrl.pathname === "/error";
+  const isAdminManagementPage =
+    request.nextUrl.pathname === "/admin-management";
   const isCreatePasswordPage =
     request.nextUrl.pathname.includes("/create-password");
   const isPublicRoute = isLoginPage || isErrorPage || isCreatePasswordPage;
@@ -56,6 +65,13 @@ export async function updateSession(request: NextRequest) {
   if (user && isLoginPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
+    return NextResponse.redirect(url);
+  }
+
+  // If user is not a super admin and trying to access a protected route, redirect to unauthorized
+  if (!isSuperAdmin && isAdminManagementPage) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/unauthorized";
     return NextResponse.redirect(url);
   }
 
