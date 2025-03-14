@@ -1,4 +1,4 @@
-import { FormEvent, Dispatch, SetStateAction } from "react";
+import { FormEvent } from "react";
 import { Form } from "@heroui/form";
 import { Link } from "@heroui/link";
 import { Button } from "@heroui/button";
@@ -9,14 +9,12 @@ import { validateEmail } from "@/utils/string";
 
 interface LoginFormProps {
   onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
-  setTab: Dispatch<SetStateAction<"login" | "register">>;
   onResetPasswordPress: () => void;
   isLoading?: boolean;
 }
 
 export const LoginForm = ({
   onSubmit,
-  setTab,
   onResetPasswordPress,
   isLoading,
 }: LoginFormProps) => (
@@ -33,10 +31,7 @@ export const LoginForm = ({
         validate={validateEmail}
       />
       <PasswordInput label="Kata sandi" />
-      <div className="flex justify-between items-center w-full">
-        <Link href="#" size="sm" onPress={() => setTab("register")}>
-          Daftar sekarang!
-        </Link>
+      <div className="flex justify-end items-center w-full">
         <Link href="#" color="danger" size="sm" onPress={onResetPasswordPress}>
           Lupa kata sandi?
         </Link>

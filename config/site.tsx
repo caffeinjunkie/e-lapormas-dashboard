@@ -1,10 +1,7 @@
 import {
   ChartBarSquareIcon,
-  RectangleGroupIcon,
   DocumentTextIcon,
   MegaphoneIcon,
-  Cog6ToothIcon,
-  ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 
 import { DashboardIcon } from "@/components/icons";
@@ -65,7 +62,7 @@ const additionalMenuItems = [
 export const siteConfig = {
   name: "E-Lapor Dashboard",
   description: "Dashboard Pelaporan Elektronik",
-  organizationName: "Bandung Barat",
+  organizationName: "Nasional",
   logoSrc:
     "https://chnpxcvhzxlwdaqhbhqp.supabase.co/storage/v1/object/sign/photos/openart-image_1g1deKbR_1741562295689_raw-removebg-preview.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwaG90b3Mvb3BlbmFydC1pbWFnZV8xZzFkZUtiUl8xNzQxNTYyMjk1Njg5X3Jhdy1yZW1vdmViZy1wcmV2aWV3LnBuZyIsImlhdCI6MTc0MTU2MjM5NywiZXhwIjoxODA0NjM0Mzk3fQ.0QOgUolCbwL2WQkmypEXGuuSX0HEuzZDPX8eCCADxPo",
   backgroundImageSrcs: [

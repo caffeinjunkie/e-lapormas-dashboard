@@ -1,0 +1,11 @@
+{
+  "LoginPage": {
+    "title-1": "Dashboard",
+    "title-2": "Sistem Pelaporan Digital",
+    "login-tab-title": "Masuk",
+    "register-tab-title": "Daftar",
+    "register-tab-invite-only-message": "Pendaftaran hanya dapat dilakukan setelah mendapatkan undangan. Mohon hubungi instansi dimana Anda bekerja untuk mendapatkan info lebih lanjut.",
+    "login-form-email-label": "Email",
+    "login-form-password-label": "Kata sandi"
+  }
+}
