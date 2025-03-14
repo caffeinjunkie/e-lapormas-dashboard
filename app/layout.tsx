@@ -1,6 +1,8 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
+import { getLocale } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
@@ -30,10 +32,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const { session } = await checkUser();
+  const locale = await getLocale();
 
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang={locale}>
       <head />
       <body
         className={clsx(
@@ -43,9 +45,13 @@ export default async function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col sm:flex-row h-screen bg-white">
-            <PrivateProvider>
-              <main className="light overflow-auto flex-grow">{children}</main>
-            </PrivateProvider>
+            <NextIntlClientProvider>
+              <PrivateProvider>
+                <main className="light overflow-auto flex-grow">
+                  {children}
+                </main>
+              </PrivateProvider>
+            </NextIntlClientProvider>
           </div>
         </Providers>
       </body>

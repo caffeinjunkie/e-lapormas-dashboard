@@ -1,36 +1,44 @@
-const validateIsRequired = (value: string, label: string) => {
+const validateIsRequired = (
+  t: (key: string) => string,
+  value: string,
+  label: string,
+) => {
   if (!value) {
-    return `Mohon masukkan ${label} anda.`;
+    return t(`required-${label}-error-message`);
   }
 
   return null;
 };
 
-const validateEmail = (value: string) => {
+const validateEmail = (t: (key: string) => string, value: string) => {
   if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-    return "Email tidak sesuai format.";
+    return t("invalid-email-format-error-message");
   }
 
   return null;
 };
 
-const validatePassword = (value: string) => {
+const validatePassword = (t: (key: string) => string, value: string) => {
   if (value.length < 6) {
-    return "Kata sandi harus memiliki minimal 6 karakter.";
+    return t("short-password-error-message");
   }
 
   const regex =
     /^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{6,}$/;
   if (!regex.test(value)) {
-    return "Kata sandi harus mengandung huruf besar, huruf kecil, angka, dan simbol.";
+    return t("invalid-password-error-message");
   }
 
   return null;
 };
 
-const validateConfirmPassword = (value: string, password: string) => {
+const validateConfirmPassword = (
+  t: (key: string) => string,
+  value: string,
+  password: string,
+) => {
   if (value !== password) {
-    return "Kata sandi tidak cocok.";
+    return t("mismatch-password-error-message");
   }
 
   return null;

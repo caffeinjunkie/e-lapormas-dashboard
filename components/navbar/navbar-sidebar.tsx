@@ -7,6 +7,7 @@ import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { Skeleton } from "@heroui/skeleton";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
 
 import { siteConfig } from "@/config/site";
 import { ProfileData } from "@/types/user";
@@ -37,6 +38,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
   isLoaded,
   children,
 }) => {
+  const t = useTranslations("Navbar");
   const isActive = (path: string) => pathname === path;
   const { sidebarTheme } = siteConfig;
 
@@ -84,7 +86,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                   className={`flex items-center gap-2 py-1 px-8 transition-colors duration-300 ease-in-out ${isActive(href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
                 >
                   <Icon color={sidebarTheme.linkText} />
-                  {label}
+                  {t(label)}
                 </div>
               </NextLink>
             ))}
@@ -135,7 +137,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                         key={item.href}
                         className={`${index === siteConfig.settingsItems.length - 1 ? "text-danger" : ""}`}
                       >
-                        {item.label}
+                        {t(item.label)}
                       </ListboxItem>
                     ))}
                   </Listbox>

@@ -7,13 +7,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import NextImage from "next/image";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@heroui/modal";
+import { Modal } from "@/components/modal";
+import { ModalHeader, ModalBody } from "@heroui/modal";
+import { useTranslations } from "next-intl";
 
 import { PasswordInput } from "@/components/password-input";
 import {
@@ -22,13 +18,14 @@ import {
   validateConfirmPassword,
 } from "@/utils/string";
 import { buildFormData } from "@/utils/form";
-import { updatePassword, validateToken } from "@/api/users";
+import { updateAuthUser, validateToken } from "@/api/users";
 import {
-  translateCreatePasswordErrorMessage,
-  translateTokenErrorMessage,
+  getCreatePasswordErrorMessage,
+  getTokenErrorMessage,
 } from "@/app/create-password/utils";
 import { logout } from "@/api/auth";
 import { siteConfig } from "@/config/site";
+import { useModal } from "@/hooks/use-modal";
 
 export default function CreatePasswordPage() {
   const [inputErrors, setInputErrors] = useState<
@@ -37,65 +34,62 @@ export default function CreatePasswordPage() {
   const [tokenError, setTokenError] = useState<string | undefined>(undefined);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen, openModal, closeModal } = useModal();
   const [modalProps, setModalProps] = useState({
     title: "",
     message: "",
   });
   const searchParams = useSearchParams();
-  const closeModal = () => setIsModalOpen(false);
   const { backgroundImageSrcs } = siteConfig;
+  const t = useTranslations("CreatePasswordPage");
 
-  const verifyToken = async () => {
+  const verifyIdentity = async () => {
     const tokenHash = searchParams.get("token_hash");
 
     if (!tokenHash) {
-      setTokenError(
-        "Tidak dapat mengakses halaman ini. Mohon kembali ke halaman login.",
-      );
+      setTokenError(t("no-access-error-message"));
       return;
     }
 
     try {
       const result = await validateToken("recovery", tokenHash);
-      return result;
+      const identities = result.data.user?.identities;
+
+      const unverifiedIdentities = identities?.filter(
+        (identity) => identity.identity_data?.email_verified === false,
+      );
+
+      return unverifiedIdentities?.length !== 0;
     } catch (error: any) {
-      setTokenError(translateTokenErrorMessage(error.name));
+      setTokenError(t(getTokenErrorMessage(error.name)));
     }
+
+    return false;
   };
 
   const handleSubmit = async (password: string) => {
-    const result = await verifyToken();
-    if (!result?.data) {
-      return;
-    }
-    const identities = result.data.user?.identities;
+    const isIdentityVerified = await verifyIdentity();
 
-    const unverifiedIdentities = identities?.filter(
-      (identity) => identity.identity_data?.email_verified === false,
-    );
-
-    if (unverifiedIdentities?.length !== 0) {
+    if (!isIdentityVerified) {
       setModalProps({
-        title: "Email Belum Diverifikasi",
-        message: "Mohon verifikasi email Anda.",
+        title: t("create-password-unverified-identity-error-title"),
+        message: t("create-password-unverified-identity-error-message"),
       });
-      setIsModalOpen(true);
+      openModal();
       return;
     }
 
-    const { success } = await updatePassword(password);
+    const { success } = await updateAuthUser({ password });
     if (!success) {
       setIsLoading(false);
       throw new Error("Gagal mengubah kata sandi"); // create submission error
     }
 
     setModalProps({
-      title: "Kata Sandi Baru Berhasil Dibuat",
-      message:
-        "Kata sandi baru berhasil dibuat. Anda dapat login dengan kata sandi baru.",
+      title: t("create-password-success-title"),
+      message: t("create-password-success-message"),
     });
-    setIsModalOpen(true);
+    openModal();
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -105,6 +99,7 @@ export default function CreatePasswordPage() {
     const confirmPassword = formData.get("confirm-password") as string;
 
     const confirmPasswordError = validateConfirmPassword(
+      t,
       password,
       confirmPassword,
     );
@@ -120,7 +115,7 @@ export default function CreatePasswordPage() {
       await handleSubmit(password);
     } catch (error: any) {
       setInputErrors({
-        password: translateCreatePasswordErrorMessage(error.message),
+        password: t(getCreatePasswordErrorMessage(error.message)),
       });
     } finally {
       setIsLoading(false);
@@ -156,7 +151,9 @@ export default function CreatePasswordPage() {
         <Card className="max-w-md w-full min-w-[360px] overflow-scroll">
           {tokenError && (
             <CardHeader className="flex p-4 gap-2 items-center justify-center">
-              <p className="text-lg font-semibold">Terjadi Kesalahan</p>
+              <p className="text-lg font-semibold">
+                {t("default-error-message-title")}
+              </p>
             </CardHeader>
           )}
           <CardBody className="flex flex-col p-4 gap-4">
@@ -168,7 +165,7 @@ export default function CreatePasswordPage() {
             {!tokenError && (
               <>
                 <h3 className="text-md text-center font-semibold">
-                  Buat Kata Sandi
+                  {t("create-password-title")}
                 </h3>
                 <Form
                   className="flex flex-col items-center justify-between pt-2 gap-4"
@@ -177,23 +174,23 @@ export default function CreatePasswordPage() {
                 >
                   <div className="flex flex-col gap-4 w-full">
                     <PasswordInput
-                      label="Kata sandi"
+                      label={t("create-password-password-input-label")}
                       isRequired
                       radius="sm"
                       ariaLabel="password"
                       validate={(value) =>
-                        validateIsRequired(value, "kata sandi") ||
-                        validatePassword(value)
+                        validateIsRequired(t, value, "password") ||
+                        validatePassword(t, value)
                       }
                     />
                     <PasswordInput
-                      label="Konfirmasi Kata sandi"
+                      label={t("create-password-confirm-password-input-label")}
                       isRequired
                       radius="sm"
                       ariaLabel="confirm-password"
                       validate={(value) =>
-                        validateIsRequired(value, "konfirmasi kata sandi") ||
-                        validatePassword(value)
+                        validateIsRequired(t, value, "confirm-password") ||
+                        validatePassword(t, value)
                       }
                     />
                   </div>
@@ -204,7 +201,7 @@ export default function CreatePasswordPage() {
                     className="w-full mt-4"
                     type="submit"
                   >
-                    Simpan Kata Sandi Baru
+                    {t("create-password-submit-button-text")}
                   </Button>
                 </Form>
               </>
@@ -219,39 +216,18 @@ export default function CreatePasswordPage() {
                 radius="sm"
                 className="w-full"
               >
-                Kembali ke halaman login
+                {t("create-password-error-link-text")}
               </Button>
             </CardFooter>
           )}
         </Card>
-        <Modal isOpen={isModalOpen} onClose={onCloseModal} className="bg-white">
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="text-black">
-                  {modalProps.title}
-                </ModalHeader>
-                <ModalBody className="text-default-500">
-                  {modalProps.message}
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    className="w-full"
-                    variant="light"
-                    color="primary"
-                    onPress={onClose}
-                  >
-                    Tutup
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
+        <Modal isOpen={isOpen} title={modalProps.title} onClose={onCloseModal}>
+          <ModalHeader className="text-black">{modalProps.title}</ModalHeader>
+          <ModalBody className="text-default-500">
+            {modalProps.message}
+          </ModalBody>
         </Modal>
       </div>
     </div>
-    // <div className="flex min-h-screen w-full items-center justify-center p-6">
-
-    // </div>
   );
 }

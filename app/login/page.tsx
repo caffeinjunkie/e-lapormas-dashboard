@@ -5,37 +5,27 @@ import { useRouter } from "next/navigation";
 import NextImage from "next/image";
 import { Card, CardBody } from "@heroui/card";
 import { Tab, Tabs } from "@heroui/tabs";
-import { Button } from "@heroui/button";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalContent,
-} from "@heroui/modal";
+import { ModalHeader, ModalBody } from "@heroui/modal";
+import { useTranslations } from "next-intl";
 
 import { buildFormData } from "@/utils/form";
 import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
 import { LoginForm } from "@/app/login/components/login-form";
-import { RegisterForm } from "./components/register-form";
 import { siteConfig } from "@/config/site";
-import {
-  handleLogin,
-  handleRegister,
-  handleResetPassword,
-} from "@/app/login/handlers";
+import { handleLogin, handleResetPassword } from "@/app/login/handlers";
+import { useModal } from "@/hooks/use-modal";
+import { Modal } from "@/components/modal";
 
 export default function LoginPage() {
+  const t = useTranslations("LoginPage");
   const router = useRouter();
   const [tab, setTab] = useState<"login" | "register">("login");
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [isLoginButtonLoading, setIsLoginButtonLoading] = useState(false);
-  const [isRegisterButtonLoading, setIsRegisterButtonLoading] = useState(false);
   const [isResetPasswordButtonLoading, setIsResetPasswordButtonLoading] =
     useState(false);
-  const [registrationFormErrors, setRegistrationFormErrors] = useState({});
   const [submissionError, setSubmissionError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen, openModal, closeModal } = useModal();
   const [modalProps, setModalProps] = useState({
     title: "",
     message: "",
@@ -43,30 +33,16 @@ export default function LoginPage() {
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const { logoSrc, backgroundImageSrcs } = siteConfig;
 
-  const closeModal = () => setIsModalOpen(false);
-
   const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = buildFormData(e);
 
     handleLogin({
+      t,
       formData,
       setError: setSubmissionError,
       setLoading: setIsLoginButtonLoading,
       router,
-    });
-  };
-
-  const onRegisterSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = buildFormData(e);
-
-    handleRegister({
-      formData,
-      setError: setRegistrationFormErrors,
-      setLoading: setIsRegisterButtonLoading,
-      setIsModalOpen,
-      setModalProps,
     });
   };
 
@@ -80,14 +56,13 @@ export default function LoginPage() {
       setLoading: setIsResetPasswordButtonLoading,
       setError: setSubmissionError,
       setSuccess: setSubmissionSuccess,
-      setIsModalOpen,
+      openModal,
       setModalProps,
     });
   };
 
   const handleReset = () => {
     setSubmissionError(null);
-    setRegistrationFormErrors({});
     setSubmissionSuccess(false);
     setModalProps({
       title: "",
@@ -119,8 +94,8 @@ export default function LoginPage() {
             height={80}
           />
           <div className="flex flex-col text-sm text-black">
-            <p>Dashboard</p>
-            <p>Sistem Laporan Elektronik</p>
+            <p>{t("title-1")}</p>
+            <p>{t("title-2")}</p>
             <p>{siteConfig.organizationName}</p>
           </div>
         </div>
@@ -131,13 +106,13 @@ export default function LoginPage() {
               maxHeight: isResetPassword
                 ? "240px"
                 : tab === "login"
-                  ? "380px"
-                  : "580px",
+                  ? "400px"
+                  : "230px",
               minHeight: isResetPassword
                 ? "100px"
                 : tab === "login"
                   ? "280px"
-                  : "468px",
+                  : "128px",
             }}
           >
             {isResetPassword && (
@@ -160,10 +135,9 @@ export default function LoginPage() {
                 className="font-semibold"
                 onSelectionChange={(key) => handleTabChange(key as string)}
               >
-                <Tab key="login" title="Masuk">
+                <Tab key="login" title={t("login-tab-title")}>
                   <LoginForm
                     onSubmit={onLoginSubmit}
-                    setTab={setTab}
                     onResetPasswordPress={() => {
                       setIsResetPassword(true);
                       handleReset();
@@ -171,13 +145,10 @@ export default function LoginPage() {
                     isLoading={isLoginButtonLoading}
                   />
                 </Tab>
-                <Tab key="register" title="Daftar">
-                  <RegisterForm
-                    errors={registrationFormErrors}
-                    onSubmit={onRegisterSubmit}
-                    setTab={setTab}
-                    isLoading={isRegisterButtonLoading}
-                  />
+                <Tab key="register" title={t("register-tab-title")}>
+                  <p className="text-center text-sm text-default-500 py-4">
+                    {t("register-tab-invite-only-message")}
+                  </p>
                 </Tab>
               </Tabs>
             )}
@@ -189,7 +160,7 @@ export default function LoginPage() {
           </CardBody>
         </Card>
         <Modal
-          isOpen={isModalOpen}
+          isOpen={isOpen}
           onClose={() => {
             closeModal();
             if (isResetPassword) {
@@ -198,30 +169,11 @@ export default function LoginPage() {
             handleTabChange("login");
             handleReset();
           }}
-          className="bg-white"
         >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="text-black">
-                  {modalProps.title}
-                </ModalHeader>
-                <ModalBody className="text-default-500">
-                  {modalProps.message}
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    className="w-full"
-                    variant="light"
-                    color="primary"
-                    onPress={onClose}
-                  >
-                    Tutup
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
+          <ModalHeader className="text-black">{modalProps.title}</ModalHeader>
+          <ModalBody className="text-default-500">
+            {modalProps.message}
+          </ModalBody>
         </Modal>
       </div>
     </div>

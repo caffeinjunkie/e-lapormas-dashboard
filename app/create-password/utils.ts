@@ -1,19 +1,19 @@
-const translateCreatePasswordErrorMessage = (message: string) => {
+const getCreatePasswordErrorMessage = (message: string) => {
   switch (message) {
     case "New password should be different from the old password.":
-      return "Kata sandi baru harus berbeda dari kata sandi lama.";
+      return "new-old-same-password-error-message";
     default:
-      return "Terjadi kesalahan. Mohon coba sesaat lagi.";
+      return "default-error-message";
   }
 };
 
-const translateTokenErrorMessage = (name: string) => {
+const getTokenErrorMessage = (name: string) => {
   switch (name) {
     case "AuthApiError":
-      return "Link kadaluarsa atau tidak valid, mohon ajukan permintaan baru.";
+      return "invalid-token-error-message";
     default:
-      return "Terjadi kesalahan. Mohon coba sesaat lagi.";
+      return "default-error-message";
   }
 };
 
-export { translateCreatePasswordErrorMessage, translateTokenErrorMessage };
+export { getCreatePasswordErrorMessage, getTokenErrorMessage };

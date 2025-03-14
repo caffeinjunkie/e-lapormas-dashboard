@@ -1,0 +1,59 @@
+{
+  "LoginPage": {
+    "title-1": "Dashboard",
+    "title-2": "Sistem Pelaporan Digital",
+    "login-tab-title": "Masuk",
+    "register-tab-title": "Daftar",
+    "register-tab-invite-only-message": "Pendaftaran hanya dapat dilakukan setelah mendapatkan undangan. Mohon hubungi instansi dimana Anda bekerja untuk mendapatkan info lebih lanjut.",
+    "login-form-email-input-label": "Email",
+    "login-form-password-input-label": "Kata sandi",
+    "login-form-forgot-password-link-text": "Lupa kata sandi?",
+    "login-form-submit-button-text": "Masuk",
+    "forgot-password-tab-title": "Reset Kata Sandi",
+    "forgot-password-email-input-label": "Masukkan email Anda",
+    "forgot-password-submit-button-text": "Kirim",
+    "forgot-password-success-button-text": "Terkirim",
+    "required-email-error-message": "Harap masukkan email",
+    "invalid-email-format-error-message": "Format email tidak sesuai",
+    "short-password-error-message": "Kata sandi minimal 6 karakter",
+    "invalid-password-error-message": "Kata sandi harus mengandung minimal 1 huruf besar, 1 huruf kecil, 1 angka, dan 1 simbol",
+    "verify-email-error-message": "Email belum terverifikasi. Silakan verifikasi email Anda",
+    "invalid-credentials-error-message": "Email atau password salah",
+    "default-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi"
+  },
+  "CreatePasswordPage": {
+    "create-password-title": "Buat Kata Sandi",
+    "create-password-submit-button-text": "Simpan Kata Sandi Baru",
+    "create-password-password-input-label": "Kata sandi",
+    "create-password-confirm-password-input-label": "Konfirmasi kata sandi",
+    "mismatch-password-error-message": "Kata sandi tidak cocok",
+    "required-password-error-message": "Harap masukkan kata sandi",
+    "required-confirm-password-error-message": "Harap masukkan konfirmasi kata sandi",
+    "short-password-error-message": "Kata sandi minimal 6 karakter",
+    "invalid-password-error-message": "Kata sandi harus mengandung minimal 1 huruf besar, 1 huruf kecil, 1 angka, dan 1 simbol",
+    "new-old-same-password-error-message": "Kata sandi baru harus berbeda dari kata sandi lama",
+    "invalid-token-error-message": "Link kadaluarsa atau tidak valid, mohon ajukan permintaan baru",
+    "default-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi",
+    "no-access-error-message": "Tidak dapat mengakses halaman ini. Mohon kembali ke halaman login",
+    "create-password-error-link-text": "Kembali ke halaman login",
+    "default-error-message-title": "Terjadi Kesalahan",
+    "create-password-success-title": "Kata Sandi Baru Berhasil Dibuat",
+    "create-password-success-message": "Kata sandi baru berhasil dibuat. Anda dapat login dengan kata sandi baru.",
+    "create-password-unverified-identity-error-title": "Email belum terverifikasi",
+    "create-password-unverified-identity-error-message": "Silakan verifikasi email Anda."
+  },
+  "Modal": {
+    "default-button-text": "Tutup"
+  },
+  "Navbar": {
+    "logout-confirmation-title": "Apakah anda yakin ingin keluar?",
+    "logout-confirmation-button-text": "Ya, keluar",
+    "logout-cancellation-button-text": "Tidak",
+    "navbar-dashboard-label": "Dashboard",
+    "navbar-reports-label": "Laporan",
+    "navbar-statistics-label": "Statistik",
+    "navbar-announcements-label": "Pengumuman",
+    "navbar-settings-label": "Pengaturan",
+    "navbar-logout-label": "Keluar"
+  }
+}

@@ -1,14 +1,11 @@
 import {
   ChartBarSquareIcon,
-  RectangleGroupIcon,
   DocumentTextIcon,
   MegaphoneIcon,
-  Cog6ToothIcon,
-  ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 
 import { DashboardIcon } from "@/components/icons";
-import { IconSvgProps } from "@/types";
+import { IconSvgProps } from "@/types/icon";
 
 export type SiteConfig = typeof siteConfig;
 
@@ -22,28 +19,28 @@ const sidebarTheme = {
 
 const sidebarMenuItems = [
   {
-    label: "Ikhtisar",
+    label: "navbar-dashboard-label",
     href: "/",
     Icon: (props: IconSvgProps) => (
       <DashboardIcon {...props} height={25} width={25} />
     ),
   },
   {
-    label: "Laporan",
+    label: "navbar-reports-label",
     href: "/reports",
     Icon: (props: IconSvgProps) => (
       <DocumentTextIcon className={iconClassname} {...props} />
     ),
   },
   {
-    label: "Statistik",
+    label: "navbar-statistics-label",
     href: "/statistics",
     Icon: (props: IconSvgProps) => (
       <ChartBarSquareIcon className={iconClassname} {...props} />
     ),
   },
   {
-    label: "Pengumuman",
+    label: "navbar-announcements-label",
     href: "/announcements",
     Icon: (props: IconSvgProps) => (
       <MegaphoneIcon className={iconClassname} {...props} />
@@ -53,11 +50,11 @@ const sidebarMenuItems = [
 
 const additionalMenuItems = [
   {
-    label: "Pengaturan",
+    label: "navbar-settings-label",
     href: "/settings",
   },
   {
-    label: "Keluar",
+    label: "navbar-logout-label",
     href: "/logout",
   },
 ];
@@ -65,7 +62,7 @@ const additionalMenuItems = [
 export const siteConfig = {
   name: "E-Lapor Dashboard",
   description: "Dashboard Pelaporan Elektronik",
-  organizationName: "Bandung Barat",
+  organizationName: "Nasional",
   logoSrc:
     "https://chnpxcvhzxlwdaqhbhqp.supabase.co/storage/v1/object/sign/photos/openart-image_1g1deKbR_1741562295689_raw-removebg-preview.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwaG90b3Mvb3BlbmFydC1pbWFnZV8xZzFkZUtiUl8xNzQxNTYyMjk1Njg5X3Jhdy1yZW1vdmViZy1wcmV2aWV3LnBuZyIsImlhdCI6MTc0MTU2MjM5NywiZXhwIjoxODA0NjM0Mzk3fQ.0QOgUolCbwL2WQkmypEXGuuSX0HEuzZDPX8eCCADxPo",
   backgroundImageSrcs: [

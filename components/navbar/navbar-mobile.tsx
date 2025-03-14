@@ -7,6 +7,7 @@ import {
   NavbarMenuItem,
 } from "@heroui/navbar";
 import { Link } from "@heroui/link";
+import { useTranslations } from "next-intl";
 
 import { siteConfig } from "@/config/site";
 
@@ -18,6 +19,7 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
   onLogout,
   children,
 }) => {
+  const t = useTranslations("Navbar");
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -54,7 +56,7 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
                   setIsOpen(false);
                 }}
               >
-                {item.label}
+                {t(item.label)}
               </Link>
             </NavbarMenuItem>
           ))}
