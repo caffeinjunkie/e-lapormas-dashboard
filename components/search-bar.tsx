@@ -1,25 +1,32 @@
-import { Input } from "@heroui/input";
-import { Kbd } from "@heroui/kbd";
+import { Input, InputProps } from "@heroui/input";
+import { MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
-import { SearchIcon } from "@/components/icons";
+interface SearchBarProps extends InputProps {
+  onClear: () => void;
+  onValueChange: (value: string) => void;
+}
 
-export const searchInput = () => (
+export const SearchBar = ({
+  onClear,
+  onValueChange,
+  labelPlacement = "outside",
+  ...props
+}: SearchBarProps) => (
   <Input
     aria-label="Search"
     classNames={{
       inputWrapper: "bg-default-100",
       input: "text-sm",
     }}
-    endContent={
-      <Kbd className="hidden lg:inline-block" keys={["command"]}>
-        K
-      </Kbd>
-    }
-    labelPlacement="outside"
-    placeholder="Search..."
+    endContent={<XCircleIcon className="size-4 text-default-500" />}
+    isClearable
+    onClear={onClear}
+    onValueChange={onValueChange}
+    labelPlacement={labelPlacement}
     startContent={
-      <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+      <MagnifyingGlassIcon className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
     }
     type="search"
+    {...props}
   />
 );

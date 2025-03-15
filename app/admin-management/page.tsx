@@ -3,9 +3,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Chip } from "@heroui/chip";
 import { Tooltip } from "@heroui/tooltip";
-import { TrashIcon, UserPlusIcon } from "@heroicons/react/24/outline";
-// import { Avatar } from "@heroui/avatar";
+import {
+  TrashIcon,
+  UserPlusIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
 import { Spinner } from "@heroui/spinner";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/dropdown";
 import {
   Table,
   TableBody,
@@ -20,12 +29,13 @@ import { Button } from "@heroui/button";
 import { useTranslations } from "next-intl";
 
 import { Layout } from "@/components/layout";
-import { fetchPaginatedAdmins } from "@/api/admin";
+import { fetchAllAdmins } from "@/api/admin";
 import { FloppyIcon } from "@/components/icons";
 import { AdminData } from "@/types/user.types";
 import { fetchUserData } from "@/api/users";
 import { upsertAdmins } from "@/api/admin";
 import { UserAva } from "@/components/user-ava";
+import { SearchBar } from "@/components/search-bar";
 
 export const columns = [
   { name: "NAME", uid: "display_name" },
@@ -34,25 +44,42 @@ export const columns = [
   { name: "ACTIONS", uid: "actions" },
 ];
 
+export const statusOptions = [
+  { translationKey: "admin-management-table-status-all", uid: "all" },
+  { translationKey: "admin-management-table-status-verified", uid: "verified" },
+  {
+    translationKey: "admin-management-table-status-pending",
+    uid: "pending",
+  },
+];
+
 export default function AdminManagementPage() {
   const t = useTranslations("AdminManagementPage");
   const [page, setPage] = useState(1);
-  const [pages, setPages] = useState(0);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [admins, setAdmins] = useState<AdminData[]>([]);
   const [selfId, setSelfId] = useState<string | null>(null);
+  const [rowsPerPage, setRowsPerPage] = React.useState(8);
+  const [filterValue, setFilterValue] = React.useState("");
+  const [selectedStatusFilterKeys, setSelectedStatusFilterKeys] =
+    React.useState<Set<string>>(new Set(["all"]));
+  const hasSearchFilter = Boolean(filterValue);
+
+  const selectedStatusFilterValue = React.useMemo(
+    () => Array.from(selectedStatusFilterKeys).join(", ").replace(/_/g, ""),
+    [selectedStatusFilterKeys],
+  );
 
   const fetchAdmins = async () => {
     setIsDataLoading(true);
     try {
-      const { data: admins, count } = await fetchPaginatedAdmins(page, 9);
+      const { data: admins, count } = await fetchAllAdmins();
       const { data: userData } = await fetchUserData();
 
       setSelfId(userData.user.id);
       setAdmins(admins as AdminData[]);
-      setPages(Math.ceil((count as number) / 9));
     } catch (error) {
       console.error(error);
     } finally {
@@ -62,15 +89,83 @@ export default function AdminManagementPage() {
 
   useEffect(() => {
     fetchAdmins();
-  }, [page]);
+
+    const calculateRowNumber = () => {
+      const height = window.innerHeight;
+      const width = window.innerWidth;
+      const orientation = window.screen.orientation.type;
+
+      if (
+        orientation === "portrait-primary" ||
+        orientation === "portrait-secondary"
+      ) {
+        setRowsPerPage(height >= 800 ? 15 : height >= 600 ? 6 : 5);
+      } else {
+        setRowsPerPage(width >= 800 ? 8 : 7);
+      }
+    };
+
+    calculateRowNumber();
+    window.addEventListener("resize", calculateRowNumber);
+
+    return () => {
+      window.removeEventListener("resize", calculateRowNumber);
+    };
+  }, []);
 
   const deepEqual = (arr1: AdminData[], arr2: AdminData[]) => {
     return JSON.stringify(arr1) === JSON.stringify(arr2);
   };
 
+  const filteredItems = React.useMemo(() => {
+    let filteredUsers = [...admins];
+
+    if (hasSearchFilter) {
+      filteredUsers = filteredUsers.filter((user) =>
+        user.display_name.toLowerCase().includes(filterValue.toLowerCase()),
+      );
+    }
+    if (
+      selectedStatusFilterValue !== "all" &&
+      Array.from(selectedStatusFilterKeys).length !== statusOptions.length
+    ) {
+      filteredUsers = filteredUsers.filter((user) =>
+        Array.from(selectedStatusFilterKeys).includes(
+          user.is_verified ? "verified" : "pending",
+        ),
+      );
+    }
+
+    return filteredUsers;
+  }, [admins, filterValue, selectedStatusFilterKeys]);
+
+  const pages = Math.ceil(filteredItems.length / rowsPerPage);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems, rowsPerPage]);
+
+  const onSearchChange = React.useCallback((value: string) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = React.useCallback(() => {
+    setFilterValue("");
+    setPage(1);
+  }, []);
+
   const handleToggle = (user: AdminData) => {
     const originalAdmins = [...admins];
 
+    // setUnsavedChanges(true);
     setAdmins((prevAdmins) => {
       return prevAdmins.map((admin) =>
         admin.user_id === user.user_id
@@ -79,8 +174,7 @@ export default function AdminManagementPage() {
       );
     });
 
-    console.log(deepEqual(admins, originalAdmins));
-    // setUnsavedChanges(!deepEqual(admins, originalAdmins));
+    // console.log(deepEqual(admins, originalAdmins));
   };
 
   const handleSave = async () => {
@@ -94,6 +188,75 @@ export default function AdminManagementPage() {
       setIsSaveLoading(false);
     }
   };
+
+  const topContent = React.useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
+          <SearchBar
+            className="w-full lg:max-w-[44%]"
+            placeholder={t("admin-management-search-placeholder")}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+          <div className="flex gap-2 items-center w-full lg:w-fit">
+            <Dropdown>
+              <DropdownTrigger className="flex w-full lg:w-fit">
+                <Button
+                  className="text-default-700"
+                  endContent={
+                    <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
+                  }
+                  variant="flat"
+                >
+                  {t(
+                    `admin-management-table-status-${selectedStatusFilterValue}`,
+                  )}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={selectedStatusFilterKeys}
+                selectionMode="single"
+                onSelectionChange={(keys) => {
+                  console.log(keys);
+                  setSelectedStatusFilterKeys(keys as Set<string>);
+                }}
+              >
+                {statusOptions.map((status) => (
+                  <DropdownItem key={status.uid} className="capitalize">
+                    {t(status.translationKey)}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <Button
+              color="warning"
+              className="text-white w-full lg:w-fit"
+              startContent={<UserPlusIcon className="size-5" />}
+              onPress={() => console.log("Add admin")}
+            >
+              {t("admin-management-invite-button-text")}
+            </Button>
+            <Button
+              color="success"
+              isLoading={isSaveLoading}
+              isDisabled={!unsavedChanges}
+              className="text-white w-full lg:w-fit"
+              startContent={
+                !isSaveLoading && <FloppyIcon color="white" size={21} />
+              }
+              onPress={handleSave}
+            >
+              {t("admin-management-save-button-text")}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }, [filterValue, selectedStatusFilterKeys, onSearchChange, hasSearchFilter]);
 
   const renderCell = useCallback(
     (user: AdminData, columnKey: string) => {
@@ -165,36 +328,15 @@ export default function AdminManagementPage() {
 
   return (
     <Layout>
-      <div className="md:fixed">
-        <p className="text-2xl font-bold text-center md:text-left">
-          {t("admin-management-title")}
-        </p>
-      </div>
-      <div className="flex flex-col-reverse md:flex-col gap-4 py-4 md:py-0">
-        <div className="flex flex-row items-center justify-end gap-2">
-          <Button
-            color="warning"
-            className="text-white mt-2 md:mt-4 w-full md:w-fit md:self-end"
-            startContent={<UserPlusIcon className="size-5" />}
-            onPress={() => console.log("Add admin")}
-          >
-            {t("admin-management-invite-button-text")}
-          </Button>
-          <Button
-            color="success"
-            isLoading={isSaveLoading}
-            isDisabled={!unsavedChanges}
-            className="text-white mt-2 md:mt-4 w-full md:w-fit md:self-end"
-            startContent={
-              !isSaveLoading && <FloppyIcon color="white" size={21} />
-            }
-            onPress={handleSave}
-          >
-            {t("admin-management-save-button-text")}
-          </Button>
-        </div>
+      <h1 className="text-2xl font-bold text-center md:text-left">
+        {t("admin-management-title")}
+      </h1>
+      <div className="flex flex-col-reverse md:flex-col gap-4 py-4 md:pt-9">
         <Table
+          topContent={topContent}
           layout="fixed"
+          bottomContentPlacement="outside"
+          topContentPlacement="outside"
           bottomContent={
             pages > 0 ? (
               <div className="flex w-full justify-center">
@@ -205,7 +347,7 @@ export default function AdminManagementPage() {
                   page={page}
                   total={pages}
                   onChange={(page) => {
-                    setUnsavedChanges(false);
+                    // setUnsavedChanges(false);
                     setPage(page);
                   }}
                 />
@@ -228,8 +370,13 @@ export default function AdminManagementPage() {
             )}
           </TableHeader>
           <TableBody
-            items={admins}
+            items={items}
             isLoading={isDataLoading}
+            emptyContent={
+              <div className="text-center">
+                {t("admin-management-table-empty-content")}
+              </div>
+            }
             loadingContent={<Spinner />}
           >
             {(item) => (

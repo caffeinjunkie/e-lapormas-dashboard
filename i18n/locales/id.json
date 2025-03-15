@@ -52,7 +52,10 @@
     "admin-management-table-actions-column-label": "Aksi",
     "admin-management-table-status-verified": "Aktif",
     "admin-management-table-status-pending": "Belum Aktif",
-    "admin-management-table-delete-tooltip-text": "Hapus anggota"
+    "admin-management-table-status-all": "Semua",
+    "admin-management-table-delete-tooltip-text": "Hapus anggota",
+    "admin-management-search-placeholder": "Cari anggota...",
+    "admin-management-table-empty-content": "Hasil pencarian tidak ditemukan"
   },
   "Modal": {
     "default-button-text": "Tutup"

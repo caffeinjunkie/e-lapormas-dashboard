@@ -12,12 +12,11 @@ export const fetchIsAdminASuperAdmin = async (id: string) => {
   return { isSuperAdmin: data.is_super_admin };
 };
 
-export const fetchPaginatedAdmins = async (page = 1, limit = 9) => {
+export const fetchAllAdmins = async () => {
   const { data, error, count } = await supabase
     .from("admins")
     .select("*", { count: "exact" })
-    .order("created_at", { ascending: false })
-    .range((page - 1) * limit, (page - 1) * limit + limit - 1);
+    .order("created_at", { ascending: false });
 
   if (error) throw error;
   return { data, count };
