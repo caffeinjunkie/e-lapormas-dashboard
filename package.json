@@ -30,6 +30,7 @@
     "@heroui/table": "^2.2.15",
     "@heroui/tabs": "^2.2.12",
     "@heroui/theme": "2.4.9",
+    "@heroui/toast": "^2.0.6",
     "@react-aria/ssr": "3.9.7",
     "@react-aria/visually-hidden": "3.8.19",
     "@supabase/ssr": "^0.5.2",

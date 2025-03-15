@@ -7,7 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { PrivateProvider } from "@/providers/private-provider";
+import { PrivateProvider, usePrivate } from "@/providers/private-provider";
 
 export const metadata: Metadata = {
   title: {

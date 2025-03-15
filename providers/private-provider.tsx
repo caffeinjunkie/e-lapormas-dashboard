@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { Navbar } from "@/components/navbar";
 import { createClient } from "@/utils/supabase-auth/client";
 
@@ -27,6 +27,8 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+
+  console.log(supabase, 'tes')
 
   const isRegularPublicPath = publicPaths.includes(pathname);
   const isCreatePasswordPath = pathname.includes("/create-password");
