@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Chip } from "@heroui/chip";
 import { Tooltip } from "@heroui/tooltip";
 import { TrashIcon, UserPlusIcon } from "@heroicons/react/24/outline";
-import { Avatar } from "@heroui/avatar";
+// import { Avatar } from "@heroui/avatar";
 import { Spinner } from "@heroui/spinner";
 import {
   Table,
@@ -25,6 +25,7 @@ import { FloppyIcon } from "@/components/icons";
 import { AdminData } from "@/types/user.types";
 import { fetchUserData } from "@/api/users";
 import { upsertAdmins } from "@/api/admin";
+import { UserAva } from "@/components/user-ava";
 
 export const columns = [
   { name: "NAME", uid: "display_name" },
@@ -63,7 +64,13 @@ export default function AdminManagementPage() {
     fetchAdmins();
   }, [page]);
 
+  const deepEqual = (arr1: AdminData[], arr2: AdminData[]) => {
+    return JSON.stringify(arr1) === JSON.stringify(arr2);
+  };
+
   const handleToggle = (user: AdminData) => {
+    const originalAdmins = [...admins];
+
     setAdmins((prevAdmins) => {
       return prevAdmins.map((admin) =>
         admin.user_id === user.user_id
@@ -71,7 +78,9 @@ export default function AdminManagementPage() {
           : admin,
       );
     });
-    setUnsavedChanges(true);
+
+    console.log(deepEqual(admins, originalAdmins));
+    // setUnsavedChanges(!deepEqual(admins, originalAdmins));
   };
 
   const handleSave = async () => {
@@ -93,20 +102,16 @@ export default function AdminManagementPage() {
       switch (columnKey) {
         case "display_name":
           return (
-            <div className="flex items-center gap-4">
-              <Avatar
-                src=""
-                showFallback
-                name={user?.display_name}
-                className="hidden sm:block size-10"
-              />
-              <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-                <p className="text-sm">{user?.display_name || "-"}</p>
-                <p className="hidden sm:block text-xs text-gray-400 truncate">
-                  {user?.email}
-                </p>
-              </div>
-            </div>
+            <UserAva
+              imageSrc={user?.profile_img}
+              displayName={user?.display_name}
+              description={user?.email}
+              classNames={{
+                container: "gap-4",
+                avatar: "hidden sm:block",
+                description: "hidden sm:block",
+              }}
+            />
           );
         case "is_super_admin":
           return (

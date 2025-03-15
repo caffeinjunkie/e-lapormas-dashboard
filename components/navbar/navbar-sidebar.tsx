@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 
 import { siteConfig, adminManagementItem } from "@/config/site";
 import { ProfileData } from "@/types/user.types";
+import { UserAva } from "../user-ava";
 
 interface SidebarProps {
   isSuperAdmin: boolean;
@@ -101,18 +102,16 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
         <div className="py-2 px-2 bg-white/5 rounded-full flex flex-row items-center justify-between gap-2">
           {isLoaded && user ? (
             <>
-              <Avatar
-                className="size-11"
-                showFallback
-                name={user?.fullName}
-                src=""
+              <UserAva
+                imageSrc=""
+                displayName={user?.fullName}
+                description={user?.email}
+                classNames={{
+                  container: "contents",
+                  name: "font-semibold text-white",
+                  description: "text-gray-400",
+                }}
               />
-              <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-                <p className="text-sm font-semibold text-white truncate">
-                  {user?.fullName}
-                </p>
-                <p className="text-xs text-gray-400 truncate">{user?.email}</p>
-              </div>
               <Popover placement="right">
                 <PopoverTrigger>
                   <Button
