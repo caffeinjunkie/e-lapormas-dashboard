@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -15,7 +15,7 @@ import { ProfileData } from "@/types/user.types";
 import { useModal } from "@/hooks/use-modal";
 import { Modal } from "@/components/modal";
 import { ModalHeader } from "@heroui/modal";
-import { fetchAdmins } from "@/api/admin";
+import { fetchIsAdminASuperAdmin } from "@/api/admin";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -31,11 +31,8 @@ export const Navbar = () => {
     setIsNavbarFullyLoaded(false);
     try {
       const { data } = await fetchUserData();
-      const admins = await fetchAdmins();
-
-      const admin = admins.find((admin) => admin.user_id === data.user.id);
-
-      setIsSuperAdmin(Boolean(admin?.is_super_admin));
+      const result = await fetchIsAdminASuperAdmin(data.user.id);
+      setIsSuperAdmin(result.isSuperAdmin);
 
       const {
         id,
@@ -93,7 +90,7 @@ export const Navbar = () => {
       <MobileNavbar isSuperAdmin={isSuperAdmin} onLogout={openModal}>
         {icon}
       </MobileNavbar>
-      <div className="px-2 shadow-lg">
+      <div className="ml-2">
         <Sidebar
           isSuperAdmin={isSuperAdmin}
           pathname={pathname}

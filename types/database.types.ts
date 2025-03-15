@@ -39,6 +39,7 @@ export type Database = {
           created_at: string;
           display_name: string;
           id: number;
+          profile_img: string;
           is_super_admin: boolean;
           is_verified: boolean;
           rating: number;
@@ -48,6 +49,7 @@ export type Database = {
           created_at?: string;
           display_name?: string;
           id?: number;
+          profile_img: string;
           is_super_admin?: boolean;
           is_verified?: boolean;
           rating?: number;
@@ -57,6 +59,7 @@ export type Database = {
           created_at?: string;
           display_name?: string;
           id?: number;
+          profile_img: string;
           is_super_admin?: boolean;
           is_verified?: boolean;
           rating?: number;

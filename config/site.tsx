@@ -1,8 +1,8 @@
 import {
-  ChartBarSquareIcon,
   DocumentTextIcon,
   MegaphoneIcon,
   UsersIcon,
+  ChartPieIcon,
 } from "@heroicons/react/24/outline";
 
 import { DashboardIcon } from "@/components/icons";
@@ -45,7 +45,7 @@ const sidebarMenuItems = [
     label: "navbar-statistics-label",
     href: "/statistics",
     Icon: (props: IconSvgProps) => (
-      <ChartBarSquareIcon className={iconClassname} {...props} />
+      <ChartPieIcon className={iconClassname} {...props} />
     ),
   },
   {

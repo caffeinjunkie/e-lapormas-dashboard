@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { fetchAdmins } from "@/api/admin";
+import { fetchIsAdminASuperAdmin } from "@/api/admin";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -40,11 +40,11 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const admins = await fetchAdmins();
+  let isSuperAdmin = false;
 
-  const isSuperAdmin = admins.find(
-    (admin) => admin.user_id === user?.id,
-  )?.is_super_admin;
+  if (user) {
+    isSuperAdmin = (await fetchIsAdminASuperAdmin(user?.id!)).isSuperAdmin;
+  }
 
   const isLoginPage = request.nextUrl.pathname === "/login";
   const isErrorPage = request.nextUrl.pathname === "/error";

@@ -1,11 +1,22 @@
 import supabase from "@/utils/supabase-db";
 
-export const fetchAdmins = async (offset = 0, limit = 10) => {
-  const { data: admins, error } = await supabase
+export const fetchIsAdminASuperAdmin = async (id: string) => {
+  const { data, error } = await supabase
     .from("admins")
-    .select("*")
-    .range(offset, offset + limit - 1);
+    .select("is_super_admin")
+    .eq("user_id", id)
+    .single();
 
   if (error) throw error;
-  return admins;
+  return { isSuperAdmin: data.is_super_admin };
+};
+
+export const fetchPaginatedAdmins = async (page = 1, limit = 9) => {
+  const { data, error, count } = await supabase
+    .from("admins")
+    .select("*", { count: "exact" })
+    .range((page - 1) * limit, (page - 1) * limit + limit - 1);
+
+  if (error) throw error;
+  return { data, count };
 };

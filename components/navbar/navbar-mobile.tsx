@@ -37,9 +37,9 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
       position="sticky"
       isMenuOpen={isOpen}
       onMenuOpenChange={toggleMenu}
-      className="flex sm:hidden"
+      className="flex md:hidden"
     >
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="start">
+      <NavbarContent className="md:hidden basis-1 pl-4" justify="start">
         <NavbarMenuToggle />
         {children}
       </NavbarContent>

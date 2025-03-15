@@ -52,7 +52,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
 
   return (
     <div
-      className="hidden sm:flex flex-col fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl"
+      className="hidden md:flex flex-col fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl shadow-lg"
       style={{
         backgroundColor: sidebarTheme.sidebarBackground,
       }}

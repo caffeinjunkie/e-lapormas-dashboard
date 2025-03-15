@@ -1,9 +1,11 @@
 import { title } from "@/components/primitives";
 
+import { Layout } from "@/components/layout";
+
 export default function SettingsPage() {
   return (
-    <div>
+    <Layout>
       <h1 className={title()}>Settings</h1>
-    </div>
+    </Layout>
   );
 }
