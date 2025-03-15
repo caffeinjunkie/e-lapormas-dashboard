@@ -37,14 +37,14 @@ import { upsertAdmins } from "@/api/admin";
 import { UserAva } from "@/components/user-ava";
 import { SearchBar } from "@/components/search-bar";
 
-export const columns = [
-  { name: "NAME", uid: "display_name" },
-  { name: "SUPER ADMIN", uid: "is_super_admin" },
-  { name: "STATUS", uid: "is_verified" },
-  { name: "ACTIONS", uid: "actions" },
+const columns = [
+  { name: "NAME", uid: "display_name", width: 120 },
+  { name: "SUPER ADMIN", uid: "is_super_admin", width: 80 },
+  { name: "STATUS", uid: "is_verified", width: 100 },
+  { name: "ACTIONS", uid: "actions", width: 40 },
 ];
 
-export const statusOptions = [
+const statusOptions = [
   { translationKey: "admin-management-table-status-all", uid: "all" },
   { translationKey: "admin-management-table-status-verified", uid: "verified" },
   {
@@ -58,8 +58,9 @@ export default function AdminManagementPage() {
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [admins, setAdmins] = useState<AdminData[]>([]);
+  const [originalAdmins, setOriginalAdmins] = useState<AdminData[]>([]);
+  const [updatedAdmins, setUpdatedAdmins] = useState<AdminData[]>([]);
   const [selfId, setSelfId] = useState<string | null>(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
   const [filterValue, setFilterValue] = React.useState("");
@@ -75,11 +76,13 @@ export default function AdminManagementPage() {
   const fetchAdmins = async () => {
     setIsDataLoading(true);
     try {
-      const { data: admins, count } = await fetchAllAdmins();
+      const { data: admins } = await fetchAllAdmins();
       const { data: userData } = await fetchUserData();
 
       setSelfId(userData.user.id);
       setAdmins(admins as AdminData[]);
+      setOriginalAdmins(admins as AdminData[]);
+      setUpdatedAdmins([]);
     } catch (error) {
       console.error(error);
     } finally {
@@ -112,10 +115,6 @@ export default function AdminManagementPage() {
       window.removeEventListener("resize", calculateRowNumber);
     };
   }, []);
-
-  const deepEqual = (arr1: AdminData[], arr2: AdminData[]) => {
-    return JSON.stringify(arr1) === JSON.stringify(arr2);
-  };
 
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...admins];
@@ -163,100 +162,127 @@ export default function AdminManagementPage() {
   }, []);
 
   const handleToggle = (user: AdminData) => {
-    const originalAdmins = [...admins];
-
-    // setUnsavedChanges(true);
     setAdmins((prevAdmins) => {
-      return prevAdmins.map((admin) =>
+      const updatedAdminsList = prevAdmins.map((admin) =>
         admin.user_id === user.user_id
           ? { ...admin, is_super_admin: !admin.is_super_admin }
           : admin,
       );
-    });
 
-    // console.log(deepEqual(admins, originalAdmins));
+      const updatedUser = updatedAdminsList.find(
+        (admin) => admin.user_id === user.user_id,
+      );
+      if (updatedUser) {
+        setUpdatedAdmins((prevUpdatedAdmins) => {
+          const isReverted =
+            originalAdmins.find((admin) => admin.user_id === user.user_id)
+              ?.is_super_admin === updatedUser.is_super_admin;
+
+          if (isReverted) {
+            return prevUpdatedAdmins.filter(
+              (admin) => admin.user_id !== updatedUser.user_id,
+            );
+          }
+
+          if (
+            !prevUpdatedAdmins.some(
+              (admin) => admin.user_id === updatedUser.user_id,
+            )
+          ) {
+            return [...prevUpdatedAdmins, updatedUser];
+          }
+          return prevUpdatedAdmins;
+        });
+      }
+
+      return updatedAdminsList;
+    });
   };
 
   const handleSave = async () => {
     setIsSaveLoading(true);
     try {
-      await upsertAdmins(admins);
+      await upsertAdmins(updatedAdmins);
+      await fetchAdmins();
     } catch (error) {
       console.error(error); // TODO: toast error
     } finally {
-      setUnsavedChanges(false);
       setIsSaveLoading(false);
     }
   };
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
-          <SearchBar
-            className="w-full lg:max-w-[44%]"
-            placeholder={t("admin-management-search-placeholder")}
-            value={filterValue}
-            onClear={() => onClear()}
-            onValueChange={onSearchChange}
-          />
-          <div className="flex gap-2 items-center w-full lg:w-fit">
-            <Dropdown>
-              <DropdownTrigger className="flex w-full lg:w-fit">
-                <Button
-                  className="text-default-700"
-                  endContent={
-                    <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
-                  }
-                  variant="flat"
-                >
-                  {t(
-                    `admin-management-table-status-${selectedStatusFilterValue}`,
-                  )}
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={selectedStatusFilterKeys}
-                selectionMode="single"
-                onSelectionChange={(keys) => {
-                  console.log(keys);
-                  setSelectedStatusFilterKeys(keys as Set<string>);
-                }}
+      <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
+        <SearchBar
+          className="w-full lg:max-w-[44%]"
+          placeholder={t("admin-management-search-placeholder")}
+          value={filterValue}
+          onClear={() => onClear()}
+          onValueChange={onSearchChange}
+        />
+        <div className="flex gap-2 items-center w-full lg:w-fit">
+          <Dropdown>
+            <DropdownTrigger className="flex w-full lg:w-fit">
+              <Button
+                className="text-default-700"
+                endContent={
+                  <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
+                }
+                variant="flat"
               >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {t(status.translationKey)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Button
-              color="warning"
-              className="text-white w-full lg:w-fit"
-              startContent={<UserPlusIcon className="size-5" />}
-              onPress={() => console.log("Add admin")}
+                {t(
+                  `admin-management-table-status-${selectedStatusFilterValue}`,
+                )}
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Table Columns"
+              closeOnSelect={false}
+              selectedKeys={selectedStatusFilterKeys}
+              selectionMode="single"
+              onSelectionChange={(keys) => {
+                setSelectedStatusFilterKeys(keys as Set<string>);
+              }}
             >
-              {t("admin-management-invite-button-text")}
-            </Button>
-            <Button
-              color="success"
-              isLoading={isSaveLoading}
-              isDisabled={!unsavedChanges}
-              className="text-white w-full lg:w-fit"
-              startContent={
-                !isSaveLoading && <FloppyIcon color="white" size={21} />
-              }
-              onPress={handleSave}
-            >
-              {t("admin-management-save-button-text")}
-            </Button>
-          </div>
+              {statusOptions.map((status) => (
+                <DropdownItem key={status.uid} className="capitalize">
+                  {t(status.translationKey)}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+          <Button
+            color="warning"
+            className="text-white w-full lg:w-fit"
+            startContent={<UserPlusIcon className="size-5" />}
+            onPress={() => console.log("Add admin")}
+          >
+            {t("admin-management-invite-button-text")}
+          </Button>
+          <Button
+            color="success"
+            isLoading={isSaveLoading}
+            isDisabled={updatedAdmins.length === 0}
+            className="text-white w-full lg:w-fit"
+            startContent={
+              !isSaveLoading && <FloppyIcon color="white" size={21} />
+            }
+            onPress={handleSave}
+          >
+            {t("admin-management-save-button-text")}
+          </Button>
         </div>
       </div>
     );
-  }, [filterValue, selectedStatusFilterKeys, onSearchChange, hasSearchFilter]);
+  }, [
+    filterValue,
+    selectedStatusFilterKeys,
+    onSearchChange,
+    hasSearchFilter,
+    updatedAdmins,
+    isSaveLoading,
+  ]);
 
   const renderCell = useCallback(
     (user: AdminData, columnKey: string) => {
@@ -280,7 +306,7 @@ export default function AdminManagementPage() {
           return (
             <div className="flex flex-col items-center">
               <Switch
-                isDisabled={selfId === user?.user_id}
+                isDisabled={selfId === user?.user_id || !user.is_verified}
                 onChange={() => handleToggle(user)}
                 isSelected={user.is_super_admin}
                 size="sm"
@@ -290,10 +316,10 @@ export default function AdminManagementPage() {
         case "is_verified":
           return (
             <Chip
-              className="capitalize"
+              className="capitalize border-none"
               color={user.is_verified ? "success" : "warning"}
               size="sm"
-              variant="flat"
+              variant="dot"
             >
               {user.is_verified
                 ? t("admin-management-table-status-verified")
@@ -311,6 +337,8 @@ export default function AdminManagementPage() {
                 <Button
                   isDisabled={selfId === user?.user_id}
                   isIconOnly
+                  size="sm"
+                  radius="full"
                   variant="light"
                   onPress={() => console.log("Delete user")}
                 >
@@ -346,10 +374,7 @@ export default function AdminManagementPage() {
                   color="primary"
                   page={page}
                   total={pages}
-                  onChange={(page) => {
-                    // setUnsavedChanges(false);
-                    setPage(page);
-                  }}
+                  onChange={setPage}
                 />
               </div>
             ) : null
@@ -361,6 +386,7 @@ export default function AdminManagementPage() {
               <TableColumn
                 key={column.uid}
                 aria-label={column.name}
+                width={column.width}
                 align={column.uid === "display_name" ? "start" : "center"}
               >
                 {t(
