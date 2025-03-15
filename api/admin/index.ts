@@ -25,7 +25,8 @@ export const fetchAllAdmins = async () => {
 export const upsertAdmins = async (data: AdminData[]) => {
   const { data: updatedAdmins, error } = await supabase
     .from("admins")
-    .upsert(data);
+    .upsert(data)
+    .select();
 
   if (error) throw error;
   return updatedAdmins;

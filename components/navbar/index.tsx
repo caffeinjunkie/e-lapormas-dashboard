@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { Sidebar } from "./navbar-sidebar";
 import { MobileNavbar } from "./navbar-mobile";
 import { ProfileData } from "@/types/user.types";
-import { useModal } from "@/hooks/use-modal";
+import { useModal } from "@/components/modal/use-modal";
 import { Modal } from "@/components/modal";
 import { ModalHeader } from "@heroui/modal";
 import { fetchIsAdminASuperAdmin } from "@/api/admin";

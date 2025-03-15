@@ -31,10 +31,14 @@ export const LoginForm = ({
           aria-label="email"
           label={t("login-form-email-input-label")}
           type="email"
+          disabled={isLoading}
           name="email"
           validate={(value) => validateEmail(t, value)}
         />
-        <PasswordInput label={t("login-form-password-input-label")} />
+        <PasswordInput
+          disabled={isLoading}
+          label={t("login-form-password-input-label")}
+        />
         <div className="flex justify-end items-center w-full">
           <Link
             href="#"

@@ -13,7 +13,7 @@ import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
 import { LoginForm } from "@/app/login/components/login-form";
 import { siteConfig } from "@/config/site";
 import { handleLogin, handleResetPassword } from "@/app/login/handlers";
-import { useModal } from "@/hooks/use-modal";
+import { useModal } from "@/components/modal/use-modal";
 import { Modal } from "@/components/modal";
 
 export default function LoginPage() {

@@ -40,7 +40,6 @@ const handleLogin = async ({
   } catch (error: any) {
     const errorMessageKey = getErrorMessageKey(error.message);
     setError(t(errorMessageKey));
-  } finally {
     setLoading(false);
   }
 };

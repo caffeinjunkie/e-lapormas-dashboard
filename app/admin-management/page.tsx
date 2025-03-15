@@ -2,59 +2,28 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Chip } from "@heroui/chip";
-import { Tooltip } from "@heroui/tooltip";
-import {
-  TrashIcon,
-  UserPlusIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/24/outline";
-import { Spinner } from "@heroui/spinner";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-} from "@heroui/dropdown";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableColumn,
-} from "@heroui/table";
 import { Pagination } from "@heroui/pagination";
 import { Switch } from "@heroui/switch";
-import { Button } from "@heroui/button";
 import { useTranslations } from "next-intl";
 
 import { Layout } from "@/components/layout";
-import { fetchAllAdmins } from "@/api/admin";
-import { FloppyIcon } from "@/components/icons";
+import { AdminTable } from "@/app/admin-management/components/admin-table";
+import {
+  fetchAdminsHandler,
+  calculateRowNumber,
+  handleToggle,
+} from "@/app/admin-management/handlers";
 import { AdminData } from "@/types/user.types";
-import { fetchUserData } from "@/api/users";
 import { upsertAdmins } from "@/api/admin";
 import { UserAva } from "@/components/user-ava";
-import { SearchBar } from "@/components/search-bar";
-
-const columns = [
-  { name: "NAME", uid: "display_name", width: 120 },
-  { name: "SUPER ADMIN", uid: "is_super_admin", width: 80 },
-  { name: "STATUS", uid: "is_verified", width: 100 },
-  { name: "ACTIONS", uid: "actions", width: 40 },
-];
-
-const statusOptions = [
-  { translationKey: "admin-management-table-status-all", uid: "all" },
-  { translationKey: "admin-management-table-status-verified", uid: "verified" },
-  {
-    translationKey: "admin-management-table-status-pending",
-    uid: "pending",
-  },
-];
+import { columns, statusOptions } from "@/app/admin-management/config";
+import { TopContent } from "./components/top-content";
+import { DeleteButton } from "./components/delete-button";
+import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
 
 export default function AdminManagementPage() {
-  const t = useTranslations("AdminManagementPage");
+  const translationKey = "AdminManagementPage";
+  const t = useTranslations(translationKey);
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
@@ -64,8 +33,10 @@ export default function AdminManagementPage() {
   const [selfId, setSelfId] = useState<string | null>(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedStatusFilterKeys, setSelectedStatusFilterKeys] =
-    React.useState<Set<string>>(new Set(["all"]));
+  const {
+    selected: selectedStatusFilterKeys,
+    setSelected: setSelectedStatusFilterKeys,
+  } = useFilterSingleSelect(new Set(["all"]));
   const hasSearchFilter = Boolean(filterValue);
 
   const selectedStatusFilterValue = React.useMemo(
@@ -74,12 +45,10 @@ export default function AdminManagementPage() {
   );
 
   const fetchAdmins = async () => {
-    setIsDataLoading(true);
     try {
-      const { data: admins } = await fetchAllAdmins();
-      const { data: userData } = await fetchUserData();
+      const { admins, userId } = await fetchAdminsHandler();
 
-      setSelfId(userData.user.id);
+      setSelfId(userId);
       setAdmins(admins as AdminData[]);
       setOriginalAdmins(admins as AdminData[]);
       setUpdatedAdmins([]);
@@ -91,28 +60,16 @@ export default function AdminManagementPage() {
   };
 
   useEffect(() => {
+    setIsDataLoading(true);
     fetchAdmins();
 
-    const calculateRowNumber = () => {
-      const height = window.innerHeight;
-      const width = window.innerWidth;
-      const orientation = window.screen.orientation.type;
+    const handleResize = () => calculateRowNumber(setRowsPerPage);
 
-      if (
-        orientation === "portrait-primary" ||
-        orientation === "portrait-secondary"
-      ) {
-        setRowsPerPage(height >= 800 ? 15 : height >= 600 ? 6 : 5);
-      } else {
-        setRowsPerPage(width >= 800 ? 8 : 7);
-      }
-    };
-
-    calculateRowNumber();
-    window.addEventListener("resize", calculateRowNumber);
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", calculateRowNumber);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -161,49 +118,13 @@ export default function AdminManagementPage() {
     setPage(1);
   }, []);
 
-  const handleToggle = (user: AdminData) => {
-    setAdmins((prevAdmins) => {
-      const updatedAdminsList = prevAdmins.map((admin) =>
-        admin.user_id === user.user_id
-          ? { ...admin, is_super_admin: !admin.is_super_admin }
-          : admin,
-      );
-
-      const updatedUser = updatedAdminsList.find(
-        (admin) => admin.user_id === user.user_id,
-      );
-      if (updatedUser) {
-        setUpdatedAdmins((prevUpdatedAdmins) => {
-          const isReverted =
-            originalAdmins.find((admin) => admin.user_id === user.user_id)
-              ?.is_super_admin === updatedUser.is_super_admin;
-
-          if (isReverted) {
-            return prevUpdatedAdmins.filter(
-              (admin) => admin.user_id !== updatedUser.user_id,
-            );
-          }
-
-          if (
-            !prevUpdatedAdmins.some(
-              (admin) => admin.user_id === updatedUser.user_id,
-            )
-          ) {
-            return [...prevUpdatedAdmins, updatedUser];
-          }
-          return prevUpdatedAdmins;
-        });
-      }
-
-      return updatedAdminsList;
-    });
-  };
-
-  const handleSave = async () => {
+  const onSave = async () => {
     setIsSaveLoading(true);
     try {
-      await upsertAdmins(updatedAdmins);
-      await fetchAdmins();
+      const result = await upsertAdmins(updatedAdmins);
+      if (result) {
+        await fetchAdmins();
+      }
     } catch (error) {
       console.error(error); // TODO: toast error
     } finally {
@@ -211,69 +132,26 @@ export default function AdminManagementPage() {
     }
   };
 
+  const onInviteUser = () => {
+    console.log("Invite user");
+  };
+
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
-        <SearchBar
-          className="w-full lg:max-w-[44%]"
-          placeholder={t("admin-management-search-placeholder")}
-          value={filterValue}
-          onClear={() => onClear()}
-          onValueChange={onSearchChange}
-        />
-        <div className="flex gap-2 items-center w-full lg:w-fit">
-          <Dropdown>
-            <DropdownTrigger className="flex w-full lg:w-fit">
-              <Button
-                className="text-default-700"
-                endContent={
-                  <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
-                }
-                variant="flat"
-              >
-                {t(
-                  `admin-management-table-status-${selectedStatusFilterValue}`,
-                )}
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectedKeys={selectedStatusFilterKeys}
-              selectionMode="single"
-              onSelectionChange={(keys) => {
-                setSelectedStatusFilterKeys(keys as Set<string>);
-              }}
-            >
-              {statusOptions.map((status) => (
-                <DropdownItem key={status.uid} className="capitalize">
-                  {t(status.translationKey)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          <Button
-            color="warning"
-            className="text-white w-full lg:w-fit"
-            startContent={<UserPlusIcon className="size-5" />}
-            onPress={() => console.log("Add admin")}
-          >
-            {t("admin-management-invite-button-text")}
-          </Button>
-          <Button
-            color="success"
-            isLoading={isSaveLoading}
-            isDisabled={updatedAdmins.length === 0}
-            className="text-white w-full lg:w-fit"
-            startContent={
-              !isSaveLoading && <FloppyIcon color="white" size={21} />
-            }
-            onPress={handleSave}
-          >
-            {t("admin-management-save-button-text")}
-          </Button>
-        </div>
-      </div>
+      <TopContent
+        searchValue={filterValue}
+        onSearchChange={onSearchChange}
+        onSearchClear={onClear}
+        selectedStatusFilterValue={selectedStatusFilterValue}
+        selectedStatusFilterKeys={selectedStatusFilterKeys}
+        onStatusFilterChange={(keys) => {
+          setSelectedStatusFilterKeys(keys as Set<string>);
+        }}
+        isSaveButtonLoading={isSaveLoading}
+        isSaveButtonDisabled={updatedAdmins.length === 0}
+        onInviteUser={onInviteUser}
+        onSave={onSave}
+      />
     );
   }, [
     filterValue,
@@ -307,7 +185,14 @@ export default function AdminManagementPage() {
             <div className="flex flex-col items-center">
               <Switch
                 isDisabled={selfId === user?.user_id || !user.is_verified}
-                onChange={() => handleToggle(user)}
+                onChange={() =>
+                  handleToggle({
+                    user,
+                    setAdmins,
+                    setUpdatedAdmins,
+                    originalAdmins,
+                  })
+                }
                 isSelected={user.is_super_admin}
                 size="sm"
               />
@@ -322,30 +207,17 @@ export default function AdminManagementPage() {
               variant="dot"
             >
               {user.is_verified
-                ? t("admin-management-table-status-verified")
-                : t("admin-management-table-status-pending")}
+                ? t("admin-management-status-verified")
+                : t("admin-management-status-pending")}
             </Chip>
           );
         case "actions":
           return (
-            <div className="relative flex w-full justify-center items-center gap-2">
-              <Tooltip
-                isDisabled={selfId === user?.user_id}
-                color="danger"
-                content={t("admin-management-table-delete-tooltip-text")}
-              >
-                <Button
-                  isDisabled={selfId === user?.user_id}
-                  isIconOnly
-                  size="sm"
-                  radius="full"
-                  variant="light"
-                  onPress={() => console.log("Delete user")}
-                >
-                  <TrashIcon className="size-5 text-danger" />
-                </Button>
-              </Tooltip>
-            </div>
+            <DeleteButton
+              isDisabled={selfId === user?.user_id}
+              onPress={() => console.log("Delete user")}
+              tooltipContent={t("admin-management-delete-tooltip-text")}
+            />
           );
         default:
           return cellValue;
@@ -359,12 +231,13 @@ export default function AdminManagementPage() {
       <h1 className="text-2xl font-bold text-center md:text-left">
         {t("admin-management-title")}
       </h1>
-      <div className="flex flex-col-reverse md:flex-col gap-4 py-4 md:pt-9">
-        <Table
+      <div className="flex py-4 md:pt-9">
+        <AdminTable
+          columns={columns}
+          items={items}
+          isLoading={isDataLoading}
+          renderCell={renderCell}
           topContent={topContent}
-          layout="fixed"
-          bottomContentPlacement="outside"
-          topContentPlacement="outside"
           bottomContent={
             pages > 0 ? (
               <div className="flex w-full justify-center">
@@ -379,41 +252,8 @@ export default function AdminManagementPage() {
               </div>
             ) : null
           }
-          aria-label="Tabel admin"
-        >
-          <TableHeader columns={columns}>
-            {(column) => (
-              <TableColumn
-                key={column.uid}
-                aria-label={column.name}
-                width={column.width}
-                align={column.uid === "display_name" ? "start" : "center"}
-              >
-                {t(
-                  `admin-management-table-${column.uid.replaceAll("_", "-")}-column-label`,
-                )}
-              </TableColumn>
-            )}
-          </TableHeader>
-          <TableBody
-            items={items}
-            isLoading={isDataLoading}
-            emptyContent={
-              <div className="text-center">
-                {t("admin-management-table-empty-content")}
-              </div>
-            }
-            loadingContent={<Spinner />}
-          >
-            {(item) => (
-              <TableRow key={item.id}>
-                {(columnKey) => (
-                  <TableCell>{renderCell(item, columnKey as string)}</TableCell>
-                )}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+          translationKey={translationKey}
+        />
       </div>
     </Layout>
   );

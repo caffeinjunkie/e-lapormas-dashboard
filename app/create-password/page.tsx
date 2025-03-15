@@ -25,7 +25,7 @@ import {
 } from "@/app/create-password/utils";
 import { logout } from "@/api/auth";
 import { siteConfig } from "@/config/site";
-import { useModal } from "@/hooks/use-modal";
+import { useModal } from "@/components/modal/use-modal";
 
 export default function CreatePasswordPage() {
   const [inputErrors, setInputErrors] = useState<

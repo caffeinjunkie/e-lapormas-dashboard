@@ -46,16 +46,17 @@
     "admin-management-title": "Manajemen Admin",
     "admin-management-invite-button-text": "Undang",
     "admin-management-save-button-text": "Simpan",
-    "admin-management-table-display-name-column-label": "Anggota",
-    "admin-management-table-is-super-admin-column-label": "Super Admin",
-    "admin-management-table-is-verified-column-label": "Status",
-    "admin-management-table-actions-column-label": "Aksi",
-    "admin-management-table-status-verified": "Aktif",
-    "admin-management-table-status-pending": "Belum Aktif",
-    "admin-management-table-status-all": "Semua",
-    "admin-management-table-delete-tooltip-text": "Hapus anggota",
+    "admin-management-status-verified": "Aktif",
+    "admin-management-status-pending": "Belum Aktif",
+    "admin-management-status-all": "Semua",
+    "admin-management-status-filter-label": "Status",
+    "admin-management-delete-tooltip-text": "Hapus anggota",
     "admin-management-search-placeholder": "Cari anggota...",
-    "admin-management-table-empty-content": "Hasil pencarian tidak ditemukan"
+    "table-empty-content": "Hasil pencarian tidak ditemukan",
+    "table-display-name-column-label": "Anggota",
+    "table-is-super-admin-column-label": "Super Admin",
+    "table-is-verified-column-label": "Status",
+    "table-actions-column-label": "Aksi"
   },
   "Modal": {
     "default-button-text": "Tutup"

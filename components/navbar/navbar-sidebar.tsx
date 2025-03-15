@@ -1,7 +1,6 @@
 import { PropsWithChildren } from "react";
 import NextLink from "next/link";
 import { redirect } from "next/navigation";
-import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
