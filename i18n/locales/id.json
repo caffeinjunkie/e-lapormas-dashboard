@@ -45,7 +45,14 @@
   "AdminManagementPage": {
     "admin-management-title": "Manajemen Admin",
     "admin-management-invite-button-text": "Undang",
-    "admin-management-save-button-text": "Simpan"
+    "admin-management-save-button-text": "Simpan",
+    "admin-management-table-display-name-column-label": "Anggota",
+    "admin-management-table-is-super-admin-column-label": "Super Admin",
+    "admin-management-table-is-verified-column-label": "Status",
+    "admin-management-table-actions-column-label": "Aksi",
+    "admin-management-table-status-verified": "Aktif",
+    "admin-management-table-status-pending": "Belum Aktif",
+    "admin-management-table-delete-tooltip-text": "Hapus anggota"
   },
   "Modal": {
     "default-button-text": "Tutup"
