@@ -118,7 +118,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     size="sm"
                     radius="full"
                     isIconOnly
-                    aria-label="Setting"
+                    aria-label="Other"
                   >
                     <EllipsisHorizontalIcon className="size-5" color="white" />
                   </Button>

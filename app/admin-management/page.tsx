@@ -77,9 +77,13 @@ export default function AdminManagementPage() {
     let filteredUsers = [...admins];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.display_name.toLowerCase().includes(filterValue.toLowerCase()),
-      );
+      filteredUsers = filteredUsers.filter((user) => {
+        const userName = user.email.split("@")[0];
+        return (
+          user.display_name.toLowerCase().includes(filterValue.toLowerCase()) ||
+          userName.toLowerCase().includes(filterValue.toLowerCase())
+        );
+      });
     }
     if (
       selectedStatusFilterValue !== "all" &&

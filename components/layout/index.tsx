@@ -14,7 +14,7 @@ export const Layout = ({ children, className }: LayoutProps) => {
         className,
       )}
     >
-    <ToastProvider />
+      <ToastProvider />
       <div className="inline-block">{children}</div>
     </section>
   );

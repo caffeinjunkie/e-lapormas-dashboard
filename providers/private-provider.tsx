@@ -28,8 +28,6 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  console.log(supabase, 'tes')
-
   const isRegularPublicPath = publicPaths.includes(pathname);
   const isCreatePasswordPath = pathname.includes("/create-password");
   const isPublicPath = isRegularPublicPath || isCreatePasswordPath;
