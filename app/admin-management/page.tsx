@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Chip } from "@heroui/chip";
 import { Pagination } from "@heroui/pagination";
 import { Switch } from "@heroui/switch";
+import { addToast } from "@heroui/toast";
 import { useTranslations } from "next-intl";
 
 import { Layout } from "@/components/layout";
@@ -17,7 +18,7 @@ import {
 import { AdminData } from "@/types/user.types";
 import { upsertAdmins } from "@/api/admin";
 import { UserAva } from "@/components/user-ava";
-import { columns, statusOptions } from "@/app/admin-management/config";
+import { columns } from "@/app/admin-management/config";
 import { TopContent } from "./components/top-content";
 import { DeleteButton } from "./components/delete-button";
 import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
@@ -52,7 +53,6 @@ export default function AdminManagementPage() {
       setSelfId(userId);
       setAdmins(admins as AdminData[]);
       setOriginalAdmins(admins as AdminData[]);
-      setUpdatedAdmins([]);
     } catch (error) {
       console.error(error);
     } finally {
@@ -116,9 +116,30 @@ export default function AdminManagementPage() {
       if (result) {
         await fetchAdmins();
       }
-      // toast success
+
+      addToast({
+        title: t("admin-management-save-success-toast-title"),
+        description: t("admin-management-save-success-toast-description", {
+          label:
+            updatedAdmins.length > 1
+              ? t("admin-management-users-count-text", {
+                  count: updatedAdmins.length,
+                })
+              : updatedAdmins[0].email,
+        }),
+        timeout: 3000,
+        color: "success",
+      });
+
+      setUpdatedAdmins([]);
     } catch (error) {
-      console.error(error); // TODO: toast error
+      addToast({
+        title: t("admin-management-error-toast-title"),
+        description: t("admin-management-error-toast-description"),
+        timeout: 3000,
+        color: "danger",
+      });
+      console.error(error);
     } finally {
       setIsSaveLoading(false);
     }
