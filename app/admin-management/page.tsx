@@ -178,6 +178,20 @@ export default function AdminManagementPage() {
 
     //TODO: to be implemented in next card
     console.log("Send invite", formData);
+    addToast({
+      title: t("admin-management-invite-user-success-toast-title"),
+      description: t.rich(
+        "admin-management-invite-user-success-toast-description",
+        {
+          email: formData.get("email") as string,
+          bold: (chunks) => <strong>{chunks}</strong>,
+        },
+      ) as string,
+      timeout: 6000,
+      color: "success",
+    });
+
+    onCloseModal();
   };
 
   const onInviteUser = () => {
@@ -314,7 +328,12 @@ export default function AdminManagementPage() {
           translationKey="AdminManagementPage"
         />
       </div>
-      <Modal onClose={onCloseModal} isOpen={isOpen} buttons={modalButtons}>
+      <Modal
+        className="focus:outline-none"
+        onClose={onCloseModal}
+        isOpen={isOpen}
+        buttons={modalButtons}
+      >
         <ModalHeader>{modalTitle}</ModalHeader>
         <ModalBody>
           {modalType === "invite" && (

@@ -72,7 +72,9 @@
     "admin-management-invite-user-modal-confirmation-button-text": "Kirim",
     "admin-management-invite-user-modal-cancellation-button-text": "Tutup",
     "required-email-error-message": "Harap masukkan email pengguna baru",
-    "invalid-email-format-error-message": "Format email tidak sesuai"
+    "invalid-email-format-error-message": "Format email tidak sesuai",
+    "admin-management-invite-user-success-toast-title": "Undangan Terkirim",
+    "admin-management-invite-user-success-toast-description": "Undangan pengguna baru untuk <bold>{email}</bold> terkirim. Verifikasi email pengguna baru untuk mengaktifkan akun."
   },
   "Modal": {
     "default-button-text": "Tutup"
