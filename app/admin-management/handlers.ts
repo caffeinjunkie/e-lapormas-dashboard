@@ -74,3 +74,32 @@ export const handleToggle = ({
     return updatedAdminsList;
   });
 };
+
+export const filterUsers = (
+  admins: AdminData[],
+  hasSearchFilter: boolean,
+  filterValue: string,
+  selectedStatusFilterValue: string,
+  selectedStatusFilterKeys: Set<string>,
+) => {
+  let filteredUsers = [...admins];
+
+  if (hasSearchFilter) {
+    filteredUsers = filteredUsers.filter((user) => {
+      const userName = user.email.split("@")[0];
+      return (
+        user.display_name.toLowerCase().includes(filterValue.toLowerCase()) ||
+        userName.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    });
+  }
+  if (selectedStatusFilterValue !== "all") {
+    filteredUsers = filteredUsers.filter((user) =>
+      Array.from(selectedStatusFilterKeys).includes(
+        user.is_verified ? "verified" : "pending",
+      ),
+    );
+  }
+
+  return filteredUsers;
+};

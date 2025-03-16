@@ -12,6 +12,7 @@ import {
   fetchAdminsHandler,
   calculateRowNumber,
   handleToggle,
+  filterUsers,
 } from "@/app/admin-management/handlers";
 import { AdminData } from "@/types/user.types";
 import { upsertAdmins } from "@/api/admin";
@@ -73,31 +74,17 @@ export default function AdminManagementPage() {
     };
   }, []);
 
-  const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...admins];
-
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) => {
-        const userName = user.email.split("@")[0];
-        return (
-          user.display_name.toLowerCase().includes(filterValue.toLowerCase()) ||
-          userName.toLowerCase().includes(filterValue.toLowerCase())
-        );
-      });
-    }
-    if (
-      selectedStatusFilterValue !== "all" &&
-      Array.from(selectedStatusFilterKeys).length !== statusOptions.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(selectedStatusFilterKeys).includes(
-          user.is_verified ? "verified" : "pending",
-        ),
-      );
-    }
-
-    return filteredUsers;
-  }, [admins, filterValue, selectedStatusFilterKeys]);
+  const filteredItems = React.useMemo(
+    () =>
+      filterUsers(
+        admins,
+        hasSearchFilter,
+        filterValue,
+        selectedStatusFilterValue,
+        selectedStatusFilterKeys,
+      ),
+    [admins, filterValue, selectedStatusFilterKeys],
+  );
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -129,6 +116,7 @@ export default function AdminManagementPage() {
       if (result) {
         await fetchAdmins();
       }
+      // toast success
     } catch (error) {
       console.error(error); // TODO: toast error
     } finally {
@@ -138,6 +126,14 @@ export default function AdminManagementPage() {
 
   const onInviteUser = () => {
     console.log("Invite user");
+    // TODO: open invite modal
+    // then create sendInvite function
+  };
+
+  const onDeleteUser = () => {
+    console.log("Delete user");
+    // TODO: open confirm delete modal
+    // then create onConfirmDelete function
   };
 
   const topContent = React.useMemo(() => {
@@ -219,7 +215,7 @@ export default function AdminManagementPage() {
           return (
             <DeleteButton
               isDisabled={selfId === user?.user_id}
-              onPress={() => console.log("Delete user")}
+              onPress={onDeleteUser}
               tooltipContent={t("admin-management-delete-tooltip-text")}
             />
           );
