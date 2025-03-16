@@ -1,6 +1,5 @@
 import { PropsWithChildren } from "react";
 import clsx from "clsx";
-import { ToastProvider } from "@heroui/toast";
 
 interface LayoutProps extends PropsWithChildren {
   className?: string;
@@ -14,7 +13,6 @@ export const Layout = ({ children, className }: LayoutProps) => {
         className,
       )}
     >
-      <ToastProvider />
       <div className="inline-block">{children}</div>
     </section>
   );

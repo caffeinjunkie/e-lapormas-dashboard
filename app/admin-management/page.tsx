@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Chip } from "@heroui/chip";
 import { Pagination } from "@heroui/pagination";
-import { Switch } from "@heroui/switch";
 import { addToast } from "@heroui/toast";
 import { useTranslations } from "next-intl";
+import { ModalHeader, ModalBody } from "@heroui/modal";
 
 import { Layout } from "@/components/layout";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
@@ -17,14 +16,14 @@ import {
 } from "@/app/admin-management/handlers";
 import { AdminData } from "@/types/user.types";
 import { upsertAdmins } from "@/api/admin";
-import { UserAva } from "@/components/user-ava";
 import { columns } from "@/app/admin-management/config";
 import { TopContent } from "./components/top-content";
-import { DeleteButton } from "./components/delete-button";
+import { AdminCell } from "./components/admin-cell";
 import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
+import { Modal } from "@/components/modal";
 
 export default function AdminManagementPage() {
-  const t = useTranslations(AdminManagementPage.displayName);
+  const t = useTranslations("AdminManagementPage");
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
@@ -126,7 +125,6 @@ export default function AdminManagementPage() {
                 })
               : updatedAdmins[0].email,
         }),
-        timeout: 3000,
         color: "success",
       });
 
@@ -135,7 +133,6 @@ export default function AdminManagementPage() {
       addToast({
         title: t("admin-management-error-toast-title"),
         description: t("admin-management-error-toast-description"),
-        timeout: 3000,
         color: "danger",
       });
       console.error(error);
@@ -183,67 +180,23 @@ export default function AdminManagementPage() {
   ]);
 
   const renderCell = useCallback(
-    (user: AdminData, columnKey: string) => {
-      const cellValue = user[columnKey as keyof AdminData];
-
-      switch (columnKey) {
-        case "display_name":
-          return (
-            <UserAva
-              imageSrc={user?.profile_img}
-              displayName={user?.display_name}
-              description={user?.email}
-              classNames={{
-                container: "gap-4",
-                avatar: "hidden sm:block",
-                description: "hidden sm:block",
-              }}
-            />
-          );
-        case "is_super_admin":
-          return (
-            <div className="flex flex-col items-center">
-              <Switch
-                isDisabled={selfId === user?.user_id || !user.is_verified}
-                onChange={() =>
-                  handleToggle({
-                    user,
-                    setAdmins,
-                    setUpdatedAdmins,
-                    originalAdmins,
-                  })
-                }
-                isSelected={user.is_super_admin}
-                size="sm"
-              />
-            </div>
-          );
-        case "is_verified":
-          return (
-            <Chip
-              className="capitalize border-none"
-              color={user.is_verified ? "success" : "warning"}
-              size="sm"
-              variant="dot"
-            >
-              {user.is_verified
-                ? t("admin-management-status-verified")
-                : t("admin-management-status-pending")}
-            </Chip>
-          );
-        case "actions":
-          return (
-            <DeleteButton
-              isDisabled={selfId === user?.user_id}
-              onPress={onDeleteUser}
-              tooltipContent={t("admin-management-delete-tooltip-text")}
-            />
-          );
-        default:
-          return cellValue;
-      }
-    },
-    [admins, selfId],
+    (user: AdminData, columnKey: string) => (
+      <AdminCell
+        columnKey={columnKey}
+        user={user}
+        selfId={selfId}
+        onSuperAdminToggle={() =>
+          handleToggle({
+            user,
+            setAdmins,
+            setUpdatedAdmins,
+            originalAdmins,
+          })
+        }
+        onDeleteUser={onDeleteUser}
+      />
+    ),
+    [selfId, handleToggle, onDeleteUser],
   );
 
   return (
@@ -251,7 +204,7 @@ export default function AdminManagementPage() {
       <h1 className="text-2xl font-bold text-center md:text-left">
         {t("admin-management-title")}
       </h1>
-      <div className="flex py-4 md:pt-9">
+      <div className="flex py-4 md:pt-8">
         <AdminTable
           columns={columns}
           items={items}
@@ -272,9 +225,13 @@ export default function AdminManagementPage() {
               </div>
             ) : null
           }
-          translationKey={AdminManagementPage.displayName}
+          translationKey="AdminManagementPage"
         />
       </div>
+      <Modal onClose={() => {}} isOpen={false} buttons={[]}>
+        <ModalHeader></ModalHeader>
+        <ModalBody></ModalBody>
+      </Modal>
     </Layout>
   );
 }
