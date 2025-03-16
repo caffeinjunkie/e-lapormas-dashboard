@@ -1,10 +1,19 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  FormEvent,
+} from "react";
 import { Pagination } from "@heroui/pagination";
 import { addToast } from "@heroui/toast";
+import { PressEvent } from "@heroui/button";
+import { Form } from "@heroui/form";
 import { useTranslations } from "next-intl";
 import { ModalHeader, ModalBody } from "@heroui/modal";
+import { Input } from "@heroui/input";
 
 import { Layout } from "@/components/layout";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
@@ -20,7 +29,10 @@ import { columns } from "@/app/admin-management/config";
 import { TopContent } from "./components/top-content";
 import { AdminCell } from "./components/admin-cell";
 import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
-import { Modal } from "@/components/modal";
+import { Modal, ModalButtonProps } from "@/components/modal";
+import { useModal } from "@/components/modal/use-modal";
+import { validateEmail, validateIsRequired } from "@/utils/string";
+import { buildFormData } from "@/utils/form";
 
 export default function AdminManagementPage() {
   const t = useTranslations("AdminManagementPage");
@@ -33,6 +45,12 @@ export default function AdminManagementPage() {
   const [selfId, setSelfId] = useState<string | null>(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
   const [filterValue, setFilterValue] = React.useState("");
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalType, setModalType] = useState<"invite" | "delete" | "">("");
+  const [emailValid, setEmailValid] = useState(false);
+  const [deletedAdminId, setDeletedAdminId] = useState<string | null>(null);
+  const { isOpen, closeModal, openModal } = useModal();
+
   const {
     selected: selectedStatusFilterKeys,
     setSelected: setSelectedStatusFilterKeys,
@@ -141,17 +159,85 @@ export default function AdminManagementPage() {
     }
   };
 
-  const onInviteUser = () => {
-    console.log("Invite user");
-    // TODO: open invite modal
-    // then create sendInvite function
+  const onCloseModal = () => {
+    closeModal();
+    setModalTitle("");
+    setModalType("");
+    setDeletedAdminId(null);
   };
 
-  const onDeleteUser = () => {
-    console.log("Delete user");
+  const onConfirmDelete = (e: PressEvent) => {
+    console.log("Confirm delete");
     // TODO: open confirm delete modal
     // then create onConfirmDelete function
   };
+
+  const onSendInvite = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = buildFormData(e);
+
+    //TODO: to be implemented in next card
+    console.log("Send invite", formData);
+  };
+
+  const onInviteUser = () => {
+    openModal();
+    setModalTitle(t("admin-management-invite-user-modal-title"));
+    setModalType("invite");
+  };
+
+  const handleDelete = (user: AdminData) => {
+    openModal();
+    setModalTitle(
+      t("admin-management-delete-user-modal-title", { email: user.email }),
+    );
+    setModalType("delete");
+  };
+
+  const modalButtons = useMemo(() => {
+    if (modalType === "invite") {
+      return [
+        {
+          title: t(
+            "admin-management-invite-user-modal-cancellation-button-text",
+          ),
+          onPress: onCloseModal,
+        },
+        {
+          title: t(
+            "admin-management-invite-user-modal-confirmation-button-text",
+          ),
+          color: "warning",
+          type: "submit",
+          formId: "invite-form",
+          variant: "solid",
+          className: "text-white",
+        },
+      ] as ModalButtonProps[];
+    }
+
+    if (modalType === "delete") {
+      return [
+        {
+          title: t(
+            "admin-management-delete-user-modal-confirmation-button-text",
+          ),
+          color: "danger",
+          onPress: onConfirmDelete,
+        },
+        {
+          title: t(
+            "admin-management-delete-user-modal-cancellation-button-text",
+          ),
+          color: "primary",
+          variant: "solid",
+          onPress: onCloseModal,
+        },
+      ] as ModalButtonProps[];
+    }
+
+    return [];
+  }, [modalType]);
 
   const topContent = React.useMemo(() => {
     return (
@@ -193,10 +279,10 @@ export default function AdminManagementPage() {
             originalAdmins,
           })
         }
-        onDeleteUser={onDeleteUser}
+        onDeleteUser={() => handleDelete(user)}
       />
     ),
-    [selfId, handleToggle, onDeleteUser],
+    [selfId, handleToggle, handleDelete],
   );
 
   return (
@@ -228,9 +314,32 @@ export default function AdminManagementPage() {
           translationKey="AdminManagementPage"
         />
       </div>
-      <Modal onClose={() => {}} isOpen={false} buttons={[]}>
-        <ModalHeader></ModalHeader>
-        <ModalBody></ModalBody>
+      <Modal onClose={onCloseModal} isOpen={isOpen} buttons={modalButtons}>
+        <ModalHeader>{modalTitle}</ModalHeader>
+        <ModalBody>
+          {modalType === "invite" && (
+            <div>
+              <Form method="post" id="invite-form" onSubmit={onSendInvite}>
+                <Input
+                  label={t("admin-management-invite-user-modal-input-label")}
+                  name="email"
+                  type="email"
+                  aria-label="email"
+                  isRequired
+                  validate={(value) =>
+                    validateIsRequired(t, value, "email") ||
+                    validateEmail(t, value)
+                  }
+                />
+              </Form>
+            </div>
+          )}
+          {modalType === "delete" && (
+            <div>
+              <p>{t("admin-management-delete-user-modal-description")}</p>
+            </div>
+          )}
+        </ModalBody>
       </Modal>
     </Layout>
   );

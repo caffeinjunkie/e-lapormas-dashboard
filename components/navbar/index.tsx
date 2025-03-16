@@ -109,7 +109,6 @@ export const Navbar = () => {
             title: t("logout-confirmation-button-text"),
             onPress: handleLogout,
             color: "danger",
-            variant: "light",
             isLoading: isButtonLoading,
           },
           {

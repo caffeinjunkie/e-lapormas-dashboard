@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { Button, ButtonProps } from "@heroui/button";
+import { Button, ButtonProps, PressEvent } from "@heroui/button";
 import {
   Modal as HeroUIModal,
   ModalContent,
@@ -8,8 +8,9 @@ import {
 } from "@heroui/modal";
 import { useTranslations } from "next-intl";
 
-interface ModalButtonProps extends ButtonProps {
+export interface ModalButtonProps extends ButtonProps {
   title: string;
+  formId?: string;
 }
 
 interface ModalProps extends HeroUIModalProps {
@@ -31,7 +32,7 @@ export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({
     <HeroUIModal
       isOpen={isOpen}
       onClose={onClose}
-      className="bg-white"
+      className="bg-white focus: outline-none"
       {...props}
     >
       <ModalContent>
@@ -40,11 +41,19 @@ export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({
             {children}
             <ModalFooter className="p-4">
               {buttons?.length > 0 &&
-                buttons?.map(({ title, ...props }, index) => (
-                  <Button key={index} radius="sm" {...props}>
-                    {title}
-                  </Button>
-                ))}
+                buttons?.map(
+                  ({ title, variant = "light", formId, ...props }, index) => (
+                    <Button
+                      key={index}
+                      radius="sm"
+                      form={formId}
+                      variant={variant}
+                      {...props}
+                    >
+                      {title}
+                    </Button>
+                  ),
+                )}
               {buttons?.length === 0 && (
                 <Button
                   className="w-full"
