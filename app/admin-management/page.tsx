@@ -135,14 +135,16 @@ export default function AdminManagementPage() {
 
       addToast({
         title: t("admin-management-save-success-toast-title"),
-        description: t("admin-management-save-success-toast-description", {
+        description: t.rich("admin-management-save-success-toast-description", {
           label:
             updatedAdmins.length > 1
               ? t("admin-management-users-count-text", {
                   count: updatedAdmins.length,
                 })
               : updatedAdmins[0].email,
-        }),
+          bold: (chunks) =>
+            updatedAdmins.length > 1 ? chunks : <strong>{chunks}</strong>,
+        }) as string,
         color: "success",
       });
 

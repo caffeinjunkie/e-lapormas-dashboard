@@ -52,7 +52,7 @@
     "admin-management-status-all": "Semua",
     "admin-management-status-filter-label": "Status",
     "admin-management-save-success-toast-title": "Berhasil",
-    "admin-management-save-success-toast-description": "Berhasil mengganti data dari {label}",
+    "admin-management-save-success-toast-description": "Berhasil mengganti data dari <bold>{label}</bold>",
     "admin-management-users-count-text": "{count} pengguna",
     "admin-management-error-toast-title": "Terjadi Kesalahan",
     "admin-management-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi",
