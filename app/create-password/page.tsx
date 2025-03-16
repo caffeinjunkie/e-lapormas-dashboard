@@ -231,3 +231,5 @@ export default function CreatePasswordPage() {
     </div>
   );
 }
+
+CreatePasswordPage.displayName = "CreatePasswordPage";

@@ -24,8 +24,7 @@ import { DeleteButton } from "./components/delete-button";
 import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
 
 export default function AdminManagementPage() {
-  const translationKey = "AdminManagementPage";
-  const t = useTranslations(translationKey);
+  const t = useTranslations(AdminManagementPage.displayName);
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
@@ -273,9 +272,11 @@ export default function AdminManagementPage() {
               </div>
             ) : null
           }
-          translationKey={translationKey}
+          translationKey={AdminManagementPage.displayName}
         />
       </div>
     </Layout>
   );
 }
+
+AdminManagementPage.displayName = "AdminManagementPage";

@@ -9,3 +9,5 @@ export default function StatisticsPage() {
     </Layout>
   );
 }
+
+StatisticsPage.displayName = "StatisticsPage";

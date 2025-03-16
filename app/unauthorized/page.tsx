@@ -17,3 +17,5 @@ export default function UnauthorizedPage() {
     </Layout>
   );
 }
+
+UnauthorizedPage.displayName = "UnauthorizedPage";

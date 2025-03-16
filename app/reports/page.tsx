@@ -9,3 +9,5 @@ export default function ReportsPage() {
     </Layout>
   );
 }
+
+ReportsPage.displayName = "ReportsPage";

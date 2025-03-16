@@ -60,3 +60,5 @@ export default function AnnouncementsPage() {
     </Layout>
   );
 }
+
+AnnouncementsPage.displayName = "AnnouncementsPage";
