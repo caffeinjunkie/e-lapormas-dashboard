@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+import { Spinner } from "@heroui/spinner";
+
 export default function CreatePasswordLayout({
   children,
 }: {
@@ -5,7 +8,7 @@ export default function CreatePasswordLayout({
 }) {
   return (
     <section className="flex min-h-screen w-full flex-col items-center justify-center">
-      {children}
+      <Suspense fallback={<Spinner />}>{children}</Suspense>
     </section>
   );
 }

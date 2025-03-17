@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+import { Spinner } from "@heroui/spinner";
+
 export default function ErrorLayout({
   children,
 }: {
@@ -6,7 +9,7 @@ export default function ErrorLayout({
   return (
     <section className="flex flex-col w-full items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-lg text-center justify-center">
-        {children}
+        <Suspense fallback={<Spinner />}>{children}</Suspense>
       </div>
     </section>
   );
