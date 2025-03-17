@@ -63,6 +63,18 @@ export const validateToken = async (type: EmailOtpType, token_hash: string) => {
   return { data };
 };
 
+export const deleteAuthUser = async (id: string) => {
+  const client = createClient();
+
+  const { error } = await client.auth.admin.deleteUser(id);
+
+  if (error) {
+    throw error;
+  }
+
+  return { success: true };
+};
+
 export const generateFakeName = async () => {
   const data = await fetch("https://randomuser.me/api/?inc=name&nat=US");
   const { results } = await data.json();

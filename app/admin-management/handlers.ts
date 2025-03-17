@@ -14,7 +14,7 @@ interface HandleToggleProps {
 export const fetchAdminsHandler = async () => {
   const { data: admins } = await fetchAllAdmins();
   const { data: userData } = await fetchUserData();
-  return { admins, userId: userData.user.id };
+  return { admins, currentUserId: userData.user.id };
 };
 
 export const calculateRowNumber = (setRowsPerPage: (rows: number) => void) => {

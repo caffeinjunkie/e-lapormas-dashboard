@@ -25,6 +25,7 @@ import {
 } from "@/app/admin-management/handlers";
 import { AdminData } from "@/types/user.types";
 import { upsertAdmins } from "@/api/admin";
+import { deleteAuthUser } from "@/api/users";
 import { columns } from "@/app/admin-management/config";
 import { TopContent } from "./components/top-content";
 import { AdminCell } from "./components/admin-cell";
@@ -47,8 +48,7 @@ export default function AdminManagementPage() {
   const [filterValue, setFilterValue] = React.useState("");
   const [modalTitle, setModalTitle] = useState("");
   const [modalType, setModalType] = useState<"invite" | "delete" | "">("");
-  const [emailValid, setEmailValid] = useState(false);
-  const [deletedAdminId, setDeletedAdminId] = useState<string | null>(null);
+  const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
   const { isOpen, closeModal, openModal } = useModal();
 
   const {
@@ -64,11 +64,11 @@ export default function AdminManagementPage() {
 
   const fetchAdmins = async () => {
     try {
-      const { admins, userId } = await fetchAdminsHandler();
+      const { admins, currentUserId } = await fetchAdminsHandler();
 
-      setSelfId(userId);
       setAdmins(admins as AdminData[]);
       setOriginalAdmins(admins as AdminData[]);
+      setSelfId(currentUserId);
     } catch (error) {
       console.error(error);
     } finally {
@@ -165,13 +165,42 @@ export default function AdminManagementPage() {
     closeModal();
     setModalTitle("");
     setModalType("");
-    setDeletedAdminId(null);
+    setDeletedAdmin(null);
   };
 
-  const onConfirmDelete = (e: PressEvent) => {
-    console.log("Confirm delete");
-    // TODO: open confirm delete modal
-    // then create onConfirmDelete function
+  const onConfirmDelete = async () => {
+    if (!deletedAdmin) {
+      return;
+    }
+
+    try {
+      const { success } = await deleteAuthUser(deletedAdmin?.user_id || "");
+
+      if (success) {
+        await fetchAdmins();
+        addToast({
+          title: t("admin-management-delete-success-toast-title"),
+          description: t.rich(
+            "admin-management-delete-success-toast-description",
+            {
+              email: deletedAdmin.email as string,
+              bold: (chunks) => <strong>{chunks}</strong>,
+            },
+          ) as string,
+          color: "success",
+        });
+      }
+    } catch (error) {
+      addToast({
+        title: t("admin-management-error-toast-title"),
+        description: t("admin-management-error-toast-description"),
+        color: "danger",
+      });
+      console.error(error);
+    } finally {
+      setIsDataLoading(false);
+      onCloseModal();
+    }
   };
 
   const onSendInvite = (e: FormEvent<HTMLFormElement>) => {
@@ -205,9 +234,13 @@ export default function AdminManagementPage() {
   const handleDelete = (user: AdminData) => {
     openModal();
     setModalTitle(
-      t("admin-management-delete-user-modal-title", { email: user.email }),
+      t.rich("admin-management-delete-user-modal-title", {
+        email: user.email,
+        bold: (chunks) => <strong>{chunks}</strong>,
+      }) as string,
     );
     setModalType("delete");
+    setDeletedAdmin(user);
   };
 
   const modalButtons = useMemo(() => {
@@ -336,29 +369,27 @@ export default function AdminManagementPage() {
         isOpen={isOpen}
         buttons={modalButtons}
       >
-        <ModalHeader>{modalTitle}</ModalHeader>
+        <ModalHeader>
+          <p>{modalTitle}</p>
+        </ModalHeader>
         <ModalBody>
           {modalType === "invite" && (
-            <div>
-              <Form method="post" id="invite-form" onSubmit={onSendInvite}>
-                <Input
-                  label={t("admin-management-invite-user-modal-input-label")}
-                  name="email"
-                  type="email"
-                  aria-label="email"
-                  isRequired
-                  validate={(value) =>
-                    validateIsRequired(t, value, "email") ||
-                    validateEmail(t, value)
-                  }
-                />
-              </Form>
-            </div>
+            <Form method="post" id="invite-form" onSubmit={onSendInvite}>
+              <Input
+                label={t("admin-management-invite-user-modal-input-label")}
+                name="email"
+                type="email"
+                aria-label="email"
+                isRequired
+                validate={(value) =>
+                  validateIsRequired(t, value, "email") ||
+                  validateEmail(t, value)
+                }
+              />
+            </Form>
           )}
           {modalType === "delete" && (
-            <div>
-              <p>{t("admin-management-delete-user-modal-description")}</p>
-            </div>
+            <p>{t("admin-management-delete-user-modal-description")}</p>
           )}
         </ModalBody>
       </Modal>

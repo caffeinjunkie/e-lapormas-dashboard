@@ -64,7 +64,7 @@
     "table-is-verified-column-label": "Status",
     "table-actions-column-label": "Aksi",
     "admin-management-invite-user-modal-title": "Undang Pengguna Baru",
-    "admin-management-delete-user-modal-title": "Hapus {email}",
+    "admin-management-delete-user-modal-title": "Hapus <bold>{email}</bold>",
     "admin-management-invite-user-modal-input-label": "Masukkan email pengguna baru",
     "admin-management-delete-user-modal-description": "Apakah anda yakin ingin menghapus pengguna dari daftar admin?",
     "admin-management-delete-user-modal-confirmation-button-text": "Ya, Hapus",
@@ -74,7 +74,9 @@
     "required-email-error-message": "Harap masukkan email pengguna baru",
     "invalid-email-format-error-message": "Format email tidak sesuai",
     "admin-management-invite-user-success-toast-title": "Undangan Terkirim",
-    "admin-management-invite-user-success-toast-description": "Undangan pengguna baru untuk <bold>{email}</bold> terkirim. Verifikasi email pengguna baru untuk mengaktifkan akun."
+    "admin-management-invite-user-success-toast-description": "Undangan pengguna baru untuk <bold>{email}</bold> terkirim. Verifikasi email pengguna baru untuk mengaktifkan akun.",
+    "admin-management-delete-success-toast-title": "Admin Berhasil Dihapus",
+    "admin-management-delete-success-toast-description": "<bold>{email}</bold> berhasil dihapus dari daftar admin."
   },
   "Modal": {
     "default-button-text": "Tutup"
