@@ -30,7 +30,7 @@ import {
 import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
 import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
-import { useModal } from "@/components/modal/use-modal";
+import { useMultipleModal } from "@/components/modal/use-modal";
 
 import {
   checkIsUserAlreadyInvited,
@@ -57,10 +57,9 @@ export default function AdminManagementPage() {
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
   const [filterValue, setFilterValue] = React.useState("");
   const [modalTitle, setModalTitle] = useState("");
-  const [modalType, setModalType] = useState<"invite" | "delete" | "">("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const { isOpen, closeModal, openModal } = useModal();
+  const { modals, openModal, closeModal } = useMultipleModal();
   const layoutRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -98,6 +97,7 @@ export default function AdminManagementPage() {
 
     const handleResize = () => {
       calculateRowNumber(setRowsPerPage);
+      setPage(1);
 
       if (!layoutRef.current) return;
       setIsMobile(layoutRef.current?.offsetWidth < 520);
@@ -183,10 +183,9 @@ export default function AdminManagementPage() {
     }
   };
 
-  const onCloseModal = () => {
-    closeModal();
+  const onCloseModal = (modalName: string) => {
+    closeModal(modalName);
     setModalTitle("");
-    setModalType("");
     setDeletedAdmin(null);
   };
 
@@ -222,7 +221,7 @@ export default function AdminManagementPage() {
     } finally {
       setIsDataLoading(false);
       addToast(toastProps);
-      onCloseModal();
+      onCloseModal("delete");
     }
   };
 
@@ -278,36 +277,34 @@ export default function AdminManagementPage() {
     } finally {
       setIsInviteLoading(false);
       addToast(toastProps);
-      onCloseModal();
+      onCloseModal("invite");
     }
   };
 
   const onInviteUser = () => {
-    openModal();
+    openModal("invite");
     setModalTitle(t("admin-management-invite-user-modal-title"));
-    setModalType("invite");
   };
 
   const handleDelete = (user: AdminData) => {
-    openModal();
+    openModal("delete");
     setModalTitle(
       t.rich("admin-management-delete-user-modal-title", {
         email: user.email as string,
         bold: (chunks) => <strong>{chunks}</strong>,
       }) as string,
     );
-    setModalType("delete");
     setDeletedAdmin(user);
   };
 
   const modalButtons = useMemo(() => {
-    if (modalType === "invite") {
+    if (modals.invite) {
       return [
         {
           title: t(
             "admin-management-invite-user-modal-cancellation-button-text",
           ),
-          onPress: onCloseModal,
+          onPress: () => onCloseModal("invite"),
         },
         {
           title: t(
@@ -323,7 +320,7 @@ export default function AdminManagementPage() {
       ] as ModalButtonProps[];
     }
 
-    if (modalType === "delete") {
+    if (modals.delete) {
       return [
         {
           title: t(
@@ -338,13 +335,13 @@ export default function AdminManagementPage() {
           ),
           color: "primary",
           variant: "solid",
-          onPress: onCloseModal,
+          onPress: () => onCloseModal("delete"),
         },
       ] as ModalButtonProps[];
     }
 
     return [];
-  }, [modalType, isInviteLoading]);
+  }, [modals, isInviteLoading]);
 
   const topContent = React.useMemo(() => {
     return (
@@ -428,15 +425,15 @@ export default function AdminManagementPage() {
       <Modal
         autoFocus={false}
         className="focus:outline-none"
-        onClose={onCloseModal}
-        isOpen={isOpen}
+        onClose={() => onCloseModal(modals.invite ? "invite" : "delete")}
+        isOpen={modals.invite || modals.delete}
         buttons={modalButtons}
       >
         <ModalHeader>
           <p>{modalTitle}</p>
         </ModalHeader>
         <ModalBody>
-          {modalType === "invite" && (
+          {modals.invite && (
             <Form method="post" id="invite-form" onSubmit={onSendInvite}>
               <Input
                 label={t("admin-management-invite-user-modal-input-label")}
@@ -451,7 +448,7 @@ export default function AdminManagementPage() {
               />
             </Form>
           )}
-          {modalType === "delete" && (
+          {modals.delete && (
             <p>{t("admin-management-delete-user-modal-description")}</p>
           )}
         </ModalBody>

@@ -54,7 +54,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
 
   return (
     <div
-      className="hidden md:flex flex-col fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl shadow-lg"
+      className="hidden md:flex flex-col overflow-y-scroll fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl shadow-lg"
       style={{
         backgroundColor: sidebarTheme.sidebarBackground,
       }}
