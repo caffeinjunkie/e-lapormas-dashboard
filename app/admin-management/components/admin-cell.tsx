@@ -11,6 +11,8 @@ import {
   useState,
 } from "react";
 
+import { TooltipButton } from "./tooltip-button";
+
 import {
   deleteCookie,
   formatTime,
@@ -23,8 +25,6 @@ import { UserAva } from "@/components/user-ava";
 import { inviteByEmail } from "@/api/users";
 
 import { AdminData } from "@/types/user.types";
-
-import { TooltipButton } from "./tooltip-button";
 
 interface AdminCellProps {
   columnKey: string;

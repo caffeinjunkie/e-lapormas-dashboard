@@ -8,11 +8,11 @@ import NextLink from "next/link";
 import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
 
+import { UserAva } from "../user-ava";
+
 import { adminManagementItem, siteConfig } from "@/config/site";
 
 import { ProfileData } from "@/types/user.types";
-
-import { UserAva } from "../user-ava";
 
 interface SidebarProps {
   isSuperAdmin: boolean;

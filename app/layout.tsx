@@ -3,14 +3,14 @@ import { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 
+import { Providers } from "./providers";
+
 import { PrivateProvider, usePrivate } from "@/providers/private-provider";
 
 import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 
 import "@/styles/globals.css";
-
-import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {

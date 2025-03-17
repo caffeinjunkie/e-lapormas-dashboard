@@ -1,4 +1,4 @@
-import { Button, ButtonProps, PressEvent } from "@heroui/button";
+import { Button, ButtonProps } from "@heroui/button";
 import {
   Modal as HeroUIModal,
   ModalProps as HeroUIModalProps,

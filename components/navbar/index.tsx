@@ -7,6 +7,9 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { MobileNavbar } from "./navbar-mobile";
+import { Sidebar } from "./navbar-sidebar";
+
 import { Logo } from "@/components/icons";
 import { Modal } from "@/components/modal";
 import { useModal } from "@/components/modal/use-modal";
@@ -17,9 +20,6 @@ import { logout } from "@/api/auth";
 import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
 
 import { ProfileData } from "@/types/user.types";
-
-import { MobileNavbar } from "./navbar-mobile";
-import { Sidebar } from "./navbar-sidebar";
 
 export const Navbar = () => {
   const router = useRouter();

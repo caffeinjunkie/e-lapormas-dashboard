@@ -15,6 +15,9 @@ import React, {
   useState,
 } from "react";
 
+import { AdminCell } from "./components/admin-cell";
+import { TopContent } from "./components/top-content";
+
 import { AdminTable } from "@/app/admin-management/components/admin-table";
 import { columns } from "@/app/admin-management/config";
 import {
@@ -40,9 +43,6 @@ import { buildFormData } from "@/utils/form";
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 import { AdminData } from "@/types/user.types";
-
-import { AdminCell } from "./components/admin-cell";
-import { TopContent } from "./components/top-content";
 
 export default function AdminManagementPage() {
   const t = useTranslations("AdminManagementPage");
