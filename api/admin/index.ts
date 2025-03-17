@@ -22,6 +22,15 @@ export const fetchAllAdmins = async () => {
   return { data, count };
 };
 
+export const checkIsUserAlreadyInvited = async (email: string) => {
+  const { count } = await supabase
+    .from("admins")
+    .select("*", { count: "exact", head: true })
+    .eq("email", email);
+
+  return !count ? 0 : count > 0;
+};
+
 export const upsertAdmins = async (data: AdminData[]) => {
   const { data: updatedAdmins, error } = await supabase
     .from("admins")
@@ -30,4 +39,30 @@ export const upsertAdmins = async (data: AdminData[]) => {
 
   if (error) throw error;
   return updatedAdmins;
+};
+
+export const createAdmin = async ({
+  email,
+  user_id,
+}: {
+  email: string;
+  user_id: string;
+}) => {
+  const { data: insertedAdmin, error } = await supabase
+    .from("admins")
+    .insert([
+      {
+        email,
+        user_id,
+        is_super_admin: false,
+        is_verified: false,
+        display_name: "",
+        profile_img: "",
+        rating: 0,
+      },
+    ])
+    .select();
+
+  if (error) throw error;
+  return insertedAdmin;
 };

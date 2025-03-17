@@ -76,7 +76,9 @@
     "admin-management-invite-user-success-toast-title": "Undangan Terkirim",
     "admin-management-invite-user-success-toast-description": "Undangan pengguna baru untuk <bold>{email}</bold> terkirim. Verifikasi email pengguna baru untuk mengaktifkan akun.",
     "admin-management-delete-success-toast-title": "Admin Berhasil Dihapus",
-    "admin-management-delete-success-toast-description": "<bold>{email}</bold> berhasil dihapus dari daftar admin."
+    "admin-management-delete-success-toast-description": "<bold>{email}</bold> berhasil dihapus dari daftar admin.",
+    "admin-management-invite-user-error-toast-title": "Email Sudah Terdaftar",
+    "admin-management-invite-user-error-toast-description": "Undangan untuk <bold>{email}</bold> gagal terkirim karena email sudah terdaftar. Mohon coba sesaat lagi."
   },
   "ErrorPage": {
     "error-title": "Terjadi Kesalahan",

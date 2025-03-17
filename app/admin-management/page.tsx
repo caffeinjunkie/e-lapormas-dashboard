@@ -22,11 +22,14 @@ import {
   calculateRowNumber,
   handleToggle,
   filterUsers,
-  sendInvite,
 } from "@/app/admin-management/handlers";
 import { AdminData } from "@/types/user.types";
-import { upsertAdmins } from "@/api/admin";
-import { deleteAuthUser } from "@/api/users";
+import {
+  createAdmin,
+  upsertAdmins,
+  checkIsUserAlreadyInvited,
+} from "@/api/admin";
+import { deleteAuthUser, inviteByEmail } from "@/api/users";
 import { columns } from "@/app/admin-management/config";
 import { TopContent } from "./components/top-content";
 import { AdminCell } from "./components/admin-cell";
@@ -41,6 +44,7 @@ export default function AdminManagementPage() {
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
+  const [isInviteLoading, setIsInviteLoading] = useState(false);
   const [admins, setAdmins] = useState<AdminData[]>([]);
   const [originalAdmins, setOriginalAdmins] = useState<AdminData[]>([]);
   const [updatedAdmins, setUpdatedAdmins] = useState<AdminData[]>([]);
@@ -50,7 +54,6 @@ export default function AdminManagementPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [modalType, setModalType] = useState<"invite" | "delete" | "">("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
-  const [isSendButtonLoading, setIsSendButtonLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { isOpen, closeModal, openModal } = useModal();
   const layoutRef = useRef<HTMLDivElement>(null);
@@ -220,10 +223,33 @@ export default function AdminManagementPage() {
     e.preventDefault();
     const formData = buildFormData(e);
     let toastProps = {};
-    setIsSendButtonLoading(true);
+    setIsInviteLoading(true);
 
     try {
-      await sendInvite(formData.get("email") as string);
+      const isUserAlreadyInvited = await checkIsUserAlreadyInvited(
+        formData.get("email") as string,
+      );
+      if (isUserAlreadyInvited) {
+        toastProps = {
+          title: t("admin-management-invite-user-error-toast-title"),
+          description: t.rich(
+            "admin-management-invite-user-error-toast-description",
+            {
+              email: formData.get("email") as string,
+              bold: (chunks) => <strong>{chunks}</strong>,
+            },
+          ) as string,
+          timeout: 6000,
+          color: "warning",
+        };
+        return;
+      }
+      const { data } = await inviteByEmail(formData.get("email") as string);
+      await createAdmin({
+        email: formData.get("email") as string,
+        user_id: data.user.id,
+      });
+      await fetchAdmins();
       toastProps = {
         title: t("admin-management-invite-user-success-toast-title"),
         description: t.rich(
@@ -244,9 +270,9 @@ export default function AdminManagementPage() {
       };
       console.error(error);
     } finally {
+      setIsInviteLoading(false);
       addToast(toastProps);
       onCloseModal();
-      setIsSendButtonLoading(false);
     }
   };
 
@@ -281,7 +307,7 @@ export default function AdminManagementPage() {
           title: t(
             "admin-management-invite-user-modal-confirmation-button-text",
           ),
-          isLoading: isSendButtonLoading,
+          isLoading: isInviteLoading,
           color: "warning",
           type: "submit",
           formId: "invite-form",
@@ -312,7 +338,7 @@ export default function AdminManagementPage() {
     }
 
     return [];
-  }, [modalType]);
+  }, [modalType, isInviteLoading]);
 
   const topContent = React.useMemo(() => {
     return (

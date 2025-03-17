@@ -77,7 +77,7 @@ export const deleteAuthUser = async (id: string) => {
 
 export const inviteByEmail = async (email: string) => {
   const client = createClient();
-  const { error } = await client.auth.admin.inviteUserByEmail(email, {
+  const { data, error } = await client.auth.admin.inviteUserByEmail(email, {
     data: {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_HOSTNAME}/auth/confirm`,
     },
@@ -87,7 +87,7 @@ export const inviteByEmail = async (email: string) => {
     throw error;
   }
 
-  return { success: true };
+  return { data };
 };
 
 export const generateFakeName = async () => {
