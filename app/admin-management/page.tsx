@@ -91,7 +91,7 @@ export default function AdminManagementPage() {
       calculateRowNumber(setRowsPerPage);
 
       if (!layoutRef.current) return;
-      setIsMobile(layoutRef.current?.offsetWidth < 519);
+      setIsMobile(layoutRef.current?.offsetWidth < 520);
     };
 
     handleResize();
@@ -385,7 +385,7 @@ export default function AdminManagementPage() {
         onDeleteUser={() => handleDelete(user)}
       />
     ),
-    [selfId, handleToggle, handleDelete],
+    [selfId, handleToggle, handleDelete, isMobile],
   );
 
   return (

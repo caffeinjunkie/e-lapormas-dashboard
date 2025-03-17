@@ -103,3 +103,37 @@ export const filterUsers = (
 
   return filteredUsers;
 };
+
+export const handleResend = (
+  id: string,
+  email: string,
+  setIsDisabled: (value: boolean) => void,
+  setTimer: (value: number) => void,
+  timerRef: React.MutableRefObject<number>,
+  deleteCookie: (name: string) => void,
+) => {};
+
+export const getCookie = (name: string) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    const part = parts.pop()?.split(";").shift();
+    return part;
+  }
+  return null;
+};
+
+export const setCookie = (value: string, id: string, days = 1) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${id}=${value};expires=${expires.toUTCString()};path=/`;
+};
+
+export const deleteCookie = (name: string) => {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+};
+
+export const formatTime = (ms: number) => {
+  const seconds = Math.floor(ms / 1000);
+  return `${seconds}s`;
+};

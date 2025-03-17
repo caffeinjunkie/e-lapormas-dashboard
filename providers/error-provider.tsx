@@ -44,8 +44,6 @@ export const ErrorProvider = ({ children }: ErrorProviderProps) => {
       hashParams.get("error_description") ||
       queryParams.get("error_description");
 
-    console.log(errorParam, errorCodeParam, errorDescriptionParam);
-
     if (errorParam && errorCodeParam && errorDescriptionParam) {
       setError({ errorParam, errorCodeParam, errorDescriptionParam });
       router.push(

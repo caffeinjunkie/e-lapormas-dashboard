@@ -57,6 +57,7 @@
     "admin-management-error-toast-title": "Terjadi Kesalahan",
     "admin-management-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi",
     "admin-management-delete-tooltip-text": "Hapus",
+    "admin-management-invite-tooltip-text": "Kirim Ulang",
     "admin-management-search-placeholder": "Cari admin...",
     "table-empty-content": "Hasil pencarian tidak ditemukan",
     "table-display-name-column-label": "Pengguna",
