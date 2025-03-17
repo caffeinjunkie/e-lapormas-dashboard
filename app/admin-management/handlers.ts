@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 
 import { fetchAllAdmins } from "@/api/admin";
-import { fetchUserData } from "@/api/users";
+import { fetchUserData, inviteByEmail } from "@/api/users";
 import { AdminData } from "@/types/user.types";
 
 interface HandleToggleProps {
@@ -102,4 +102,8 @@ export const filterUsers = (
   }
 
   return filteredUsers;
+};
+
+export const sendInvite = async (email: string) => {
+  await inviteByEmail(email);
 };

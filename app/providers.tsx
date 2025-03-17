@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ToastProvider } from "@heroui/toast";
 
+import { ErrorProvider } from "@/providers/error-provider";
+
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
@@ -31,7 +33,9 @@ export function Providers({ children, themeProps }: ProvidersProps) {
         toastOffset={10}
         toastProps={{ timeout: 3000 }}
       />
-      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+      <ErrorProvider>
+        <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+      </ErrorProvider>
     </HeroUIProvider>
   );
 }

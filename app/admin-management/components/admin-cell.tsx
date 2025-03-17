@@ -48,22 +48,23 @@ export const AdminCell = ({
                   color={user.is_verified ? "success" : "warning"}
                   size="sm"
                   variant="dot"
-                >
-                  {user.is_verified
-                    ? t("admin-management-status-verified")
-                    : t("admin-management-status-pending")}
-                </Chip>
+                />
               }
               classNames={{
                 container: "gap-4",
               }}
             />
-            <Switch
-              isDisabled={selfId === user?.user_id || !user.is_verified}
-              onChange={onSuperAdminToggle}
-              isSelected={user.is_super_admin}
-              size="sm"
-            />
+            <div className="flex flex-col items-end gap-2">
+              <Switch
+                isDisabled={selfId === user?.user_id || !user.is_verified}
+                onChange={onSuperAdminToggle}
+                isSelected={user.is_super_admin}
+                size="sm"
+              />
+              <p className="text-default-500 text-xs">
+                {t("table-is-super-admin-column-label")}
+              </p>
+            </div>
           </div>
           <div className="flex flex-row items-center pt-4 gap-2">
             <Button

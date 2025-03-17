@@ -22,6 +22,7 @@ import {
   calculateRowNumber,
   handleToggle,
   filterUsers,
+  sendInvite,
 } from "@/app/admin-management/handlers";
 import { AdminData } from "@/types/user.types";
 import { upsertAdmins } from "@/api/admin";
@@ -49,6 +50,7 @@ export default function AdminManagementPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [modalType, setModalType] = useState<"invite" | "delete" | "">("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
+  const [isSendButtonLoading, setIsSendButtonLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { isOpen, closeModal, openModal } = useModal();
   const layoutRef = useRef<HTMLDivElement>(null);
@@ -134,13 +136,14 @@ export default function AdminManagementPage() {
 
   const onSave = async () => {
     setIsSaveLoading(true);
+    let toastProps = {};
     try {
       const result = await upsertAdmins(updatedAdmins);
       if (result) {
         await fetchAdmins();
       }
 
-      addToast({
+      toastProps = {
         title: t("admin-management-save-success-toast-title"),
         description: t.rich("admin-management-save-success-toast-description", {
           label:
@@ -153,17 +156,18 @@ export default function AdminManagementPage() {
             updatedAdmins.length > 1 ? chunks : <strong>{chunks}</strong>,
         }) as string,
         color: "success",
-      });
+      };
 
       setUpdatedAdmins([]);
     } catch (error) {
-      addToast({
+      toastProps = {
         title: t("admin-management-error-toast-title"),
         description: t("admin-management-error-toast-description"),
         color: "danger",
-      });
+      };
       console.error(error);
     } finally {
+      addToast(toastProps);
       setIsSaveLoading(false);
     }
   };
@@ -179,13 +183,14 @@ export default function AdminManagementPage() {
     if (!deletedAdmin) {
       return;
     }
+    let toastProps = {};
 
     try {
       const { success } = await deleteAuthUser(deletedAdmin?.user_id || "");
 
       if (success) {
         await fetchAdmins();
-        addToast({
+        toastProps = {
           title: t("admin-management-delete-success-toast-title"),
           description: t.rich(
             "admin-management-delete-success-toast-description",
@@ -195,41 +200,54 @@ export default function AdminManagementPage() {
             },
           ) as string,
           color: "success",
-        });
+        };
       }
     } catch (error) {
-      addToast({
+      toastProps = {
         title: t("admin-management-error-toast-title"),
         description: t("admin-management-error-toast-description"),
         color: "danger",
-      });
+      };
       console.error(error);
     } finally {
       setIsDataLoading(false);
+      addToast(toastProps);
       onCloseModal();
     }
   };
 
-  const onSendInvite = (e: FormEvent<HTMLFormElement>) => {
+  const onSendInvite = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = buildFormData(e);
+    let toastProps = {};
+    setIsSendButtonLoading(true);
 
-    //TODO: to be implemented in next card
-    console.log("Send invite", formData);
-    addToast({
-      title: t("admin-management-invite-user-success-toast-title"),
-      description: t.rich(
-        "admin-management-invite-user-success-toast-description",
-        {
-          email: formData.get("email") as string,
-          bold: (chunks) => <strong>{chunks}</strong>,
-        },
-      ) as string,
-      timeout: 6000,
-      color: "success",
-    });
-
-    onCloseModal();
+    try {
+      await sendInvite(formData.get("email") as string);
+      toastProps = {
+        title: t("admin-management-invite-user-success-toast-title"),
+        description: t.rich(
+          "admin-management-invite-user-success-toast-description",
+          {
+            email: formData.get("email") as string,
+            bold: (chunks) => <strong>{chunks}</strong>,
+          },
+        ) as string,
+        timeout: 6000,
+        color: "success",
+      };
+    } catch (error) {
+      toastProps = {
+        title: t("admin-management-error-toast-title"),
+        description: t("admin-management-error-toast-description"),
+        color: "danger",
+      };
+      console.error(error);
+    } finally {
+      addToast(toastProps);
+      onCloseModal();
+      setIsSendButtonLoading(false);
+    }
   };
 
   const onInviteUser = () => {
@@ -263,6 +281,7 @@ export default function AdminManagementPage() {
           title: t(
             "admin-management-invite-user-modal-confirmation-button-text",
           ),
+          isLoading: isSendButtonLoading,
           color: "warning",
           type: "submit",
           formId: "invite-form",

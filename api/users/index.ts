@@ -75,6 +75,21 @@ export const deleteAuthUser = async (id: string) => {
   return { success: true };
 };
 
+export const inviteByEmail = async (email: string) => {
+  const client = createClient();
+  const { error } = await client.auth.admin.inviteUserByEmail(email, {
+    data: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_HOSTNAME}/auth/confirm`,
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return { success: true };
+};
+
 export const generateFakeName = async () => {
   const data = await fetch("https://randomuser.me/api/?inc=name&nat=US");
   const { results } = await data.json();

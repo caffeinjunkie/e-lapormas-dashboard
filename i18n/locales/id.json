@@ -56,10 +56,10 @@
     "admin-management-users-count-text": "{count} pengguna",
     "admin-management-error-toast-title": "Terjadi Kesalahan",
     "admin-management-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi",
-    "admin-management-delete-tooltip-text": "Hapus anggota",
-    "admin-management-search-placeholder": "Cari anggota...",
+    "admin-management-delete-tooltip-text": "Hapus",
+    "admin-management-search-placeholder": "Cari admin...",
     "table-empty-content": "Hasil pencarian tidak ditemukan",
-    "table-display-name-column-label": "Anggota",
+    "table-display-name-column-label": "Pengguna",
     "table-is-super-admin-column-label": "Super Admin",
     "table-is-verified-column-label": "Status",
     "table-actions-column-label": "Aksi",
@@ -77,6 +77,11 @@
     "admin-management-invite-user-success-toast-description": "Undangan pengguna baru untuk <bold>{email}</bold> terkirim. Verifikasi email pengguna baru untuk mengaktifkan akun.",
     "admin-management-delete-success-toast-title": "Admin Berhasil Dihapus",
     "admin-management-delete-success-toast-description": "<bold>{email}</bold> berhasil dihapus dari daftar admin."
+  },
+  "ErrorPage": {
+    "error-title": "Terjadi Kesalahan",
+    "error-description-otp-expired": "Link sudah kadaluarsa. Mohon ajukan permintaan baru",
+    "back-to-login-button": "Kembali ke halaman login"
   },
   "Modal": {
     "default-button-text": "Tutup"

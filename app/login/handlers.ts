@@ -129,19 +129,19 @@ const handleResetPassword = async ({
     const result = await resetPassword(email);
     if (result.success) {
       setSuccess(true);
+      setModalProps({
+        title: "Reset Password",
+        message:
+          "Link untuk reset password telah dikirim ke email Anda. Silakan cek email Anda untuk melanjutkan.",
+      });
+      setTimeout(() => {
+        openModal();
+      }, 500);
     }
   } catch (error: any) {
     setError("Terjadi kesalahan. Mohon coba sesaat lagi.");
   } finally {
     setLoading(false);
-    setModalProps({
-      title: "Reset Password",
-      message:
-        "Link untuk reset password telah dikirim ke email Anda. Silakan cek email Anda untuk melanjutkan.",
-    });
-    setTimeout(() => {
-      openModal();
-    }, 500);
   }
 };
 
