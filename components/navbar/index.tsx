@@ -1,22 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { ModalHeader } from "@heroui/modal";
+import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Logo } from "@/components/icons";
-import { logout } from "@/api/auth";
-import { updateAdmin } from "@/api/admin";
-import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
-import { useRouter } from "next/navigation";
-import { Sidebar } from "./navbar-sidebar";
-import { MobileNavbar } from "./navbar-mobile";
-import { ProfileData } from "@/types/user.types";
-import { useModal } from "@/components/modal/use-modal";
 import { Modal } from "@/components/modal";
-import { ModalHeader } from "@heroui/modal";
+import { useModal } from "@/components/modal/use-modal";
+
+import { updateAdmin } from "@/api/admin";
 import { fetchAdminById } from "@/api/admin";
+import { logout } from "@/api/auth";
+import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
+
+import { ProfileData } from "@/types/user.types";
+
+import { MobileNavbar } from "./navbar-mobile";
+import { Sidebar } from "./navbar-sidebar";
 
 export const Navbar = () => {
   const router = useRouter();

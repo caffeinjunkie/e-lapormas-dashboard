@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction, FormEvent } from "react";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Link } from "@heroui/link";
+import { Dispatch, FormEvent, SetStateAction } from "react";
 
-import { PasswordInput } from "@/components/password-input";
 import { Input } from "@/components/input";
+import { PasswordInput } from "@/components/password-input";
 
 import {
   validateEmail,

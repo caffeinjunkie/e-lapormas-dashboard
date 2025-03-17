@@ -1,9 +1,9 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { Button } from "@heroui/button";
+import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 
 import { useError } from "@/providers/error-provider";
 

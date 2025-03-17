@@ -1,4 +1,5 @@
 import supabase from "@/utils/supabase-db";
+
 import { AdminData } from "@/types/user.types";
 
 export const fetchAdminById = async (id: string) => {

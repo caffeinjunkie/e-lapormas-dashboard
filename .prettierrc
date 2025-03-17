@@ -1,1 +1,19 @@
-{}
+{
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "^@/app/(.*)$",
+    "^@/components/(.*)$",
+    "^@/providers/(.*)$",
+    "^@/api/(.*)$",
+    "^@/middleware/(.*)$",
+    "^@/i18n/(.*)$",
+    "^@/utils/(.*)$",
+    "^@/config/(.*)$",
+    "^@/icons/(.*)$",
+    "^@/types/(.*)$",
+    "^@/styles/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

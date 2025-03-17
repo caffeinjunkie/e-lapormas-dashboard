@@ -1,15 +1,17 @@
-import { PropsWithChildren } from "react";
-import NextLink from "next/link";
-import { redirect } from "next/navigation";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { Skeleton } from "@heroui/skeleton";
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { useTranslations } from "next-intl";
+import NextLink from "next/link";
+import { redirect } from "next/navigation";
+import { PropsWithChildren } from "react";
 
-import { siteConfig, adminManagementItem } from "@/config/site";
+import { adminManagementItem, siteConfig } from "@/config/site";
+
 import { ProfileData } from "@/types/user.types";
+
 import { UserAva } from "../user-ava";
 
 interface SidebarProps {

@@ -1,31 +1,35 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { Card, CardBody, CardHeader, CardFooter } from "@heroui/card";
-import { Link } from "@heroui/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@heroui/button";
+import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { Form } from "@heroui/form";
-import NextImage from "next/image";
-import { Modal } from "@/components/modal";
-import { ModalHeader, ModalBody } from "@heroui/modal";
+import { Link } from "@heroui/link";
+import { ModalBody, ModalHeader } from "@heroui/modal";
 import { useTranslations } from "next-intl";
+import NextImage from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useState } from "react";
 
-import { PasswordInput } from "@/components/password-input";
-import {
-  validatePassword,
-  validateIsRequired,
-  validateConfirmPassword,
-} from "@/utils/string";
-import { buildFormData } from "@/utils/form";
-import { updateAuthUser, validateToken } from "@/api/users";
 import {
   getCreatePasswordErrorMessage,
   getTokenErrorMessage,
 } from "@/app/create-password/utils";
-import { logout } from "@/api/auth";
-import { siteConfig } from "@/config/site";
+
+import { Modal } from "@/components/modal";
 import { useModal } from "@/components/modal/use-modal";
+import { PasswordInput } from "@/components/password-input";
+
+import { logout } from "@/api/auth";
+import { updateAuthUser, validateToken } from "@/api/users";
+
+import { buildFormData } from "@/utils/form";
+import {
+  validateConfirmPassword,
+  validateIsRequired,
+  validatePassword,
+} from "@/utils/string";
+
+import { siteConfig } from "@/config/site";
 
 export default function CreatePasswordPage() {
   const [inputErrors, setInputErrors] = useState<

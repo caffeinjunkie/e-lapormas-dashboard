@@ -1,6 +1,6 @@
 import { Button } from "@heroui/button";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 import { Layout } from "@/components/layout";
 

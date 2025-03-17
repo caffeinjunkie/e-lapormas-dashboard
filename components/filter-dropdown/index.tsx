@@ -1,13 +1,13 @@
-import { PropsWithChildren } from "react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Button } from "@heroui/button";
 import {
   Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
   DropdownItem,
+  DropdownMenu,
   DropdownMenuProps,
+  DropdownTrigger,
 } from "@heroui/dropdown";
-import { Button } from "@heroui/button";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { PropsWithChildren } from "react";
 
 interface FilterDropdownProps extends DropdownMenuProps {
   label: string;

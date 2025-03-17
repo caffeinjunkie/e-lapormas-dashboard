@@ -1,5 +1,5 @@
-import { Input, InputProps } from "@heroui/input";
 import { MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { Input, InputProps } from "@heroui/input";
 
 interface SearchBarProps extends InputProps {
   onClear: () => void;

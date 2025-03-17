@@ -1,12 +1,12 @@
-import { PropsWithChildren } from "react";
 import { Button, ButtonProps, PressEvent } from "@heroui/button";
 import {
   Modal as HeroUIModal,
+  ModalProps as HeroUIModalProps,
   ModalContent,
   ModalFooter,
-  ModalProps as HeroUIModalProps,
 } from "@heroui/modal";
 import { useTranslations } from "next-intl";
+import { PropsWithChildren } from "react";
 
 export interface ModalButtonProps extends ButtonProps {
   title: string;

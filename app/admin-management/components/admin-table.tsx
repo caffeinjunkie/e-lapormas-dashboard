@@ -1,13 +1,13 @@
+import { Spinner } from "@heroui/spinner";
 import {
   Table,
   TableBody,
   TableCell,
   TableColumn,
-  TableProps,
   TableHeader,
+  TableProps,
   TableRow,
 } from "@heroui/table";
-import { Spinner } from "@heroui/spinner";
 import { useTranslations } from "next-intl";
 
 import { AdminData } from "@/types/user.types";
@@ -42,7 +42,7 @@ export const AdminTable = ({
   translationKey,
   ...props
 }: AdminTableProps) => {
-  const t = useTranslations("AdminManagementPage");
+  const t = useTranslations(translationKey);
 
   return (
     <Table
