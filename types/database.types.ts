@@ -48,17 +48,17 @@ export type Database = {
         };
         Insert: {
           display_name?: string;
-          email: string;
+          email?: string;
           profile_img?: string;
           is_super_admin?: boolean;
           is_verified?: boolean;
           rating?: number;
-          user_id: string;
+          user_id?: string;
         };
         Update: {
           display_name?: string;
-          email: string;
-          profile_img: string;
+          email?: string;
+          profile_img?: string;
           is_super_admin?: boolean;
           is_verified?: boolean;
           rating?: number;

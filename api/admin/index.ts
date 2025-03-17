@@ -1,15 +1,15 @@
 import supabase from "@/utils/supabase-db";
 import { AdminData } from "@/types/user.types";
 
-export const fetchIsAdminASuperAdmin = async (id: string) => {
+export const fetchAdminById = async (id: string) => {
   const { data, error } = await supabase
     .from("admins")
-    .select("is_super_admin")
+    .select("*")
     .eq("user_id", id)
     .single();
 
   if (error) throw error;
-  return { isSuperAdmin: data.is_super_admin };
+  return data;
 };
 
 export const fetchAllAdmins = async () => {
@@ -37,8 +37,22 @@ export const upsertAdmins = async (data: AdminData[]) => {
     .upsert(data)
     .select();
 
+  console.log(updatedAdmins, error, "tes");
+
   if (error) throw error;
   return updatedAdmins;
+};
+
+export const updateAdmin = async (data: AdminData) => {
+  const { data: updatedData, error } = await supabase
+    .from("admins")
+    .update({ display_name: data.display_name })
+    .eq("user_id", data.user_id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return updatedData;
 };
 
 export const createAdmin = async ({

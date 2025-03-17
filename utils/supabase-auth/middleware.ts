@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { fetchIsAdminASuperAdmin } from "@/api/admin";
+import { fetchAdminById } from "@/api/admin";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -43,7 +43,7 @@ export async function updateSession(request: NextRequest) {
   let isSuperAdmin = false;
 
   if (user) {
-    isSuperAdmin = (await fetchIsAdminASuperAdmin(user?.id!)).isSuperAdmin;
+    isSuperAdmin = (await fetchAdminById(user?.id!)).is_super_admin;
   }
 
   const isLoginPage = request.nextUrl.pathname === "/login";

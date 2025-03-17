@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { Logo } from "@/components/icons";
 import { logout } from "@/api/auth";
+import { updateAdmin } from "@/api/admin";
 import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "./navbar-sidebar";
@@ -15,7 +16,7 @@ import { ProfileData } from "@/types/user.types";
 import { useModal } from "@/components/modal/use-modal";
 import { Modal } from "@/components/modal";
 import { ModalHeader } from "@heroui/modal";
-import { fetchIsAdminASuperAdmin } from "@/api/admin";
+import { fetchAdminById } from "@/api/admin";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -23,35 +24,34 @@ export const Navbar = () => {
   const t = useTranslations("Navbar");
   const { isOpen, openModal, closeModal } = useModal();
   const [isButtonLoading, setIsButtonLoading] = useState(false);
-  const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(true);
+  const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(false);
   const [user, setUser] = useState<ProfileData | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
   const getUserData = async () => {
-    setIsNavbarFullyLoaded(false);
     try {
       const { data } = await fetchUserData();
-      const result = await fetchIsAdminASuperAdmin(data.user.id);
-      setIsSuperAdmin(result.isSuperAdmin);
+      const result = await fetchAdminById(data.user.id);
 
-      const {
-        id,
-        email,
-        user_metadata: { fullName },
-      } = data.user;
+      let displayName = result.display_name as string;
 
-      let displayName = fullName;
+      if (!result.display_name || result.display_name.trim() === "") {
+        const fakeName = await generateFakeName();
+        displayName = fakeName;
 
-      if (!fullName) {
-        displayName = await generateFakeName();
         await updateAuthUser({ data: { fullName: displayName } });
+        await updateAdmin({
+          display_name: displayName as string,
+          user_id: result.user_id as string,
+        });
       }
 
       setUser({
-        id,
-        email: email as string,
+        id: result.user_id,
+        email: result.email as string,
         fullName: displayName,
       });
+      setIsSuperAdmin(result.is_super_admin);
     } catch (error) {
       await handleLogout();
     } finally {

@@ -20,6 +20,7 @@ import {
   getCookie,
   formatTime,
 } from "@/app/admin-management/handlers";
+import { inviteByEmail } from "@/api/users";
 
 interface AdminCellProps {
   columnKey: string;
@@ -83,7 +84,8 @@ export const AdminCell = ({
     };
   }, []);
 
-  const onResend = (userId: string) => {
+  const onResend = async (userId: string) => {
+    await inviteByEmail(user.email as string);
     const timestamp = Date.now().toString();
     setCookie(timestamp, userId, 1);
 
@@ -118,7 +120,7 @@ export const AdminCell = ({
             <UserAva
               imageSrc={user?.profile_img}
               displayName={user?.display_name}
-              description={user?.email}
+              description={user?.email as string}
               indicator={
                 <Chip
                   className="capitalize border-none"
@@ -179,7 +181,7 @@ export const AdminCell = ({
         <UserAva
           imageSrc={user?.profile_img}
           displayName={user?.display_name}
-          description={user?.email}
+          description={user?.email as string}
           classNames={{
             container: "gap-4",
           }}

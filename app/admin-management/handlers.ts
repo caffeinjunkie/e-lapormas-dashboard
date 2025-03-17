@@ -86,9 +86,11 @@ export const filterUsers = (
 
   if (hasSearchFilter) {
     filteredUsers = filteredUsers.filter((user) => {
-      const userName = user.email.split("@")[0];
+      const email = user.email as string;
+      const displayName = user.display_name as string;
+      const userName = email.split("@")[0];
       return (
-        user.display_name.toLowerCase().includes(filterValue.toLowerCase()) ||
+        displayName.toLowerCase().includes(filterValue.toLowerCase()) ||
         userName.toLowerCase().includes(filterValue.toLowerCase())
       );
     });
@@ -103,15 +105,6 @@ export const filterUsers = (
 
   return filteredUsers;
 };
-
-export const handleResend = (
-  id: string,
-  email: string,
-  setIsDisabled: (value: boolean) => void,
-  setTimer: (value: number) => void,
-  timerRef: React.MutableRefObject<number>,
-  deleteCookie: (name: string) => void,
-) => {};
 
 export const getCookie = (name: string) => {
   const value = `; ${document.cookie}`;
