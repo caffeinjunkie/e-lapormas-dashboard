@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { Pagination } from "@heroui/pagination";
 import { addToast } from "@heroui/toast";
-import { PressEvent } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { useTranslations } from "next-intl";
 import { ModalHeader, ModalBody } from "@heroui/modal";
