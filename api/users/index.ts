@@ -1,6 +1,6 @@
 import { EmailOtpType } from "@supabase/supabase-js";
 
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase-auth/client";
 
 export const fetchUserData = async () => {
   const client = createClient();
@@ -61,6 +61,18 @@ export const validateToken = async (type: EmailOtpType, token_hash: string) => {
   }
 
   return { data };
+};
+
+export const deleteAuthUser = async (id: string) => {
+  const client = createClient();
+
+  const { error } = await client.auth.admin.deleteUser(id);
+
+  if (error) {
+    throw error;
+  }
+
+  return { success: true };
 };
 
 export const generateFakeName = async () => {

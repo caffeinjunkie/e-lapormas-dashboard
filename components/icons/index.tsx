@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { IconSvgProps } from "@/types/icon";
+import { IconSvgProps } from "@/types/icon.types";
 
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
@@ -43,6 +43,29 @@ export const MoonFilledIcon = ({
       d="M21.53 15.93c-.16-.27-.61-.69-1.73-.49a8.46 8.46 0 01-1.88.13 8.409 8.409 0 01-5.91-2.82 8.068 8.068 0 01-1.44-8.66c.44-1.01.13-1.54-.09-1.76s-.77-.55-1.83-.11a10.318 10.318 0 00-6.32 10.21 10.475 10.475 0 007.04 8.99 10 10 0 002.89.55c.16.01.32.02.48.02a10.5 10.5 0 008.47-4.27c.67-.93.49-1.519.32-1.79z"
       fill="currentColor"
     />
+  </svg>
+);
+
+export const FloppyIcon = ({
+  size = 24,
+  height,
+  width,
+  color,
+  ...props
+}: IconSvgProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill={color}
+    stroke={color}
+    strokeWidth={0.5}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    width={width || size}
+    height={height || size}
+    {...props}
+  >
+    <path d="M20.015,7.015l-4.15-3.39a2.54,2.54,0,0,0-1.58-.56H4.565a1.5,1.5,0,0,0-1.5,1.5v14.87a1.5,1.5,0,0,0,1.5,1.5h14.87a1.5,1.5,0,0,0,1.5-1.5V8.955A2.507,2.507,0,0,0,20.015,7.015ZM6.565,4.065h5.75v1.37a.5.5,0,0,1-.5.5H7.065a.5.5,0,0,1-.5-.5Zm0,15.87v-5.93a1.5,1.5,0,0,1,1.5-1.5h7.87a1.5,1.5,0,0,1,1.5,1.5v5.93Zm13.37-.5a.5.5,0,0,1-.5.5h-1v-5.93a2.507,2.507,0,0,0-2.5-2.5H8.065a2.5,2.5,0,0,0-2.5,2.5v5.93h-1a.5.5,0,0,1-.5-.5V4.565a.5.5,0,0,1,.5-.5h1v1.37a1.5,1.5,0,0,0,1.5,1.5h4.75a1.5,1.5,0,0,0,1.5-1.5V4.065h.97a1.514,1.514,0,0,1,.95.34l4.14,3.38a1.483,1.483,0,0,1,.56,1.17Z" />
   </svg>
 );
 
@@ -89,34 +112,6 @@ export const HeartFilledIcon = ({
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}
-    />
-  </svg>
-);
-
-export const SearchIcon = (props: IconSvgProps) => (
-  <svg
-    aria-hidden="true"
-    fill="none"
-    focusable="false"
-    height="1em"
-    role="presentation"
-    viewBox="0 0 24 24"
-    width="1em"
-    {...props}
-  >
-    <path
-      d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-    <path
-      d="M22 22L20 20"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
     />
   </svg>
 );

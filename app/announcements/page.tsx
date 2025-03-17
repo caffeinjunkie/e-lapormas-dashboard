@@ -1,10 +1,11 @@
 import { title, subtitle } from "@/components/primitives";
 import { Snippet } from "@heroui/snippet";
-import { Code } from "@heroui/code";
+
+import { Layout } from "@/components/layout";
 
 export default function AnnouncementsPage() {
   return (
-    <div>
+    <Layout>
       <div className="inline-block max-w-xl text-center justify-center">
         <span className={title()}>Make&nbsp;</span>
         <span className={title({ color: "violet" })}>beautiful&nbsp;</span>
@@ -19,9 +20,7 @@ export default function AnnouncementsPage() {
 
       <div className="mt-8">
         <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
+          ette
         </Snippet>
       </div>
       <div className="inline-block max-w-xl text-center justify-center">
@@ -38,9 +37,7 @@ export default function AnnouncementsPage() {
 
       <div className="mt-8">
         <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
+          <span>Get s</span>
         </Snippet>
       </div>
       <div className="inline-block max-w-xl text-center justify-center">
@@ -57,11 +54,11 @@ export default function AnnouncementsPage() {
 
       <div className="mt-8">
         <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
+          <span>Get started by e</span>
         </Snippet>
       </div>
-    </div>
+    </Layout>
   );
 }
+
+AnnouncementsPage.displayName = "AnnouncementsPage";

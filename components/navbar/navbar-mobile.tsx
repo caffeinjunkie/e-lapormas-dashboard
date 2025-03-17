@@ -9,13 +9,15 @@ import {
 import { Link } from "@heroui/link";
 import { useTranslations } from "next-intl";
 
-import { siteConfig } from "@/config/site";
+import { adminManagementItem, siteConfig } from "@/config/site";
 
 interface MobileNavbarProps {
+  isSuperAdmin: boolean;
   onLogout: () => void;
 }
 
 export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
+  isSuperAdmin,
   onLogout,
   children,
 }) => {
@@ -23,7 +25,11 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const mobileMenu = [...siteConfig.menuItems, ...siteConfig.settingsItems];
+  const mobileMenu = [
+    ...siteConfig.menuItems,
+    ...(isSuperAdmin ? [adminManagementItem] : []),
+    ...siteConfig.settingsItems,
+  ];
 
   return (
     <HeroUINavbar
@@ -31,9 +37,9 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
       position="sticky"
       isMenuOpen={isOpen}
       onMenuOpenChange={toggleMenu}
-      className="flex sm:hidden"
+      className="flex md:hidden"
     >
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="start">
+      <NavbarContent className="md:hidden basis-1 pl-4" justify="start">
         <NavbarMenuToggle />
         {children}
       </NavbarContent>

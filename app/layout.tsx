@@ -7,7 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { PrivateProvider } from "@/providers/private-provider";
+import { PrivateProvider, usePrivate } from "@/providers/private-provider";
 
 export const metadata: Metadata = {
   title: {
@@ -44,7 +44,7 @@ export default async function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <div className="relative flex flex-col sm:flex-row h-screen bg-white">
+          <div className="relative flex flex-col md:flex-row h-screen bg-white">
             <NextIntlClientProvider>
               <PrivateProvider>
                 <main className="light overflow-auto flex-grow">

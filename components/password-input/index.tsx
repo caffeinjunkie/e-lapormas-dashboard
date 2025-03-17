@@ -33,6 +33,7 @@ export const PasswordInput = ({
           aria-label="toggle password visibility"
           className="focus:outline-none"
           type="button"
+          disabled={props.disabled}
           onClick={toggleVisibility}
         >
           {isVisible ? (

@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { PasswordInput } from "@/components/password-input";
 import { Input } from "@/components/input";
-import { validateEmail } from "@/utils/string";
+import { validateEmail, validateIsRequired } from "@/utils/string";
 
 interface LoginFormProps {
   onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
@@ -31,10 +31,20 @@ export const LoginForm = ({
           aria-label="email"
           label={t("login-form-email-input-label")}
           type="email"
+          disabled={isLoading}
           name="email"
-          validate={(value) => validateEmail(t, value)}
+          isRequired
+          validate={(value) =>
+            validateIsRequired(t, value, "email") || validateEmail(t, value)
+          }
         />
-        <PasswordInput label={t("login-form-password-input-label")} />
+        <PasswordInput
+          disabled={isLoading}
+          isRequired
+          ariaLabel="password"
+          validate={(value) => validateIsRequired(t, value, "password")}
+          label={t("login-form-password-input-label")}
+        />
         <div className="flex justify-end items-center w-full">
           <Link
             href="#"

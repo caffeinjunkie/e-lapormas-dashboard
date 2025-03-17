@@ -1,7 +1,6 @@
 import { PropsWithChildren } from "react";
 import NextLink from "next/link";
 import { redirect } from "next/navigation";
-import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
@@ -9,10 +8,12 @@ import { Skeleton } from "@heroui/skeleton";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { useTranslations } from "next-intl";
 
-import { siteConfig } from "@/config/site";
-import { ProfileData } from "@/types/user";
+import { siteConfig, adminManagementItem } from "@/config/site";
+import { ProfileData } from "@/types/user.types";
+import { UserAva } from "../user-ava";
 
 interface SidebarProps {
+  isSuperAdmin: boolean;
   onLogout: () => void;
   pathname: string;
   user?: ProfileData | null;
@@ -32,6 +33,7 @@ const ProfileSkeleton = () => (
 );
 
 export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
+  isSuperAdmin,
   pathname,
   user,
   onLogout,
@@ -40,15 +42,17 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
 }) => {
   const t = useTranslations("Navbar");
   const isActive = (path: string) => pathname === path;
-  const { sidebarTheme } = siteConfig;
+  const { sidebarTheme, menuItems, settingsItems } = siteConfig;
+  const sidebarItems = [
+    ...menuItems,
+    ...(isSuperAdmin ? [adminManagementItem] : []),
+  ];
 
-  const activeIndex = siteConfig.menuItems.findIndex(
-    (item) => item.href === pathname,
-  );
+  const activeIndex = sidebarItems.findIndex((item) => item.href === pathname);
 
   return (
     <div
-      className="hidden sm:flex flex-col fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl"
+      className="hidden md:flex flex-col fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl shadow-lg"
       style={{
         backgroundColor: sidebarTheme.sidebarBackground,
       }}
@@ -72,7 +76,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
             />
           </div>
           <nav className="flex flex-col">
-            {siteConfig.menuItems.map(({ href, label, Icon }) => (
+            {sidebarItems.map(({ href, label, Icon }) => (
               <NextLink
                 key={href}
                 className="flex w-full space-x-2 text-sm py-3 font-semibold"
@@ -97,18 +101,16 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
         <div className="py-2 px-2 bg-white/5 rounded-full flex flex-row items-center justify-between gap-2">
           {isLoaded && user ? (
             <>
-              <Avatar
-                className="size-11"
-                showFallback
-                name={user?.fullName}
-                src=""
+              <UserAva
+                imageSrc=""
+                displayName={user?.fullName}
+                description={user?.email}
+                classNames={{
+                  container: "contents",
+                  name: "font-semibold text-white",
+                  description: "text-gray-400",
+                }}
               />
-              <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-                <p className="text-sm font-semibold text-white truncate">
-                  {user?.fullName}
-                </p>
-                <p className="text-xs text-gray-400 truncate">{user?.email}</p>
-              </div>
               <Popover placement="right">
                 <PopoverTrigger>
                   <Button
@@ -116,7 +118,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     size="sm"
                     radius="full"
                     isIconOnly
-                    aria-label="Setting"
+                    aria-label="Other"
                   >
                     <EllipsisHorizontalIcon className="size-5" color="white" />
                   </Button>
@@ -132,10 +134,10 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                       }
                     }}
                   >
-                    {siteConfig.settingsItems.map((item, index) => (
+                    {settingsItems.map((item, index) => (
                       <ListboxItem
                         key={item.href}
-                        className={`${index === siteConfig.settingsItems.length - 1 ? "text-danger" : ""}`}
+                        className={`${index === settingsItems.length - 1 ? "text-danger" : ""}`}
                       >
                         {t(item.label)}
                       </ListboxItem>

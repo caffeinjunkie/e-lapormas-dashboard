@@ -1,9 +1,9 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { Navbar } from "@/components/navbar";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase-auth/client";
 
 interface PrivateLayoutProps {
   children: React.ReactNode;

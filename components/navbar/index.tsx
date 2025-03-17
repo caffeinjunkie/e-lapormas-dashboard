@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -11,10 +11,11 @@ import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "./navbar-sidebar";
 import { MobileNavbar } from "./navbar-mobile";
-import { ProfileData } from "@/types/user";
-import { useModal } from "@/hooks/use-modal";
+import { ProfileData } from "@/types/user.types";
+import { useModal } from "@/components/modal/use-modal";
 import { Modal } from "@/components/modal";
 import { ModalHeader } from "@heroui/modal";
+import { fetchIsAdminASuperAdmin } from "@/api/admin";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -24,11 +25,15 @@ export const Navbar = () => {
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(true);
   const [user, setUser] = useState<ProfileData | null>(null);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
   const getUserData = async () => {
     setIsNavbarFullyLoaded(false);
     try {
       const { data } = await fetchUserData();
+      const result = await fetchIsAdminASuperAdmin(data.user.id);
+      setIsSuperAdmin(result.isSuperAdmin);
+
       const {
         id,
         email,
@@ -82,9 +87,12 @@ export const Navbar = () => {
 
   return (
     <>
-      <MobileNavbar onLogout={openModal}>{icon}</MobileNavbar>
-      <div className="px-2 shadow-lg">
+      <MobileNavbar isSuperAdmin={isSuperAdmin} onLogout={openModal}>
+        {icon}
+      </MobileNavbar>
+      <div className="ml-2">
         <Sidebar
+          isSuperAdmin={isSuperAdmin}
           pathname={pathname}
           isLoaded={isNavbarFullyLoaded}
           user={user}
@@ -101,7 +109,6 @@ export const Navbar = () => {
             title: t("logout-confirmation-button-text"),
             onPress: handleLogout,
             color: "danger",
-            variant: "light",
             isLoading: isButtonLoading,
           },
           {

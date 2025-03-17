@@ -1,11 +1,12 @@
 import {
-  ChartBarSquareIcon,
   DocumentTextIcon,
   MegaphoneIcon,
+  UsersIcon,
+  ChartPieIcon,
 } from "@heroicons/react/24/outline";
 
 import { DashboardIcon } from "@/components/icons";
-import { IconSvgProps } from "@/types/icon";
+import { IconSvgProps } from "@/types/icon.types";
 
 export type SiteConfig = typeof siteConfig;
 
@@ -15,6 +16,14 @@ const sidebarTheme = {
   sidebarBackground: "#1a1c1e",
   linkText: "#ffffff",
   linkIndicator: "#ffffff",
+};
+
+export const adminManagementItem = {
+  label: "navbar-admin-management-label",
+  href: "/admin-management",
+  Icon: (props: IconSvgProps) => (
+    <UsersIcon className={iconClassname} {...props} />
+  ),
 };
 
 const sidebarMenuItems = [
@@ -36,7 +45,7 @@ const sidebarMenuItems = [
     label: "navbar-statistics-label",
     href: "/statistics",
     Icon: (props: IconSvgProps) => (
-      <ChartBarSquareIcon className={iconClassname} {...props} />
+      <ChartPieIcon className={iconClassname} {...props} />
     ),
   },
   {
