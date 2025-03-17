@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
   FormEvent,
 } from "react";
 import { Pagination } from "@heroui/pagination";
@@ -48,7 +49,9 @@ export default function AdminManagementPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [modalType, setModalType] = useState<"invite" | "delete" | "">("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const { isOpen, closeModal, openModal } = useModal();
+  const layoutRef = useRef<HTMLDivElement>(null);
 
   const {
     selected: selectedStatusFilterKeys,
@@ -79,7 +82,12 @@ export default function AdminManagementPage() {
     setIsDataLoading(true);
     fetchAdmins();
 
-    const handleResize = () => calculateRowNumber(setRowsPerPage);
+    const handleResize = () => {
+      calculateRowNumber(setRowsPerPage);
+
+      if (!layoutRef.current) return;
+      setIsMobile(layoutRef.current?.offsetWidth < 519);
+    };
 
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -314,10 +322,12 @@ export default function AdminManagementPage() {
   ]);
 
   const renderCell = useCallback(
-    (user: AdminData, columnKey: string) => (
+    (user: AdminData, columnKey: string, isLast: boolean) => (
       <AdminCell
         columnKey={columnKey}
         user={user}
+        isMobile={isMobile}
+        isLast={isLast}
         selfId={selfId}
         onSuperAdminToggle={() =>
           handleToggle({
@@ -334,14 +344,16 @@ export default function AdminManagementPage() {
   );
 
   return (
-    <Layout>
+    <Layout ref={layoutRef}>
       <h1 className="text-2xl font-bold text-center md:text-left">
         {t("admin-management-title")}
       </h1>
       <div className="flex py-4 md:pt-8">
         <AdminTable
-          columns={columns}
+          layout={isMobile ? "auto" : "fixed"}
+          columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}
           items={items}
+          hideHeader={isMobile}
           isLoading={isDataLoading}
           renderCell={renderCell}
           topContent={topContent}
@@ -363,6 +375,7 @@ export default function AdminManagementPage() {
         />
       </div>
       <Modal
+        autoFocus={false}
         className="focus:outline-none"
         onClose={onCloseModal}
         isOpen={isOpen}
