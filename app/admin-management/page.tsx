@@ -78,7 +78,7 @@ export default function AdminManagementPage() {
       setSelfId(currentUserId);
     } catch (error) {
       addToast({
-        title: t("admin-management-error-toast-title"),
+        title: t("admin-management-default-error-toast-title"),
         description: t("admin-management-default-error-toast-description"),
         color: "danger",
       });
@@ -168,8 +168,8 @@ export default function AdminManagementPage() {
       setUpdatedAdmins([]);
     } catch (error) {
       toastProps = {
-        title: t("admin-management-error-toast-title"),
-        description: t("admin-management-error-toast-description"),
+        title: t("admin-management-save-error-toast-title"),
+        description: t("admin-management-save-error-toast-description"),
         color: "danger",
       };
     } finally {
@@ -210,8 +210,8 @@ export default function AdminManagementPage() {
       }
     } catch (error) {
       toastProps = {
-        title: t("admin-management-error-toast-title"),
-        description: t("admin-management-error-toast-description"),
+        title: t("admin-management-delete-error-toast-title"),
+        description: t("admin-management-delete-error-toast-description"),
         color: "danger",
       };
     } finally {
@@ -233,9 +233,9 @@ export default function AdminManagementPage() {
       );
       if (isUserAlreadyInvited) {
         toastProps = {
-          title: t("admin-management-invite-user-error-toast-title"),
+          title: t("admin-management-invite-user-warning-toast-title"),
           description: t.rich(
-            "admin-management-invite-user-error-toast-description",
+            "admin-management-invite-user-warning-toast-description",
             {
               email: formData.get("email") as string,
               bold: (chunks) => <strong>{chunks}</strong>,
@@ -266,8 +266,8 @@ export default function AdminManagementPage() {
       };
     } catch (error) {
       toastProps = {
-        title: t("admin-management-error-toast-title"),
-        description: t("admin-management-error-toast-description"),
+        title: t("admin-management-invite-user-error-toast-title"),
+        description: t("admin-management-invite-user-error-toast-description"),
         color: "danger",
       };
     } finally {
