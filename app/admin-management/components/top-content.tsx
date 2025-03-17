@@ -20,6 +20,7 @@ interface TopContentProps {
   isSaveButtonDisabled: boolean;
   onInviteUser: () => void;
   onSave: () => void;
+  isMobile: boolean;
 }
 
 export const TopContent = ({
@@ -29,6 +30,7 @@ export const TopContent = ({
   selectedStatusFilterValue,
   selectedStatusFilterKeys,
   onStatusFilterChange,
+  isMobile,
   isSaveButtonLoading,
   isSaveButtonDisabled,
   onInviteUser,
@@ -40,6 +42,15 @@ export const TopContent = ({
     id: status.uid,
     label: t(status.translationKey),
   }));
+
+  const statusFilterValue = t(
+    `admin-management-status-${selectedStatusFilterValue}`,
+  );
+  const abbreviatedStatusFilterValue = t(
+    `admin-management-status-${selectedStatusFilterValue}`,
+  )
+    .slice(0, 3)
+    .toUpperCase();
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
@@ -59,19 +70,21 @@ export const TopContent = ({
           selectedKeys={selectedStatusFilterKeys}
           onSelectionChange={onStatusFilterChange}
         >
-          <p>{t(`admin-management-status-${selectedStatusFilterValue}`)}</p>
+          <p>{isMobile ? abbreviatedStatusFilterValue : statusFilterValue}</p>
         </FilterDropdown>
         <Button
           color="warning"
+          isIconOnly={isMobile}
           className="text-white w-full lg:w-fit"
           startContent={<UserPlusIcon className="size-5" />}
           onPress={onInviteUser}
         >
-          {t("admin-management-invite-button-text")}
+          {isMobile ? null : t("admin-management-invite-button-text")}
         </Button>
         <Button
           color="success"
           isLoading={isSaveButtonLoading}
+          isIconOnly={isMobile}
           isDisabled={isSaveButtonDisabled}
           className="text-white w-full lg:w-fit"
           startContent={
@@ -79,7 +92,7 @@ export const TopContent = ({
           }
           onPress={onSave}
         >
-          {t("admin-management-save-button-text")}
+          {isMobile ? null : t("admin-management-save-button-text")}
         </Button>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
-import { addToast } from "@heroui/toast";
+import { ToastProps, addToast } from "@heroui/toast";
 import { useTranslations } from "next-intl";
 import React, {
   FormEvent,
@@ -24,6 +24,7 @@ import {
   calculateRowNumber,
   fetchAdminsHandler,
   filterUsers,
+  getErrorToastProps,
   handleToggle,
 } from "@/app/admin-management/handlers";
 
@@ -81,11 +82,7 @@ export default function AdminManagementPage() {
       setOriginalAdmins(admins as AdminData[]);
       setSelfId(currentUserId);
     } catch (error) {
-      addToast({
-        title: t("admin-management-default-error-toast-title"),
-        description: t("admin-management-default-error-toast-description"),
-        color: "danger",
-      });
+      addToast(getErrorToastProps(t) as ToastProps);
     } finally {
       setIsDataLoading(false);
     }
@@ -154,29 +151,34 @@ export default function AdminManagementPage() {
       if (result) {
         await fetchAdmins();
       }
+      let description = "";
+      const onlyOneAdmin = updatedAdmins.length === 1;
+      const targetEmail = updatedAdmins[0].email as string;
+      const targetIsSuperAdmin = updatedAdmins[0].is_super_admin as boolean;
+
+      if (onlyOneAdmin) {
+        description = t.rich(
+          `admin-management-${targetIsSuperAdmin ? "save" : "remove"}-super-admin-success-toast-description`,
+          {
+            label: targetEmail,
+            bold: (chunks) => <strong>{chunks}</strong>,
+          },
+        ) as string;
+      } else {
+        description = t("admin-management-save-all-success-toast-description", {
+          count: updatedAdmins.length,
+        });
+      }
 
       toastProps = {
         title: t("admin-management-save-success-toast-title"),
-        description: t.rich("admin-management-save-success-toast-description", {
-          label:
-            updatedAdmins.length > 1
-              ? t("admin-management-users-count-text", {
-                  count: updatedAdmins.length,
-                })
-              : (updatedAdmins[0].email as string),
-          bold: (chunks) =>
-            updatedAdmins.length > 1 ? chunks : <strong>{chunks}</strong>,
-        }) as string,
+        description,
         color: "success",
       };
 
       setUpdatedAdmins([]);
     } catch (error) {
-      toastProps = {
-        title: t("admin-management-save-error-toast-title"),
-        description: t("admin-management-save-error-toast-description"),
-        color: "danger",
-      };
+      toastProps = getErrorToastProps(t, "save");
     } finally {
       addToast(toastProps);
       setIsSaveLoading(false);
@@ -213,11 +215,7 @@ export default function AdminManagementPage() {
         };
       }
     } catch (error) {
-      toastProps = {
-        title: t("admin-management-delete-error-toast-title"),
-        description: t("admin-management-delete-error-toast-description"),
-        color: "danger",
-      };
+      toastProps = getErrorToastProps(t, "delete");
     } finally {
       setIsDataLoading(false);
       addToast(toastProps);
@@ -269,11 +267,7 @@ export default function AdminManagementPage() {
         color: "success",
       };
     } catch (error) {
-      toastProps = {
-        title: t("admin-management-invite-user-error-toast-title"),
-        description: t("admin-management-invite-user-error-toast-description"),
-        color: "danger",
-      };
+      toastProps = getErrorToastProps(t, "invite");
     } finally {
       setIsInviteLoading(false);
       addToast(toastProps);
@@ -354,6 +348,7 @@ export default function AdminManagementPage() {
         onStatusFilterChange={(keys) => {
           setSelectedStatusFilterKeys(keys as Set<string>);
         }}
+        isMobile={isMobile}
         isSaveButtonLoading={isSaveLoading}
         isSaveButtonDisabled={updatedAdmins.length === 0}
         onInviteUser={onInviteUser}
@@ -365,6 +360,7 @@ export default function AdminManagementPage() {
     selectedStatusFilterKeys,
     onSearchChange,
     hasSearchFilter,
+    isMobile,
     updatedAdmins,
     isSaveLoading,
   ]);

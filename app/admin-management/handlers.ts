@@ -130,3 +130,14 @@ export const formatTime = (ms: number) => {
   const seconds = Math.floor(ms / 1000);
   return `${seconds}s`;
 };
+
+export const getErrorToastProps = (
+  t: (key: string) => string,
+  key: string = "default",
+) => {
+  return {
+    title: t(`admin-management-${key}-error-toast-title`),
+    description: t(`admin-management-${key}-error-toast-description`),
+    color: "danger",
+  };
+};

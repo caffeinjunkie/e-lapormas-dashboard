@@ -15,7 +15,7 @@ export const useModal = (defaultOpen: boolean = false) => {
 
 export const useMultipleModal = () => {
   const [modals, setModals] = useState<Record<string, boolean>>({});
-  
+
   const toggleModal = (modalName: string) => {
     setModals((prevModals) => ({
       ...prevModals,
