@@ -55,6 +55,7 @@
     "admin-management-save-success-toast-description": "Berhasil mengganti data dari <bold>{label}</bold>",
     "admin-management-users-count-text": "{count} pengguna",
     "admin-management-error-toast-title": "Terjadi Kesalahan",
+    "admin-management-default-error-description": "Terjadi kesalahan. Mohon coba sesaat lagi",
     "admin-management-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi",
     "admin-management-delete-tooltip-text": "Hapus",
     "admin-management-invite-tooltip-text": "Kirim Ulang",
@@ -80,6 +81,10 @@
     "admin-management-delete-success-toast-description": "<bold>{email}</bold> berhasil dihapus dari daftar admin.",
     "admin-management-invite-user-error-toast-title": "Email Sudah Terdaftar",
     "admin-management-invite-user-error-toast-description": "Undangan untuk <bold>{email}</bold> gagal terkirim karena email sudah terdaftar. Mohon coba sesaat lagi."
+  },
+  "UnauthorizedPage": {
+    "unauthorized-tab-description": "Anda tidak memiliki akses ke halaman ini. Mohon kembali ke halaman utama",
+    "back-to-login-button": "Kembali ke halaman utama"
   },
   "ErrorPage": {
     "error-title": "Terjadi Kesalahan",

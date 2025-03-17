@@ -77,7 +77,11 @@ export default function AdminManagementPage() {
       setOriginalAdmins(admins as AdminData[]);
       setSelfId(currentUserId);
     } catch (error) {
-      console.error(error);
+      addToast({
+        title: t("admin-management-error-toast-title"),
+        description: t("admin-management-default-error-toast-description"),
+        color: "danger",
+      });
     } finally {
       setIsDataLoading(false);
     }
@@ -154,7 +158,7 @@ export default function AdminManagementPage() {
               ? t("admin-management-users-count-text", {
                   count: updatedAdmins.length,
                 })
-              : updatedAdmins[0].email,
+              : (updatedAdmins[0].email as string),
           bold: (chunks) =>
             updatedAdmins.length > 1 ? chunks : <strong>{chunks}</strong>,
         }) as string,
@@ -168,7 +172,6 @@ export default function AdminManagementPage() {
         description: t("admin-management-error-toast-description"),
         color: "danger",
       };
-      console.error(error);
     } finally {
       addToast(toastProps);
       setIsSaveLoading(false);
@@ -211,7 +214,6 @@ export default function AdminManagementPage() {
         description: t("admin-management-error-toast-description"),
         color: "danger",
       };
-      console.error(error);
     } finally {
       setIsDataLoading(false);
       addToast(toastProps);
@@ -268,7 +270,6 @@ export default function AdminManagementPage() {
         description: t("admin-management-error-toast-description"),
         color: "danger",
       };
-      console.error(error);
     } finally {
       setIsInviteLoading(false);
       addToast(toastProps);
@@ -286,7 +287,7 @@ export default function AdminManagementPage() {
     openModal();
     setModalTitle(
       t.rich("admin-management-delete-user-modal-title", {
-        email: user.email,
+        email: user.email as string,
         bold: (chunks) => <strong>{chunks}</strong>,
       }) as string,
     );
@@ -393,7 +394,7 @@ export default function AdminManagementPage() {
       <h1 className="text-2xl font-bold text-center md:text-left">
         {t("admin-management-title")}
       </h1>
-      <div className="flex py-4 md:pt-8">
+      <div className="flex py-4 lg:pt-8">
         <AdminTable
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}

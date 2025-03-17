@@ -19,16 +19,15 @@ export const fetchAdminsHandler = async () => {
 
 export const calculateRowNumber = (setRowsPerPage: (rows: number) => void) => {
   const height = window.innerHeight;
-  const width = window.innerWidth;
   const orientation = window.screen.orientation.type;
 
   if (
     orientation === "portrait-primary" ||
     orientation === "portrait-secondary"
   ) {
-    setRowsPerPage(height >= 800 ? 15 : height >= 600 ? 6 : 5);
+    setRowsPerPage(height >= 1100 ? 12 : height >= 1024 ? 6 : 5);
   } else {
-    setRowsPerPage(width >= 800 ? 8 : 7);
+    setRowsPerPage(height >= 1024 ? 8 : height > 884 ? 7 : 6);
   }
 };
 

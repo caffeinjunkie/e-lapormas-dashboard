@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export const useError = () => {
@@ -14,23 +14,10 @@ interface ErrorProviderProps {
 const ErrorContext = createContext<ErrorProviderValue | undefined>(undefined);
 
 interface ErrorProviderValue {
-  error: {
-    errorParam: string;
-    errorCodeParam: string;
-    errorDescriptionParam: string;
-  } | null;
-  setError: (
-    error: {
-      errorParam: string;
-      errorCodeParam: string;
-      errorDescriptionParam: string;
-    } | null,
-  ) => void;
   clearError: () => void;
 }
 
 export const ErrorProvider = ({ children }: ErrorProviderProps) => {
-  const [error, setError] = useState<ErrorProviderValue["error"]>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -45,7 +32,6 @@ export const ErrorProvider = ({ children }: ErrorProviderProps) => {
       queryParams.get("error_description");
 
     if (errorParam && errorCodeParam && errorDescriptionParam) {
-      setError({ errorParam, errorCodeParam, errorDescriptionParam });
       router.push(
         `/error?errorCode=${errorCodeParam}&errorDescription=${encodeURIComponent(errorDescriptionParam)}`,
       );
@@ -53,12 +39,11 @@ export const ErrorProvider = ({ children }: ErrorProviderProps) => {
   }, [router]);
 
   const clearError = () => {
-    setError(null);
     router.push("/");
   };
 
   return (
-    <ErrorContext.Provider value={{ error, setError, clearError }}>
+    <ErrorContext.Provider value={{ clearError }}>
       {children}
     </ErrorContext.Provider>
   );

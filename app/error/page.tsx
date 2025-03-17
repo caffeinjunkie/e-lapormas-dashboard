@@ -3,11 +3,13 @@
 import { useSearchParams } from "next/navigation";
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { Button } from "@heroui/button";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
+
+import { useError } from "@/providers/error-provider";
 
 export default function ErrorPage() {
   const t = useTranslations("ErrorPage");
+  const error = useError();
 
   const searchParams = useSearchParams();
   const errorCode = searchParams.get("errorCode");
@@ -30,8 +32,7 @@ export default function ErrorPage() {
         </CardBody>
         <CardFooter className="pt-4">
           <Button
-            as={Link}
-            href="/login"
+            onPress={error?.clearError}
             color="primary"
             radius="sm"
             variant="light"

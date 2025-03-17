@@ -37,8 +37,6 @@ export const upsertAdmins = async (data: AdminData[]) => {
     .upsert(data)
     .select();
 
-  console.log(updatedAdmins, error, "tes");
-
   if (error) throw error;
   return updatedAdmins;
 };
