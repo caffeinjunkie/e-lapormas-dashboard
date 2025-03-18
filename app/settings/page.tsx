@@ -1,10 +1,13 @@
+import { useTranslations } from "next-intl";
+
 import { Layout } from "@/components/layout";
 import { title } from "@/components/primitives";
 
 export default function SettingsPage() {
+  const t = useTranslations("SettingsPage");
   return (
-    <Layout>
-      <h1 className={title()}>Settings</h1>
+    <Layout title={t("settings-title")}>
+
     </Layout>
   );
 }

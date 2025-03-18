@@ -382,7 +382,7 @@ export default function AdminManagementPage() {
 
   return (
     <Layout ref={layoutRef} title={t("title")}>
-      <div className="flex pt-2 md:pt-6">
+      <div className="flex">
         <AdminTable
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}

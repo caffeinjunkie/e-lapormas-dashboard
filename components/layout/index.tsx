@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import React, { PropsWithChildren } from "react";
 
+import { title as titleClass } from "@/components/primitives";
+
 interface LayoutProps extends PropsWithChildren {
   className?: string;
   title?: string;
@@ -15,8 +17,8 @@ export const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
           className,
         )}
       >
-        <div className="inline-block" ref={ref}>
-          <h1 className="text-2xl font-bold hidden md:block">{title}</h1>
+        <div className="inline-block p-2 md:p-0" ref={ref}>
+          <h1 className={clsx(titleClass(), "mb-0 md:mb-4")}>{title}</h1>
           {children}
         </div>
       </section>

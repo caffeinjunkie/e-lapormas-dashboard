@@ -3,6 +3,7 @@
 import { ModalHeader } from "@heroui/modal";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
+import NextImage from "next/image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
 import { Modal } from "@/components/modal";
 import { useModal } from "@/components/modal/use-modal";
 import { ProfileData } from "@/types/user.types";
+import { siteConfig } from "@/config/site";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -27,6 +29,7 @@ export const Navbar = () => {
   const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(false);
   const [user, setUser] = useState<ProfileData | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const { logoSrc } = siteConfig;
 
   const getUserData = async () => {
     try {
@@ -78,7 +81,7 @@ export const Navbar = () => {
     }
   };
 
-  const icon = (
+  const mobileHeaderLabel = (
     <NextLink className="flex justify-start items-center gap-1" href="/">
       <p className="font-bold text-inherit">
         {t(
@@ -91,7 +94,7 @@ export const Navbar = () => {
   return (
     <>
       <MobileNavbar isSuperAdmin={isSuperAdmin} onLogout={openModal}>
-        {icon}
+        {mobileHeaderLabel}
       </MobileNavbar>
       <div className="ml-2">
         <Sidebar
@@ -101,7 +104,15 @@ export const Navbar = () => {
           user={user}
           onLogout={openModal}
         >
-          {icon}
+          <div className="flex w-full justify-center items-center">
+            <NextImage
+              src={logoSrc}
+              alt="Logo"
+              className="object-contain"
+              width={80}
+              height={80}
+            />
+          </div>
         </Sidebar>
       </div>
       <Modal
