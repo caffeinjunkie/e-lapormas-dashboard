@@ -426,7 +426,6 @@ export default function AdminManagementPage() {
         />
       </div>
       <Modal
-        autoFocus={false}
         className="focus:outline-none"
         onClose={() => onCloseModal(modals.invite ? "invite" : "delete")}
         isOpen={modals.invite || modals.delete}
