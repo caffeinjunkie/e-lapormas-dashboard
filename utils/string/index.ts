@@ -44,7 +44,38 @@ const validateConfirmPassword = (
   return null;
 };
 
+function generatePassword(): string {
+  const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  const symbols = "!@#$%^&*()_-+=<>?";
+  const allChars = uppercaseChars + lowercaseChars + numbers + symbols;
+
+  let password = "";
+
+  password += uppercaseChars.charAt(
+    Math.floor(Math.random() * uppercaseChars.length),
+  );
+  password += lowercaseChars.charAt(
+    Math.floor(Math.random() * lowercaseChars.length),
+  );
+  password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+  password += symbols.charAt(Math.floor(Math.random() * symbols.length));
+
+  while (password.length < 6) {
+    password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+  }
+
+  password = password
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("");
+
+  return password;
+}
+
 export {
+  generatePassword,
   validateIsRequired,
   validateEmail,
   validatePassword,

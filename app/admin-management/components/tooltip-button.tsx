@@ -4,11 +4,13 @@ import { Tooltip, TooltipProps } from "@heroui/tooltip";
 interface TooltipButtonProps extends TooltipProps {
   onPress: () => void;
   icon?: React.ReactNode;
+  isLoading?: boolean;
 }
 
 export const TooltipButton = ({
   isDisabled = false,
   onPress,
+  isLoading = false,
   icon,
   ...props
 }: TooltipButtonProps) => (
@@ -16,13 +18,14 @@ export const TooltipButton = ({
     <Tooltip isDisabled={isDisabled} {...props}>
       <Button
         isDisabled={isDisabled}
+        isLoading={isLoading}
         isIconOnly
         size="sm"
         radius="full"
         variant="light"
         onPress={onPress}
       >
-        {icon}
+        {isLoading || icon}
       </Button>
     </Tooltip>
   </div>

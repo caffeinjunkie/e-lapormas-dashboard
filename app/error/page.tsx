@@ -13,9 +13,9 @@ export default function ErrorPage() {
 
   const searchParams = useSearchParams();
   const errorCode = searchParams.get("errorCode");
-  const message =
-    searchParams.get("errorDescription") ||
-    "Terjadi kesalahan. Mohon coba sesaat lagi";
+  const message = errorCode
+    ? t(`error-description-${errorCode?.replaceAll("_", "-")}`)
+    : t("error-description-default");
 
   return (
     <div className="flex min-h-screen items-center justify-center">
@@ -24,11 +24,7 @@ export default function ErrorPage() {
           <p className="text-lg font-semibold">{t("error-title")}</p>
         </CardHeader>
         <CardBody className="flex flex-col p-4 gap-4">
-          <p className="text-sm text-default-500">
-            {errorCode
-              ? t(`error-description-${errorCode.replaceAll("_", "-")}`)
-              : message}
-          </p>
+          <p className="text-sm text-default-500">{message}</p>
         </CardBody>
         <CardFooter className="pt-4">
           <Button

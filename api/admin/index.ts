@@ -42,16 +42,34 @@ export const upsertAdmins = async (data: AdminData[]) => {
   return updatedAdmins;
 };
 
-export const updateAdmin = async (data: AdminData) => {
-  const { data: updatedData, error } = await supabase
+export const updateAdminById = async ({
+  user_id,
+  ...updatedData
+}: AdminData) => {
+  const { data, error } = await supabase
     .from("admins")
-    .update({ display_name: data.display_name })
-    .eq("user_id", data.user_id)
+    .update(updatedData)
+    .eq("user_id", user_id as string)
     .select()
     .single();
 
   if (error) throw error;
-  return updatedData;
+  return data;
+};
+
+export const updateAdminByEmail = async ({
+  email,
+  ...updatedData
+}: AdminData) => {
+  const { data, error } = await supabase
+    .from("admins")
+    .update(updatedData)
+    .eq("email", email as string)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
 };
 
 export const createAdmin = async ({

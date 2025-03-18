@@ -44,10 +44,10 @@ export const TopContent = ({
   }));
 
   const statusFilterValue = t(
-    `admin-management-status-${selectedStatusFilterValue}`,
+    `admin-management-status-${selectedStatusFilterValue === "all" ? "filter-label" : selectedStatusFilterValue}`,
   );
   const abbreviatedStatusFilterValue = t(
-    `admin-management-status-${selectedStatusFilterValue}`,
+    `admin-management-status-${selectedStatusFilterValue === "all" ? "filter-label" : selectedStatusFilterValue}`,
   )
     .slice(0, 3)
     .toUpperCase();

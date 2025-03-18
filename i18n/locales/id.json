@@ -60,8 +60,8 @@
     "admin-management-default-error-description": "Terjadi kesalahan. Mohon coba sesaat lagi",
     "admin-management-save-error-toast-title": "Terjadi Kesalahan",
     "admin-management-save-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi",
-    "admin-management-invite-user-error-toast-title": "Terjadi Kesalahan",
-    "admin-management-invite-user-error-toast-description": "Galal mengirim undangan. Mohon coba sesaat lagi",
+    "admin-management-invite-error-toast-title": "Terjadi Kesalahan",
+    "admin-management-invite-error-toast-description": "Galal mengirim undangan. Mohon coba sesaat lagi",
     "admin-management-delete-error-toast-title": "Terjadi Kesalahan",
     "admin-management-delete-error-toast-description": "Data gagal dihapus. Mohon coba sesaat lagi",
     "admin-management-delete-tooltip-text": "Hapus",
@@ -96,6 +96,9 @@
   "ErrorPage": {
     "error-title": "Terjadi Kesalahan",
     "error-description-otp-expired": "Link sudah kadaluarsa. Mohon ajukan permintaan baru",
+    "error-description-invalid-token": "Link tidak valid. Mohon ajukan permintaan baru",
+    "error-description-default": "Terjadi kesalahan. Silakan kembali ke halaman login.",
+    "error-description-auth-error": "Terjadi kesalahan saat verifikasi. Mohon coba sesaat lagi",
     "back-to-login-button": "Kembali ke halaman login"
   },
   "Modal": {
@@ -105,7 +108,7 @@
     "logout-confirmation-title": "Apakah anda yakin ingin keluar?",
     "logout-confirmation-button-text": "Ya, keluar",
     "logout-cancellation-button-text": "Tidak",
-    "navbar-dashboard-label": "Dashboard",
+    "navbar-dashboard-label": "Ikhtisar",
     "navbar-reports-label": "Laporan",
     "navbar-statistics-label": "Statistik",
     "navbar-admin-management-label": "Manajemen Admin",

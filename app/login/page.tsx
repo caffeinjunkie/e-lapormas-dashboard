@@ -51,6 +51,7 @@ export default function LoginPage() {
 
   const onResetPasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    handleReset();
     const formData = buildFormData(e);
     const email = formData.get("email") as string;
 

@@ -2,6 +2,7 @@ import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Chip } from "@heroui/chip";
 import { Switch } from "@heroui/switch";
+import { ToastProps, addToast } from "@heroui/toast";
 import { useTranslations } from "next-intl";
 import {
   ChangeEventHandler,
@@ -19,10 +20,11 @@ import {
   getCookie,
   setCookie,
 } from "@/app/admin-management/handlers";
+import { getErrorToastProps } from "@/app/admin-management/handlers";
 
 import { UserAva } from "@/components/user-ava";
 
-import { inviteByEmail } from "@/api/users";
+import { createAuthUser } from "@/api/auth";
 
 import { AdminData } from "@/types/user.types";
 
@@ -34,6 +36,7 @@ interface AdminCellProps {
   onSuperAdminToggle: ChangeEventHandler<HTMLInputElement>;
   onDeleteUser: () => void;
   isLast: boolean;
+  admins: AdminData[];
 }
 
 export const AdminCell = ({
@@ -42,11 +45,13 @@ export const AdminCell = ({
   isMobile,
   isLast,
   selfId,
+  admins,
   onSuperAdminToggle,
   onDeleteUser,
 }: AdminCellProps) => {
   const t = useTranslations("AdminManagementPage");
   const [isResendButtonDisabled, setIsResendButtonDisabled] = useState(false);
+  const [isResendButtonLoading, setIsResendButtonLoading] = useState(false);
   const [timers, setTimers] = useState<Record<string, number>>({});
   const timersRef: MutableRefObject<
     Record<string, ReturnType<typeof setInterval> | undefined>
@@ -54,64 +59,73 @@ export const AdminCell = ({
   const cellValue = user[columnKey as keyof AdminData];
 
   useEffect(() => {
-    const storedTimestamp = getCookie(user.user_id);
+    const userId = user.user_id as string;
+    const storedTimestamp = getCookie(userId);
     if (storedTimestamp) {
       const elapsedTime = Date.now() - parseInt(storedTimestamp);
       const remainingTime = 60 * 1000 - elapsedTime;
 
       if (remainingTime > 0) {
         setIsResendButtonDisabled(true);
-        setTimers((prev) => ({ ...prev, [user.user_id]: remainingTime }));
+        setTimers((prev) => ({ ...prev, [userId]: remainingTime }));
 
-        timersRef.current[user.user_id] = setInterval(() => {
+        timersRef.current[userId] = setInterval(() => {
           setTimers((prev) => {
-            const newTime = (prev[user.user_id] || 0) - 1000;
-            if (newTime <= 0 && timersRef.current[user.user_id]) {
-              clearInterval(timersRef.current[user.user_id]);
+            const newTime = (prev[userId] || 0) - 1000;
+            if (newTime <= 0 && timersRef.current[userId]) {
+              clearInterval(timersRef.current[userId]);
               setIsResendButtonDisabled(false);
-              deleteCookie(user.user_id);
-              return { ...prev, [user.user_id]: 0 };
+              deleteCookie(userId);
+              return { ...prev, [userId]: 0 };
             }
-            return { ...prev, [user.user_id]: newTime };
+            return { ...prev, [userId]: newTime };
           });
         }, 1000);
       } else {
         setIsResendButtonDisabled(false);
-        setTimers((prev) => ({ ...prev, [user.user_id]: 0 }));
-        deleteCookie(user.user_id);
+        setTimers((prev) => ({ ...prev, [userId]: 0 }));
+        deleteCookie(userId);
       }
     }
     return () => {
-      if (timersRef.current[user.user_id]) {
-        clearInterval(timersRef.current[user.user_id]);
+      if (timersRef.current[userId]) {
+        clearInterval(timersRef.current[userId]);
       }
     };
-  }, []);
+  }, [admins]);
 
   const onResend = async (userId: string) => {
-    await inviteByEmail(user.email as string);
-    const timestamp = Date.now().toString();
-    setCookie(timestamp, userId, 1);
+    setIsResendButtonLoading(true);
+    try {
+      await createAuthUser(user.email as string);
+      const timestamp = Date.now().toString();
+      setCookie(timestamp, userId, 1);
 
-    setIsResendButtonDisabled(true);
-    setTimers((prev) => ({ ...prev, [userId]: 60 * 1000 }));
+      setIsResendButtonDisabled(true);
+      setTimers((prev) => ({ ...prev, [userId]: 60 * 1000 }));
 
-    if (timersRef.current[userId]) {
-      clearInterval(timersRef.current[userId]);
+      if (timersRef.current[userId]) {
+        clearInterval(timersRef.current[userId]);
+      }
+
+      timersRef.current[userId] = setInterval(() => {
+        setTimers((prev) => {
+          const currentTime = prev[userId] || 0;
+          if (currentTime <= 1000 && timersRef.current[userId]) {
+            clearInterval(timersRef.current[userId]);
+            setIsResendButtonDisabled(false);
+            deleteCookie(userId);
+            return { ...prev, [userId]: 0 };
+          }
+          return { ...prev, [userId]: currentTime - 1000 };
+        });
+      }, 1000);
+    } catch (error) {
+      const toastProps = getErrorToastProps(t, "invite");
+      addToast(toastProps as ToastProps);
+    } finally {
+      setIsResendButtonLoading(false);
     }
-
-    timersRef.current[userId] = setInterval(() => {
-      setTimers((prev) => {
-        const currentTime = prev[userId] || 0;
-        if (currentTime <= 1000 && timersRef.current[userId]) {
-          clearInterval(timersRef.current[userId]);
-          setIsResendButtonDisabled(false);
-          deleteCookie(userId);
-          return { ...prev, [userId]: 0 };
-        }
-        return { ...prev, [userId]: currentTime - 1000 };
-      });
-    }, 1000);
   };
 
   switch (columnKey) {
@@ -156,17 +170,20 @@ export const AdminCell = ({
                 selfId === user?.user_id ||
                 user.is_verified
               }
-              onPress={() => onResend(user.user_id)}
+              isLoading={isResendButtonLoading}
+              onPress={() => onResend(user.user_id as string)}
               color="warning"
               size="sm"
               variant="bordered"
               className="w-full"
               startContent={
-                <PaperAirplaneIcon className="size-4 -rotate-45 mb-1" />
+                isResendButtonLoading || (
+                  <PaperAirplaneIcon className="size-4 -rotate-45 mb-1" />
+                )
               }
             >
               {isResendButtonDisabled
-                ? formatTime(timers[user.user_id])
+                ? formatTime(timers[user.user_id as string])
                 : t("admin-management-invite-tooltip-text")}
             </Button>
             <Button
@@ -225,12 +242,13 @@ export const AdminCell = ({
               selfId === user?.user_id ||
               user.is_verified
             }
-            onPress={() => onResend(user.user_id)}
+            isLoading={isResendButtonLoading}
+            onPress={() => onResend(user.user_id as string)}
             color="warning"
             content={t("admin-management-invite-tooltip-text")}
             icon={
               isResendButtonDisabled ? (
-                <p>{formatTime(timers[user.user_id])}</p>
+                <p>{formatTime(timers[user.user_id as string])}</p>
               ) : (
                 <PaperAirplaneIcon className="size-5 text-warning -rotate-45" />
               )

@@ -8,9 +8,10 @@ import { ModalBody, ModalHeader } from "@heroui/modal";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import {
+  deleteAllCookies,
   getCreatePasswordErrorMessage,
   getTokenErrorMessage,
 } from "@/app/create-password/utils";
@@ -46,13 +47,17 @@ export default function CreatePasswordPage() {
   const searchParams = useSearchParams();
   const { backgroundImageSrcs } = siteConfig;
   const t = useTranslations("CreatePasswordPage");
+  const type = searchParams.get("type");
+  const tokenHash = searchParams.get("token_hash");
+
+  useEffect(() => {
+    deleteAllCookies();
+  }, []);
 
   const verifyIdentity = async () => {
-    const tokenHash = searchParams.get("token_hash");
-
     if (!tokenHash) {
       setTokenError(t("no-access-error-message"));
-      return;
+      return null;
     }
 
     try {
@@ -63,18 +68,22 @@ export default function CreatePasswordPage() {
         (identity) => identity.identity_data?.email_verified === false,
       );
 
-      return unverifiedIdentities?.length !== 0;
+      return unverifiedIdentities;
     } catch (error: any) {
       setTokenError(t(getTokenErrorMessage(error.name)));
     }
 
-    return false;
+    return null;
   };
 
   const handleSubmit = async (password: string) => {
-    const isIdentityVerified = await verifyIdentity();
+    const identities = await verifyIdentity();
 
-    if (!isIdentityVerified) {
+    if (!identities) {
+      return;
+    }
+
+    if (identities?.length === 0 && type !== "invite") {
       setModalProps({
         title: t("create-password-unverified-identity-error-title"),
         message: t("create-password-unverified-identity-error-message"),

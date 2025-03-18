@@ -10,11 +10,10 @@ import { useEffect, useState } from "react";
 import { MobileNavbar } from "./navbar-mobile";
 import { Sidebar } from "./navbar-sidebar";
 
-import { Logo } from "@/components/icons";
 import { Modal } from "@/components/modal";
 import { useModal } from "@/components/modal/use-modal";
 
-import { updateAdmin } from "@/api/admin";
+import { updateAdminById } from "@/api/admin";
 import { fetchAdminById } from "@/api/admin";
 import { logout } from "@/api/auth";
 import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
@@ -42,8 +41,8 @@ export const Navbar = () => {
         const fakeName = await generateFakeName();
         displayName = fakeName;
 
-        await updateAuthUser({ data: { fullName: displayName } });
-        await updateAdmin({
+        await updateAuthUser({ data: { fullName: displayName, passKey: "" } });
+        await updateAdminById({
           display_name: displayName as string,
           user_id: result.user_id as string,
         });
@@ -83,8 +82,11 @@ export const Navbar = () => {
 
   const icon = (
     <NextLink className="flex justify-start items-center gap-1" href="/">
-      <Logo />
-      <p className="font-bold text-inherit">e-lapormas jakarta</p>
+      <p className="font-bold text-inherit">
+        {t(
+          `navbar-${pathname === "/" ? "dashboard" : pathname.split("/")[1]}-label`,
+        )}
+      </p>
     </NextLink>
   );
 

@@ -52,7 +52,9 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname === "/admin-management";
   const isCreatePasswordPage =
     request.nextUrl.pathname.includes("/create-password");
-  const isPublicRoute = isLoginPage || isErrorPage || isCreatePasswordPage;
+  const isAuthConfirmPage = request.nextUrl.pathname.includes("/auth/confirm");
+  const isPublicRoute =
+    isLoginPage || isErrorPage || isCreatePasswordPage || isAuthConfirmPage;
 
   // If user is not signed in and trying to access a protected route, redirect to login
   if (!user && !isPublicRoute) {

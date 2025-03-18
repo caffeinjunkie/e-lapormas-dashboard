@@ -27,6 +27,7 @@ import {
   getErrorToastProps,
   handleToggle,
 } from "@/app/admin-management/handlers";
+import { setCookie } from "@/app/admin-management/handlers";
 
 import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
 import { Layout } from "@/components/layout";
@@ -38,7 +39,8 @@ import {
   createAdmin,
   upsertAdmins,
 } from "@/api/admin";
-import { deleteAuthUser, inviteByEmail } from "@/api/users";
+import { createAuthUser } from "@/api/auth";
+import { deleteAuthUser } from "@/api/users";
 
 import { buildFormData } from "@/utils/form";
 import { validateEmail, validateIsRequired } from "@/utils/string";
@@ -248,12 +250,22 @@ export default function AdminManagementPage() {
         };
         return;
       }
-      const { data } = await inviteByEmail(formData.get("email") as string);
-      await createAdmin({
-        email: formData.get("email") as string,
-        user_id: data.user.id,
-      });
+      const email = formData.get("email") as string;
+      const { data } = await createAuthUser(email);
+
+      if (data) {
+        const userId = data?.user?.id as string;
+        const timestamp = Date.now().toString();
+        setCookie(timestamp, userId, 1);
+
+        await createAdmin({
+          email,
+          user_id: userId,
+        });
+      }
+
       await fetchAdmins();
+
       toastProps = {
         title: t("admin-management-invite-user-success-toast-title"),
         description: t.rich(
@@ -298,6 +310,7 @@ export default function AdminManagementPage() {
           title: t(
             "admin-management-invite-user-modal-cancellation-button-text",
           ),
+          isDisabled: isInviteLoading,
           onPress: () => onCloseModal("invite"),
         },
         {
@@ -370,6 +383,7 @@ export default function AdminManagementPage() {
       <AdminCell
         columnKey={columnKey}
         user={user}
+        admins={admins}
         isMobile={isMobile}
         isLast={isLast}
         selfId={selfId}
@@ -384,15 +398,12 @@ export default function AdminManagementPage() {
         onDeleteUser={() => handleDelete(user)}
       />
     ),
-    [selfId, handleToggle, handleDelete, isMobile],
+    [selfId, handleToggle, handleDelete, isMobile, admins],
   );
 
   return (
-    <Layout ref={layoutRef}>
-      <h1 className="text-2xl font-bold text-center md:text-left">
-        {t("admin-management-title")}
-      </h1>
-      <div className="flex py-4 lg:pt-8">
+    <Layout ref={layoutRef} title={t("admin-management-title")}>
+      <div className="flex pt-2 md:pt-6">
         <AdminTable
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}
