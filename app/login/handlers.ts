@@ -44,68 +44,6 @@ const handleLogin = async ({
   }
 };
 
-interface HandleRegisterProps {
-  formData: FormData;
-  setError: (errors: Record<string, string>) => void;
-  setLoading: (loading: boolean) => void;
-  openModal: () => void;
-  setModalProps: (props: { title: string; message: string }) => void;
-}
-
-const handleRegister = async ({
-  formData,
-  setError,
-  setLoading,
-  openModal,
-  setModalProps,
-}: HandleRegisterProps) => {
-  setLoading(true);
-
-  // const passwordMismatchErrors = validateConfirmPassword(
-  //   formData.get("password") as string,
-  //   formData.get("confirm-password") as string,
-  // );
-
-  // if (passwordMismatchErrors) {
-  //   setError({ "confirm-password": passwordMismatchErrors });
-  //   setLoading(false);
-  //   return;
-  // }
-
-  // try {
-  //   const { data } = await register(formData);
-  //   const identities = data.user?.identities;
-  //   if (identities?.length === 0) {
-  //     setError({
-  //       email: "Email telah terdaftar. Mohon gunakan email lain.",
-  //     });
-  //     return;
-  //   }
-
-  //   const unverifiedIdentities = identities?.filter(
-  //     (identity) => identity.identity_data?.email_verified === false,
-  //   );
-
-  //   if (identities?.length !== 0 && unverifiedIdentities?.length !== 0) {
-  //     openModal();
-  //     setModalProps({
-  //       title: "Email Berhasil Didaftarkan",
-  //       message:
-  //         "Mohon verifikasi email Anda untuk melanjutkan proses pendaftaran.",
-  //     });
-  //     return;
-  //   }
-  // } catch (error: any) {
-  //   const message = translateRegisterErrorMessage(
-  //     error.message,
-  //     formData.get("email") as string,
-  //   );
-  //   setError({ email: message });
-  // } finally {
-  //   setLoading(false);
-  // }
-};
-
 interface HandleResetPasswordProps {
   email: string;
   setLoading: (loading: boolean) => void;
@@ -145,4 +83,4 @@ const handleResetPassword = async ({
   }
 };
 
-export { handleLogin, handleRegister, handleResetPassword };
+export { handleLogin, handleResetPassword };
