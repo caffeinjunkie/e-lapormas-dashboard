@@ -47,7 +47,6 @@ export default function CreatePasswordPage() {
   const searchParams = useSearchParams();
   const { backgroundImageSrcs } = siteConfig;
   const t = useTranslations("CreatePasswordPage");
-  const type = searchParams.get("type");
   const tokenHash = searchParams.get("token_hash");
 
   useEffect(() => {
@@ -64,11 +63,7 @@ export default function CreatePasswordPage() {
       const result = await validateToken("recovery", tokenHash);
       const identities = result.data.user?.identities;
 
-      const unverifiedIdentities = identities?.filter(
-        (identity) => identity.identity_data?.email_verified === false,
-      );
-
-      return unverifiedIdentities;
+      return identities?.[0];
     } catch (error: any) {
       setTokenError(t(getTokenErrorMessage(error.name)));
     }
@@ -77,13 +72,13 @@ export default function CreatePasswordPage() {
   };
 
   const handleSubmit = async (password: string) => {
-    const identities = await verifyIdentity();
+    const identity = await verifyIdentity();
 
-    if (!identities) {
+    if (!identity) {
       return;
     }
 
-    if (identities?.length === 0 && type !== "invite") {
+    if (!identity.identity_data?.email_verified) {
       setModalProps({
         title: t("create-password-unverified-identity-error-title"),
         message: t("create-password-unverified-identity-error-message"),
