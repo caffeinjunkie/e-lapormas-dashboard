@@ -6,7 +6,6 @@ import { FormEvent } from "react";
 
 import { Input } from "@/components/input";
 import { PasswordInput } from "@/components/password-input";
-
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 interface LoginFormProps {

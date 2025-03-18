@@ -10,27 +10,23 @@ import NextImage from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
+import { logout } from "@/api/auth";
+import { updateAuthUser, validateToken } from "@/api/users";
 import {
   deleteAllCookies,
   getCreatePasswordErrorMessage,
   getTokenErrorMessage,
 } from "@/app/create-password/utils";
-
 import { Modal } from "@/components/modal";
 import { useModal } from "@/components/modal/use-modal";
 import { PasswordInput } from "@/components/password-input";
-
-import { logout } from "@/api/auth";
-import { updateAuthUser, validateToken } from "@/api/users";
-
+import { siteConfig } from "@/config/site";
 import { buildFormData } from "@/utils/form";
 import {
   validateConfirmPassword,
   validateIsRequired,
   validatePassword,
 } from "@/utils/string";
-
-import { siteConfig } from "@/config/site";
 
 export default function CreatePasswordPage() {
   const [inputErrors, setInputErrors] = useState<

@@ -6,7 +6,6 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { DashboardIcon } from "@/components/icons";
-
 import { IconSvgProps } from "@/types/icon.types";
 
 export type SiteConfig = typeof siteConfig;

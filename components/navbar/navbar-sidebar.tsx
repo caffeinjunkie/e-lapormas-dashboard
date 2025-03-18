@@ -11,7 +11,6 @@ import { PropsWithChildren } from "react";
 import { UserAva } from "../user-ava";
 
 import { adminManagementItem, siteConfig } from "@/config/site";
-
 import { ProfileData } from "@/types/user.types";
 
 interface SidebarProps {

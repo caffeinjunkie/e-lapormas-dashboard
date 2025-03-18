@@ -18,6 +18,13 @@ import React, {
 import { AdminCell } from "./components/admin-cell";
 import { TopContent } from "./components/top-content";
 
+import {
+  checkIsUserAlreadyInvited,
+  createAdmin,
+  upsertAdmins,
+} from "@/api/admin";
+import { createAuthUser } from "@/api/auth";
+import { deleteAuthUser } from "@/api/users";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
 import { columns } from "@/app/admin-management/config";
 import {
@@ -28,24 +35,13 @@ import {
   handleToggle,
 } from "@/app/admin-management/handlers";
 import { setCookie } from "@/app/admin-management/handlers";
-
 import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
 import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
 import { useMultipleModal } from "@/components/modal/use-modal";
-
-import {
-  checkIsUserAlreadyInvited,
-  createAdmin,
-  upsertAdmins,
-} from "@/api/admin";
-import { createAuthUser } from "@/api/auth";
-import { deleteAuthUser } from "@/api/users";
-
+import { AdminData } from "@/types/user.types";
 import { buildFormData } from "@/utils/form";
 import { validateEmail, validateIsRequired } from "@/utils/string";
-
-import { AdminData } from "@/types/user.types";
 
 export default function AdminManagementPage() {
   const t = useTranslations("AdminManagementPage");

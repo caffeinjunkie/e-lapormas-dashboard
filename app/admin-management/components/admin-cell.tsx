@@ -14,6 +14,7 @@ import {
 
 import { TooltipButton } from "./tooltip-button";
 
+import { createAuthUser } from "@/api/auth";
 import {
   deleteCookie,
   formatTime,
@@ -21,11 +22,7 @@ import {
   setCookie,
 } from "@/app/admin-management/handlers";
 import { getErrorToastProps } from "@/app/admin-management/handlers";
-
 import { UserAva } from "@/components/user-ava";
-
-import { createAuthUser } from "@/api/auth";
-
 import { AdminData } from "@/types/user.types";
 
 interface AdminCellProps {

@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { FormEvent } from "react";
 
 import { Input } from "@/components/input";
-
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 interface ResetPasswordFormProps {

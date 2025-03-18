@@ -11,13 +11,10 @@ import { FormEvent, useState } from "react";
 import { LoginForm } from "@/app/login/components/login-form";
 import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
 import { handleLogin, handleResetPassword } from "@/app/login/handlers";
-
 import { Modal } from "@/components/modal";
 import { useModal } from "@/components/modal/use-modal";
-
-import { buildFormData } from "@/utils/form";
-
 import { siteConfig } from "@/config/site";
+import { buildFormData } from "@/utils/form";
 
 export default function LoginPage() {
   const t = useTranslations("LoginPage");

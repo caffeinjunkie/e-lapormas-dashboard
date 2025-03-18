@@ -10,14 +10,12 @@ import { useEffect, useState } from "react";
 import { MobileNavbar } from "./navbar-mobile";
 import { Sidebar } from "./navbar-sidebar";
 
-import { Modal } from "@/components/modal";
-import { useModal } from "@/components/modal/use-modal";
-
 import { updateAdminById } from "@/api/admin";
 import { fetchAdminById } from "@/api/admin";
 import { logout } from "@/api/auth";
 import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
-
+import { Modal } from "@/components/modal";
+import { useModal } from "@/components/modal/use-modal";
 import { ProfileData } from "@/types/user.types";
 
 export const Navbar = () => {

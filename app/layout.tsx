@@ -5,11 +5,9 @@ import { getLocale } from "next-intl/server";
 
 import { Providers } from "./providers";
 
-import { PrivateProvider, usePrivate } from "@/providers/private-provider";
-
 import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
-
+import { PrivateProvider, usePrivate } from "@/providers/private-provider";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
