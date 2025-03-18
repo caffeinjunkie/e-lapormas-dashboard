@@ -57,7 +57,6 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
                 onClick={() => {
                   if (item.href === "/logout") {
                     onLogout();
-                    return;
                   }
                   setIsOpen(false);
                 }}
