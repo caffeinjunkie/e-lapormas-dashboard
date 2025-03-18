@@ -1,35 +1,40 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { Button } from "@heroui/button";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
+import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
+import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+
+import { useError } from "@/providers/error-provider";
 
 export default function ErrorPage() {
+  const t = useTranslations("ErrorPage");
+  const error = useError();
+
   const searchParams = useSearchParams();
-  const message =
-    searchParams.get("message") || "Terjadi kesalahan. Mohon coba sesaat lagi";
+  const errorCode = searchParams.get("errorCode");
+  const message = errorCode
+    ? t(`error-description-${errorCode?.replaceAll("_", "-")}`)
+    : t("error-description-default");
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Card className="max-w-md w-full p-2">
+      <Card className="maxw-md w-full p-2">
         <CardHeader className="flex p-4 gap-2 items-center justify-center">
-          <ExclamationTriangleIcon className="size-6 text-danger" />
-          <p className="text-lg font-semibold">Error</p>
+          <p className="text-lg font-semibold">{t("error-title")}</p>
         </CardHeader>
         <CardBody className="flex flex-col p-4 gap-4">
           <p className="text-sm text-default-500">{message}</p>
         </CardBody>
         <CardFooter className="pt-4">
           <Button
-            as={Link}
-            href="/login"
+            onPress={error?.clearError}
             color="primary"
+            radius="sm"
             variant="light"
             className="w-full"
           >
-            Kembali ke halaman login
+            {t("back-to-login-button")}
           </Button>
         </CardFooter>
       </Card>

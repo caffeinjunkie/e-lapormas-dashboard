@@ -2,14 +2,16 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect } from "react";
+
 import { Navbar } from "@/components/navbar";
+
 import { createClient } from "@/utils/supabase-auth/client";
 
 interface PrivateLayoutProps {
   children: React.ReactNode;
 }
 
-const publicPaths = ["/login", "/error", "/auth/confirm"];
+const publicPaths = ["/login", "/create-password"];
 
 const PrivateContext = createContext<{ isPrivate: boolean } | undefined>(
   undefined,
@@ -28,9 +30,8 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  const isRegularPublicPath = publicPaths.includes(pathname);
-  const isCreatePasswordPath = pathname.includes("/create-password");
-  const isPublicPath = isRegularPublicPath || isCreatePasswordPath;
+  const isPublicPath = publicPaths.includes(pathname);
+  const isErrorPath = pathname === "/error";
 
   useEffect(() => {
     const checkUser = async () => {
@@ -39,7 +40,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
           data: { session },
         } = await supabase.auth.getSession();
 
-        if (!session && !isPublicPath) {
+        if (!session && !isPublicPath && !isErrorPath) {
           router.replace("/login");
         } else if (session && isPublicPath) {
           router.replace("/");
@@ -54,7 +55,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session && !isPublicPath) {
+      if (!session && !isPublicPath && !isErrorPath) {
         router.replace("/login");
       }
     });
@@ -66,7 +67,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
 
   return (
     <PrivateContext.Provider value={{ isPrivate: !isPublicPath }}>
-      {!isPublicPath && <Navbar />}
+      {!isPublicPath && !isErrorPath && <Navbar />}
       {children}
     </PrivateContext.Provider>
   );

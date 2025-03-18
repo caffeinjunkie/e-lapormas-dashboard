@@ -1,20 +1,23 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import NextImage from "next/image";
 import { Card, CardBody } from "@heroui/card";
+import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Tab, Tabs } from "@heroui/tabs";
-import { ModalHeader, ModalBody } from "@heroui/modal";
 import { useTranslations } from "next-intl";
+import NextImage from "next/image";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+
+import { LoginForm } from "@/app/login/components/login-form";
+import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
+import { handleLogin, handleResetPassword } from "@/app/login/handlers";
+
+import { Modal } from "@/components/modal";
+import { useModal } from "@/components/modal/use-modal";
 
 import { buildFormData } from "@/utils/form";
-import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
-import { LoginForm } from "@/app/login/components/login-form";
+
 import { siteConfig } from "@/config/site";
-import { handleLogin, handleResetPassword } from "@/app/login/handlers";
-import { useModal } from "@/components/modal/use-modal";
-import { Modal } from "@/components/modal";
 
 export default function LoginPage() {
   const t = useTranslations("LoginPage");
@@ -48,6 +51,7 @@ export default function LoginPage() {
 
   const onResetPasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    handleReset();
     const formData = buildFormData(e);
     const email = formData.get("email") as string;
 

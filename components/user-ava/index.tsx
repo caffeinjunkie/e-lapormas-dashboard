@@ -4,6 +4,7 @@ interface UserAvaProps {
   imageSrc?: string;
   displayName?: string;
   description: string;
+  indicator?: React.ReactNode;
   classNames?: {
     container?: string;
     avatar?: string;
@@ -16,6 +17,7 @@ export const UserAva = ({
   imageSrc = "",
   displayName = "",
   description,
+  indicator,
   classNames,
 }: UserAvaProps) => {
   const {
@@ -31,10 +33,13 @@ export const UserAva = ({
         src={imageSrc}
         showFallback
         name={displayName}
-        className={`hidden sm:block ${avatar}`}
+        className={avatar}
       />
       <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-        <p className={`text-sm truncate ${name}`}>{displayName || "-"}</p>
+        <span className={`text-sm truncate flex items-center ${name}`}>
+          {displayName || "-"}
+          {indicator && <span>{indicator}</span>}
+        </span>
         <p className={`text-xs text-gray-400 truncate ${descriptionClass}`}>
           {description}
         </p>

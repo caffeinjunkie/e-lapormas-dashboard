@@ -1,7 +1,7 @@
-import { title, subtitle } from "@/components/primitives";
 import { Snippet } from "@heroui/snippet";
 
 import { Layout } from "@/components/layout";
+import { subtitle, title } from "@/components/primitives";
 
 export default function AnnouncementsPage() {
   return (

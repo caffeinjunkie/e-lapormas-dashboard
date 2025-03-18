@@ -1,13 +1,13 @@
+import { Spinner } from "@heroui/spinner";
 import {
   Table,
   TableBody,
   TableCell,
   TableColumn,
-  TableProps,
   TableHeader,
+  TableProps,
   TableRow,
 } from "@heroui/table";
-import { Spinner } from "@heroui/spinner";
 import { useTranslations } from "next-intl";
 
 import { AdminData } from "@/types/user.types";
@@ -16,13 +16,17 @@ interface AdminTableProps extends TableProps {
   columns: {
     name: string;
     uid: string;
-    width: number;
-    align: string;
+    width?: number;
+    align?: string;
   }[];
   items: AdminData[];
   isLoading?: boolean;
   translationKey: string;
-  renderCell: (user: AdminData, columnKey: string) => React.ReactNode;
+  renderCell: (
+    user: AdminData,
+    columnKey: string,
+    isLast: boolean,
+  ) => React.ReactNode;
   bottomContent?: React.ReactNode;
   topContent?: React.ReactNode;
 }
@@ -32,13 +36,13 @@ export const AdminTable = ({
   items = [],
   isLoading = false,
   renderCell,
-  layout = "fixed",
+  layout = "auto",
   bottomContentPlacement = "outside",
   topContentPlacement = "outside",
   translationKey,
   ...props
 }: AdminTableProps) => {
-  const t = useTranslations("AdminManagementPage");
+  const t = useTranslations(translationKey);
 
   return (
     <Table
@@ -54,7 +58,7 @@ export const AdminTable = ({
             key={column.uid}
             aria-label={column.name}
             width={column.width}
-            align={column.align as "start" | "center" | "end"}
+            align={(column.align as "start" | "center" | "end") || "start"}
           >
             {t(`table-${column.uid.replaceAll("_", "-")}-column-label`)}
           </TableColumn>
@@ -71,7 +75,13 @@ export const AdminTable = ({
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey as string)}</TableCell>
+              <TableCell>
+                {renderCell(
+                  item,
+                  columnKey as string,
+                  item.id === items[items.length - 1].id,
+                )}
+              </TableCell>
             )}
           </TableRow>
         )}

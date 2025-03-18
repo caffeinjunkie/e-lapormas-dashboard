@@ -1,16 +1,18 @@
-import { PropsWithChildren } from "react";
-import NextLink from "next/link";
-import { redirect } from "next/navigation";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { Skeleton } from "@heroui/skeleton";
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { useTranslations } from "next-intl";
+import NextLink from "next/link";
+import { redirect } from "next/navigation";
+import { PropsWithChildren } from "react";
 
-import { siteConfig, adminManagementItem } from "@/config/site";
-import { ProfileData } from "@/types/user.types";
 import { UserAva } from "../user-ava";
+
+import { adminManagementItem, siteConfig } from "@/config/site";
+
+import { ProfileData } from "@/types/user.types";
 
 interface SidebarProps {
   isSuperAdmin: boolean;
@@ -52,7 +54,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
 
   return (
     <div
-      className="hidden md:flex flex-col fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl shadow-lg"
+      className="hidden md:flex flex-col overflow-y-scroll fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl shadow-lg"
       style={{
         backgroundColor: sidebarTheme.sidebarBackground,
       }}

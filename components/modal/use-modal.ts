@@ -12,3 +12,35 @@ export const useModal = (defaultOpen: boolean = false) => {
     closeModal,
   };
 };
+
+export const useMultipleModal = () => {
+  const [modals, setModals] = useState<Record<string, boolean>>({});
+
+  const toggleModal = (modalName: string) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: !prevModals[modalName],
+    }));
+  };
+
+  const openModal = (modalName: string) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: true,
+    }));
+  };
+
+  const closeModal = (modalName: string) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: false,
+    }));
+  };
+
+  return {
+    modals,
+    toggleModal,
+    openModal,
+    closeModal,
+  };
+};

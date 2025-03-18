@@ -1,0 +1,32 @@
+import { Button } from "@heroui/button";
+import { Tooltip, TooltipProps } from "@heroui/tooltip";
+
+interface TooltipButtonProps extends TooltipProps {
+  onPress: () => void;
+  icon?: React.ReactNode;
+  isLoading?: boolean;
+}
+
+export const TooltipButton = ({
+  isDisabled = false,
+  onPress,
+  isLoading = false,
+  icon,
+  ...props
+}: TooltipButtonProps) => (
+  <div className="relative flex w-full justify-center items-center gap-2">
+    <Tooltip isDisabled={isDisabled} {...props}>
+      <Button
+        isDisabled={isDisabled}
+        isLoading={isLoading}
+        isIconOnly
+        size="sm"
+        radius="full"
+        variant="light"
+        onPress={onPress}
+      >
+        {isLoading || icon}
+      </Button>
+    </Tooltip>
+  </div>
+);

@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { Input, InputProps } from "@heroui/input";
-
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { Input, InputProps } from "@heroui/input";
+import { useState } from "react";
 
 interface PasswordInputProps extends InputProps {
   ariaLabel?: string;

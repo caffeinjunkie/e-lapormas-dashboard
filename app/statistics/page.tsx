@@ -1,6 +1,5 @@
-import { title } from "@/components/primitives";
-
 import { Layout } from "@/components/layout";
+import { title } from "@/components/primitives";
 
 export default function StatisticsPage() {
   return (

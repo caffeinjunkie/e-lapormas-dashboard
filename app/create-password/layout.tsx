@@ -1,5 +1,5 @@
-import { Suspense } from "react";
 import { Spinner } from "@heroui/spinner";
+import { Suspense } from "react";
 
 export default function CreatePasswordLayout({
   children,

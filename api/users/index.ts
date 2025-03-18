@@ -32,6 +32,7 @@ type UpdateAuthUserData = {
   email?: string;
   data?: {
     fullName?: string;
+    passKey?: string;
   };
   password?: string;
 };

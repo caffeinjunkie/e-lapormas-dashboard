@@ -1,11 +1,12 @@
-import { FormEvent } from "react";
-import { Button } from "@heroui/button";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { useTranslations } from "next-intl";
+import { FormEvent } from "react";
 
 import { Input } from "@/components/input";
+
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 interface ResetPasswordFormProps {

@@ -1,13 +1,16 @@
-import "@/styles/globals.css";
-import { Metadata, Viewport } from "next";
 import clsx from "clsx";
-import { getLocale } from "next-intl/server";
+import { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 import { Providers } from "./providers";
-import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
+
 import { PrivateProvider, usePrivate } from "@/providers/private-provider";
+
+import { fontSans } from "@/config/fonts";
+import { siteConfig } from "@/config/site";
+
+import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: {

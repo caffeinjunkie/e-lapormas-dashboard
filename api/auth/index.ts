@@ -1,5 +1,6 @@
 "use server";
 
+import { generatePassword } from "@/utils/string";
 import { createClient } from "@/utils/supabase-auth/server";
 
 export const login = async (formData: FormData) => {
@@ -18,23 +19,27 @@ export const login = async (formData: FormData) => {
   return { data };
 };
 
-export const register = async (formData: FormData) => {
+export const createAuthUser = async (email: string) => {
+  const password = generatePassword();
   const client = await createClient();
-  //TODO: create a safer way to pass data here
   const registrationData = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
+    email,
+    password,
     options: {
       data: {
-        fullName: formData.get("full-name") as string,
+        passKey: password,
       },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_HOSTNAME}/auth/confirm`,
     },
   };
 
   const { data, error } = await client.auth.signUp(registrationData);
-  //TODO: connect pekerja AI admin services to save admin
-  //personal data such as full name, email, and image.
+  await client.auth.admin.updateUserById(data?.user?.id as string, {
+    user_metadata: {
+      email_verified: true,
+      passKey: "123",
+    },
+  });
 
   if (error) {
     throw error;
