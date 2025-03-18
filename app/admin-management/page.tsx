@@ -156,20 +156,20 @@ export default function AdminManagementPage() {
 
       if (onlyOneAdmin) {
         description = t.rich(
-          `admin-management-${targetIsSuperAdmin ? "save" : "remove"}-super-admin-success-toast-description`,
+          `${targetIsSuperAdmin ? "save" : "remove"}-super-admin-success-toast-description`,
           {
             label: targetEmail,
             bold: (chunks) => <strong>{chunks}</strong>,
           },
         ) as string;
       } else {
-        description = t("admin-management-save-all-success-toast-description", {
+        description = t("save-all-success-toast-description", {
           count: updatedAdmins.length,
         });
       }
 
       toastProps = {
-        title: t("admin-management-save-success-toast-title"),
+        title: t("save-success-toast-title"),
         description,
         color: "success",
       };
@@ -201,14 +201,11 @@ export default function AdminManagementPage() {
       if (success) {
         await fetchAdmins();
         toastProps = {
-          title: t("admin-management-delete-success-toast-title"),
-          description: t.rich(
-            "admin-management-delete-success-toast-description",
-            {
-              email: deletedAdmin.email as string,
-              bold: (chunks) => <strong>{chunks}</strong>,
-            },
-          ) as string,
+          title: t("delete-success-toast-title"),
+          description: t.rich("delete-success-toast-description", {
+            email: deletedAdmin.email as string,
+            bold: (chunks) => <strong>{chunks}</strong>,
+          }) as string,
           color: "success",
         };
       }
@@ -233,14 +230,11 @@ export default function AdminManagementPage() {
       );
       if (isUserAlreadyInvited) {
         toastProps = {
-          title: t("admin-management-invite-user-warning-toast-title"),
-          description: t.rich(
-            "admin-management-invite-user-warning-toast-description",
-            {
-              email: formData.get("email") as string,
-              bold: (chunks) => <strong>{chunks}</strong>,
-            },
-          ) as string,
+          title: t("invite-user-warning-toast-title"),
+          description: t.rich("invite-user-warning-toast-description", {
+            email: formData.get("email") as string,
+            bold: (chunks) => <strong>{chunks}</strong>,
+          }) as string,
           timeout: 6000,
           color: "warning",
         };
@@ -263,14 +257,11 @@ export default function AdminManagementPage() {
       await fetchAdmins();
 
       toastProps = {
-        title: t("admin-management-invite-user-success-toast-title"),
-        description: t.rich(
-          "admin-management-invite-user-success-toast-description",
-          {
-            email: formData.get("email") as string,
-            bold: (chunks) => <strong>{chunks}</strong>,
-          },
-        ) as string,
+        title: t("invite-user-success-toast-title"),
+        description: t.rich("invite-user-success-toast-description", {
+          email: formData.get("email") as string,
+          bold: (chunks) => <strong>{chunks}</strong>,
+        }) as string,
         timeout: 6000,
         color: "success",
       };
@@ -285,13 +276,13 @@ export default function AdminManagementPage() {
 
   const onInviteUser = () => {
     openModal("invite");
-    setModalTitle(t("admin-management-invite-user-modal-title"));
+    setModalTitle(t("invite-user-modal-title"));
   };
 
   const handleDelete = (user: AdminData) => {
     openModal("delete");
     setModalTitle(
-      t.rich("admin-management-delete-user-modal-title", {
+      t.rich("delete-user-modal-title", {
         email: user.email as string,
         bold: (chunks) => <strong>{chunks}</strong>,
       }) as string,
@@ -303,16 +294,12 @@ export default function AdminManagementPage() {
     if (modals.invite) {
       return [
         {
-          title: t(
-            "admin-management-invite-user-modal-cancellation-button-text",
-          ),
+          title: t("invite-user-modal-cancellation-button-text"),
           isDisabled: isInviteLoading,
           onPress: () => onCloseModal("invite"),
         },
         {
-          title: t(
-            "admin-management-invite-user-modal-confirmation-button-text",
-          ),
+          title: t("invite-user-modal-confirmation-button-text"),
           isLoading: isInviteLoading,
           color: "warning",
           type: "submit",
@@ -326,16 +313,12 @@ export default function AdminManagementPage() {
     if (modals.delete) {
       return [
         {
-          title: t(
-            "admin-management-delete-user-modal-confirmation-button-text",
-          ),
+          title: t("delete-user-modal-confirmation-button-text"),
           color: "danger",
           onPress: onConfirmDelete,
         },
         {
-          title: t(
-            "admin-management-delete-user-modal-cancellation-button-text",
-          ),
+          title: t("delete-user-modal-cancellation-button-text"),
           color: "primary",
           variant: "solid",
           onPress: () => onCloseModal("delete"),
@@ -398,7 +381,7 @@ export default function AdminManagementPage() {
   );
 
   return (
-    <Layout ref={layoutRef} title={t("admin-management-title")}>
+    <Layout ref={layoutRef} title={t("title")}>
       <div className="flex pt-2 md:pt-6">
         <AdminTable
           layout={isMobile ? "auto" : "fixed"}
@@ -438,7 +421,7 @@ export default function AdminManagementPage() {
           {modals.invite && (
             <Form method="post" id="invite-form" onSubmit={onSendInvite}>
               <Input
-                label={t("admin-management-invite-user-modal-input-label")}
+                label={t("invite-user-modal-input-label")}
                 name="email"
                 type="email"
                 aria-label="email"
@@ -450,9 +433,7 @@ export default function AdminManagementPage() {
               />
             </Form>
           )}
-          {modals.delete && (
-            <p>{t("admin-management-delete-user-modal-description")}</p>
-          )}
+          {modals.delete && <p>{t("delete-user-modal-description")}</p>}
         </ModalBody>
       </Modal>
     </Layout>

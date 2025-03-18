@@ -181,7 +181,7 @@ export const AdminCell = ({
             >
               {isResendButtonDisabled
                 ? formatTime(timers[user.user_id as string])
-                : t("admin-management-invite-tooltip-text")}
+                : t("invite-tooltip-text")}
             </Button>
             <Button
               isDisabled={selfId === user?.user_id}
@@ -191,7 +191,7 @@ export const AdminCell = ({
               startContent={<TrashIcon className="size-4" />}
               onPress={onDeleteUser}
             >
-              {t("admin-management-delete-tooltip-text")}
+              {t("delete-tooltip-text")}
             </Button>
           </div>
         </div>
@@ -224,9 +224,7 @@ export const AdminCell = ({
           size="sm"
           variant="dot"
         >
-          {user.is_verified
-            ? t("admin-management-status-verified")
-            : t("admin-management-status-pending")}
+          {user.is_verified ? t("status-verified") : t("status-pending")}
         </Chip>
       );
     case "actions":
@@ -242,7 +240,7 @@ export const AdminCell = ({
             isLoading={isResendButtonLoading}
             onPress={() => onResend(user.user_id as string)}
             color="warning"
-            content={t("admin-management-invite-tooltip-text")}
+            content={t("invite-tooltip-text")}
             icon={
               isResendButtonDisabled ? (
                 <p>{formatTime(timers[user.user_id as string])}</p>
@@ -255,7 +253,7 @@ export const AdminCell = ({
             isDisabled={selfId === user?.user_id}
             onPress={onDeleteUser}
             color="danger"
-            content={t("admin-management-delete-tooltip-text")}
+            content={t("delete-tooltip-text")}
             icon={<TrashIcon className="size-5 text-danger" />}
           />
         </div>

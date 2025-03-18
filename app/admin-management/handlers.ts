@@ -135,8 +135,8 @@ export const getErrorToastProps = (
   key: string = "default",
 ) => {
   return {
-    title: t(`admin-management-${key}-error-toast-title`),
-    description: t(`admin-management-${key}-error-toast-description`),
+    title: t(`${key}-error-toast-title`),
+    description: t(`${key}-error-toast-description`),
     color: "danger",
   };
 };
