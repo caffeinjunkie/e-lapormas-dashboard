@@ -104,8 +104,8 @@ export const Navbar = () => {
         >
           <div className="flex justify-center px-6 pt-4 w-full">
             <div className="flex-col justify-center">
-            <Logo />
-            <p className="text-[10px] mt-[-12px] mr-3 text-end"></p>
+              <Logo />
+              <p className="text-[10px] mt-[-12px] mr-3 text-end"></p>
             </div>
           </div>
         </Sidebar>

@@ -113,14 +113,12 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
             className="bg-transparent shadow-none"
           >
             <ModalContent>
-              <div className="">
-                <DotLottieReact
-                  autoplay
-                  className="d-lg-block d-md-block d-sm-none d-none"
-                  src="https://lottie.host/9a57dcf3-865b-4c05-9135-93252148017c/cQDH4AffBr.lottie"
-                  dotLottieRefCallback={dotLottieRefCallback}
-                />
-              </div>
+              <DotLottieReact
+                autoplay
+                className="d-lg-block d-md-block d-sm-none d-none"
+                src="https://lottie.host/9a57dcf3-865b-4c05-9135-93252148017c/cQDH4AffBr.lottie"
+                dotLottieRefCallback={dotLottieRefCallback}
+              />
             </ModalContent>
           </Modal>
         </>
