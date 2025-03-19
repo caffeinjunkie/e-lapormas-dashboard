@@ -24,6 +24,7 @@ export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({
   isOpen,
   children,
   buttons = [],
+  className,
   ...props
 }) => {
   const t = useTranslations("Modal");
@@ -32,7 +33,7 @@ export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({
     <HeroUIModal
       isOpen={isOpen}
       onClose={onClose}
-      className="bg-white focus:outline-none"
+      className={`bg-white focus:outline-none ${className}`}
       {...props}
     >
       <ModalContent>

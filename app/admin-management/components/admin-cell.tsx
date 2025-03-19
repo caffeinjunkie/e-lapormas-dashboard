@@ -15,15 +15,11 @@ import {
 import { TooltipButton } from "./tooltip-button";
 
 import { createAuthUser } from "@/api/auth";
-import {
-  deleteCookie,
-  formatTime,
-  getCookie,
-  setCookie,
-} from "@/app/admin-management/handlers";
+import { formatTime, setCookie } from "@/app/admin-management/handlers";
 import { getErrorToastProps } from "@/app/admin-management/handlers";
 import { UserAva } from "@/components/user-ava";
 import { AdminData } from "@/types/user.types";
+import { deleteCookie, getCookie } from "@/utils/cookie";
 
 interface AdminCellProps {
   columnKey: string;

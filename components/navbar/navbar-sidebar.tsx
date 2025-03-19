@@ -59,7 +59,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
       }}
     >
       <div className="flex flex-col gap-8">
-        <div className="flex items-center justify-start py-6 px-9 text-md font-semibold text-gray-200">
+        <div className="flex items-center justify-start text-md font-semibold text-gray-200">
           {children}
         </div>
         <div className="relative">
