@@ -90,7 +90,9 @@
     "invite-user-warning-toast-description": "Undangan untuk <bold>{email}</bold> gagal terkirim karena email sudah terdaftar. Mohon coba sesaat lagi."
   },
   "SettingsPage": {
-    "settings-title": "Pengaturan"
+    "settings-title": "Pengaturan",
+    "profile-section-title": "Profil",
+    "app-settings-section-title": "Pengaturan Aplikasi"
   },
   "UnauthorizedPage": {
     "unauthorized-tab-description": "Anda tidak memiliki akses ke halaman ini. Mohon kembali ke halaman utama",

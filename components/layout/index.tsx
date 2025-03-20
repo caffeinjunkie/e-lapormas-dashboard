@@ -27,7 +27,7 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
         )}
       >
         <div
-          className={`inline-block overflow-y-scroll ${classNames?.container || "px-6 pb-4 pt-2 md:py-6"}`}
+          className={`inline-block overflow-y-scroll ${classNames?.container || "px-0 sm:px-2"}`}
           ref={ref}
         >
           <div

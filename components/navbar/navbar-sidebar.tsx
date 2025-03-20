@@ -6,7 +6,7 @@ import { Skeleton } from "@heroui/skeleton";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { redirect } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 
 import { UserAva } from "../user-ava";
 
@@ -43,6 +43,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
 }) => {
   const t = useTranslations("Navbar");
   const isActive = (path: string) => pathname === path;
+  const [isOpen, setIsOpen] = useState(false);
   const { sidebarTheme, menuItems, settingsItems } = siteConfig;
   const sidebarItems = [
     ...menuItems,
@@ -119,7 +120,11 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     description: "text-gray-400",
                   }}
                 />
-                <Popover placement="right">
+                <Popover
+                  placement="right"
+                  isOpen={isOpen}
+                  onOpenChange={() => setIsOpen(!isOpen)}
+                >
                   <PopoverTrigger>
                     <Button
                       variant="light"
@@ -147,6 +152,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     >
                       {settingsItems.map((item, index) => (
                         <ListboxItem
+                          onPress={() => setIsOpen(false)}
                           key={item.href}
                           className={`${index === settingsItems.length - 1 ? "text-danger" : ""}`}
                         >
