@@ -56,7 +56,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
     <div
       className="hidden md:flex flex-col w-full fixed bottom-0 top-0"
       style={{
-        backgroundColor: sidebarTheme.sidebarBackground,
+        backgroundColor: sidebarTheme.primary,
       }}
     >
       <div className="fixed bottom-0 top-0 gap-4 w-[274px] flex flex-col justify-between overflow-y-scroll">
@@ -74,7 +74,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
               <div
                 className="w-1 py-4 rounded-r-lg"
                 style={{
-                  backgroundColor: sidebarTheme.linkIndicator,
+                  backgroundColor: sidebarTheme.secondary,
                 }}
               />
             </div>
@@ -88,15 +88,15 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                 >
                   <div
                     style={{
-                      color: sidebarTheme.linkText,
+                      color: sidebarTheme.text,
                     }}
                     className={`flex items-center gap-2 py-1 pl-10 transition-colors duration-300 ease-in-out ${isActive(href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
                   >
                     <Icon
                       color={
                         isActive(href)
-                          ? sidebarTheme.linkIndicator
-                          : sidebarTheme.linkText
+                          ? sidebarTheme.secondary
+                          : sidebarTheme.text
                       }
                     />
                     {t(label)}
@@ -107,16 +107,23 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
           </div>
         </div>
         <div className="py-6 px-6">
-          <div className="py-2 px-2 bg-white/5 rounded-full flex flex-row items-center justify-between gap-2">
+          <div className="py-2 px-2 rounded-full flex flex-row items-center justify-between gap-2"
+            style={{
+              backgroundColor: `${sidebarTheme.text}10`
+            }}
+          >
             {isLoaded && user ? (
               <>
                 <UserAva
                   imageSrc=""
+                  theme={{
+                    name: sidebarTheme.text
+                  }}
                   displayName={user?.fullName}
                   description={user?.email}
                   classNames={{
                     container: "contents",
-                    name: "font-semibold text-white",
+                    name: "font-semibold",
                     description: "text-gray-400",
                   }}
                 />
@@ -135,7 +142,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     >
                       <EllipsisHorizontalIcon
                         className="size-5"
-                        color="white"
+                        color={sidebarTheme.text}
                       />
                     </Button>
                   </PopoverTrigger>

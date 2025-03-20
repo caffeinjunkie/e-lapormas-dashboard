@@ -2,13 +2,13 @@
 
 import { Form } from "@heroui/form";
 import { Select, SelectItem } from "@heroui/select";
+import { SharedSelection } from "@heroui/system";
 import { Tab, Tabs } from "@heroui/tabs";
 import { useTranslations } from "next-intl";
-import { useState, ReactEventHandler } from "react";
+import { ReactEventHandler, useState } from "react";
 
 import { Input } from "@/components/input";
 import { Layout } from "@/components/layout";
-import { SharedSelection } from "@heroui/system";
 
 enum SettingsTabEnum {
   PROFILE = "profile",
@@ -44,9 +44,9 @@ export default function SettingsPage() {
   ];
 
   const onTimezoneSelect = (keys: SharedSelection) => {
-    console.log(Array.from(keys)[0])
-    setSelectedTimezone(Array.from(keys)[0] as string)
-  }
+    console.log(Array.from(keys)[0]);
+    setSelectedTimezone(Array.from(keys)[0] as string);
+  };
 
   return (
     <Layout title={t("settings-title")} classNames={{ body: "px-6" }}>
@@ -80,18 +80,19 @@ export default function SettingsPage() {
                 placeholder={t("app-settings-org-placeholder-text")}
               />
               <Select
-                id="timezone-select"
+                id="react-aria-:R1dcvfal7:"
                 className="w-full lg:w-[80%]"
                 label={t("app-settings-timezone-select-label")}
                 value={selectedTimezone}
+                items={timezones}
                 placeholder={t("app-settings-timezone-placeholder-text")}
                 onSelectionChange={onTimezoneSelect}
               >
-                {timezones.map(({ key }) => (
+                {({ key }) => (
                   <SelectItem key={key} className="outline-none">
                     {t(`timezone-label-${key}-label`)}
                   </SelectItem>
-                ))}
+                )}
               </Select>
             </div>
           </Form>
