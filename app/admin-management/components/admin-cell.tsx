@@ -125,7 +125,7 @@ export const AdminCell = ({
     case "display_name":
       return isMobile ? (
         <div
-          className={`border-b-1 border-default-200 ${isLast ? "border-b-0 pb-0" : "pb-4"}`}
+          className={`${isLast ? "border-b-0 pb-0" : "border-b-1 border-default-200 pb-4"}`}
         >
           <div className="flex items-center justify-between">
             <UserAva

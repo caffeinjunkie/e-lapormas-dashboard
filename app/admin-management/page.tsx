@@ -26,7 +26,11 @@ import {
 import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
-import { columns } from "@/app/admin-management/config";
+import {
+  columns,
+  footerClassNames,
+  headerClassNames,
+} from "@/app/admin-management/config";
 import {
   calculateRowNumber,
   fetchAdminsHandler,
@@ -92,7 +96,6 @@ export default function AdminManagementPage() {
 
     const handleResize = () => {
       calculateRowNumber(setRowsPerPage);
-      setPage(1);
 
       if (!layoutRef.current) return;
       setIsMobile(layoutRef.current?.offsetWidth < 520);
@@ -127,19 +130,19 @@ export default function AdminManagementPage() {
     return filteredItems.slice(start, end);
   }, [page, filteredItems, rowsPerPage]);
 
-  const onSearchChange = React.useCallback((value: string) => {
+  const onSearchChange = (value: string) => {
     if (value) {
       setFilterValue(value);
-      setPage(1);
     } else {
       setFilterValue("");
     }
-  }, []);
+    setPage(1);
+  };
 
-  const onClear = React.useCallback(() => {
+  const onClear = () => {
     setFilterValue("");
     setPage(1);
-  }, []);
+  };
 
   const onSave = async () => {
     setIsSaveLoading(true);
@@ -381,8 +384,13 @@ export default function AdminManagementPage() {
   );
 
   return (
-    <Layout ref={layoutRef} title={t("title")}>
-      <div className="flex">
+    <Layout
+      ref={layoutRef}
+      title={t("title")}
+      classNames={{ container: "py-0", title: "px-6 pt-6" }}
+    >
+      <div className={headerClassNames}>{topContent}</div>
+      <div className="flex px-6 pb-20 md:pb-2 pt-28 md:pt-0 md:mt-0 mb-1">
         <AdminTable
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}
@@ -390,24 +398,21 @@ export default function AdminManagementPage() {
           hideHeader={isMobile}
           isLoading={isDataLoading}
           renderCell={renderCell}
-          topContent={topContent}
-          bottomContent={
-            pages > 0 ? (
-              <div className="flex w-full justify-center">
-                <Pagination
-                  showControls
-                  showShadow
-                  color="primary"
-                  page={page}
-                  total={pages}
-                  onChange={setPage}
-                />
-              </div>
-            ) : null
-          }
           translationKey="AdminManagementPage"
         />
       </div>
+      {pages > 0 && (
+        <div className={footerClassNames}>
+          <Pagination
+            showControls
+            showShadow
+            color="primary"
+            page={page}
+            total={pages}
+            onChange={setPage}
+          />
+        </div>
+      )}
       <Modal
         className="focus:outline-none"
         onClose={() => onCloseModal(modals.invite ? "invite" : "delete")}
