@@ -14,6 +14,7 @@ interface LayoutProps extends PropsWithChildren {
     container?: string;
     title?: string;
     header?: string;
+    body?: string;
   };
 }
 
@@ -48,7 +49,7 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
             </h1>
             {headerComponent}
           </div>
-          {children}
+          <div className={classNames?.body}>{children}</div>
         </div>
       </section>
     );

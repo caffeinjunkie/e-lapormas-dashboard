@@ -4,9 +4,9 @@ import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
 
 import { statusOptions } from "@/app/admin-management/config";
-import { FilterDropdown } from "@/components/filter-dropdown";
 import { FloppyIcon } from "@/components/icons";
 import { SearchBar } from "@/components/search-bar";
+import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 
 interface TopContentProps {
   searchValue: string;
@@ -37,9 +37,9 @@ export const TopContent = ({
 }: TopContentProps) => {
   const t = useTranslations("AdminManagementPage");
 
-  const transformedStatusOptions = statusOptions.map((status) => ({
-    id: status.uid,
-    label: t(status.translationKey),
+  const transformedStatusOptions = statusOptions.map(({ id, labelKey }) => ({
+    id,
+    label: t(labelKey),
   }));
 
   const statusFilterValue = t(
@@ -61,7 +61,7 @@ export const TopContent = ({
         onValueChange={onSearchChange}
       />
       <div className="flex gap-2 items-center w-full lg:w-fit">
-        <FilterDropdown
+        <SingleSelectDropdown
           label={t("status-filter-label")}
           items={transformedStatusOptions}
           triggerClassname="w-full lg:w-fit"
@@ -70,10 +70,11 @@ export const TopContent = ({
           onSelectionChange={onStatusFilterChange}
         >
           <p>{isMobile ? abbreviatedStatusFilterValue : statusFilterValue}</p>
-        </FilterDropdown>
+        </SingleSelectDropdown>
         <Button
           color="warning"
           isIconOnly={isMobile}
+          radius="md"
           className="text-white w-full lg:w-fit"
           startContent={<UserPlusIcon className="size-5" />}
           onPress={onInviteUser}
@@ -84,6 +85,7 @@ export const TopContent = ({
           color="success"
           isLoading={isSaveButtonLoading}
           isIconOnly={isMobile}
+          radius="md"
           isDisabled={isSaveButtonDisabled}
           className="text-white w-full lg:w-fit"
           startContent={

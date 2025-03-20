@@ -6,10 +6,10 @@ export const columns = [
 ];
 
 export const statusOptions = [
-  { translationKey: "status-all", uid: "all" },
-  { translationKey: "status-verified", uid: "verified" },
+  { labelKey: "status-all", id: "all" },
+  { labelKey: "status-verified", id: "verified" },
   {
-    translationKey: "status-pending",
-    uid: "pending",
+    labelKey: "status-pending",
+    id: "pending",
   },
 ];

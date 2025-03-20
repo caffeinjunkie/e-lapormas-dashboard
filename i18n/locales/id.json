@@ -91,8 +91,15 @@
   },
   "SettingsPage": {
     "settings-title": "Pengaturan",
-    "profile-section-title": "Profil",
-    "app-settings-section-title": "Pengaturan Aplikasi"
+    "profile-tab-title": "Profil",
+    "app-settings-tab-title": "Aplikasi",
+    "app-settings-org-input-label": "Nama Instansi",
+    "app-settings-timezone-select-label": "Zone Waktu",
+    "app-settings-org-placeholder-text": "Masukkan nama instansi",
+    "app-settings-timezone-placeholder-text": "Pilih zona waktu",
+    "timezone-label-wib-label": "Waktu Indonesia Barat",
+    "timezone-label-wita-label": "Waktu Indonesia Tengah",
+    "timezone-label-wit-label": "Waktu Indonesia Tenggara"
   },
   "UnauthorizedPage": {
     "unauthorized-tab-description": "Anda tidak memiliki akses ke halaman ini. Mohon kembali ke halaman utama",

@@ -47,8 +47,6 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         } = await supabase.auth.getSession();
         setUserId(session?.user.id as string);
 
-        console.log(session?.user);
-
         if (!session && !isPublicPath && !isErrorPath) {
           router.replace("/login");
         } else if (session && isPublicPath) {
@@ -78,7 +76,6 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
     if (userId === null) return;
 
     const visited = getCookie(userId as string);
-    console.log(userId, visited);
 
     if (!visited) {
       openModal();

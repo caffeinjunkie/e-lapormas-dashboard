@@ -8,6 +8,8 @@ import {
 import { useTranslations } from "next-intl";
 import { PropsWithChildren } from "react";
 
+import { useModal, useMultipleModal } from "@/components/modal/use-modal";
+
 export interface ModalButtonProps extends ButtonProps {
   title: string;
   formId?: string;
@@ -19,14 +21,10 @@ interface ModalProps extends HeroUIModalProps {
   buttons?: ModalButtonProps[];
 }
 
-export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({
-  onClose,
-  isOpen,
-  children,
-  buttons = [],
-  className,
-  ...props
-}) => {
+const Modal: React.FC<PropsWithChildren<ModalProps>> & {
+  useModal: typeof useModal;
+  useMultipleModal: typeof useMultipleModal;
+} = ({ onClose, isOpen, children, buttons = [], className, ...props }) => {
   const t = useTranslations("Modal");
 
   return (
@@ -73,3 +71,8 @@ export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({
     </HeroUIModal>
   );
 };
+
+Modal.useModal = useModal;
+Modal.useMultipleModal = useMultipleModal;
+
+export { Modal };

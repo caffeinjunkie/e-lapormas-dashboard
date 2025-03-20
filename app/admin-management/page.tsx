@@ -4,6 +4,7 @@ import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
+import { SharedSelection } from "@heroui/system";
 import { ToastProps, addToast } from "@heroui/toast";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
@@ -24,18 +25,17 @@ import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
 import { columns } from "@/app/admin-management/config";
+import { fetchAdminsHandler } from "@/app/admin-management/handlers";
 import {
   calculateRowNumber,
-  fetchAdminsHandler,
   filterUsers,
   getErrorToastProps,
-  handleToggle,
-} from "@/app/admin-management/handlers";
-import { setCookie } from "@/app/admin-management/handlers";
-import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
+  transformAdmins,
+} from "@/app/admin-management/utils";
+import { setCookie } from "@/app/admin-management/utils";
 import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
-import { useMultipleModal } from "@/components/modal/use-modal";
+import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { AdminData } from "@/types/user.types";
 import { buildFormData } from "@/utils/form";
 import { validateEmail, validateIsRequired } from "@/utils/string";
@@ -55,13 +55,13 @@ export default function AdminManagementPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const { modals, openModal, closeModal } = useMultipleModal();
+  const { modals, openModal, closeModal } = Modal.useMultipleModal();
   const layoutRef = useRef<HTMLDivElement>(null);
 
   const {
     selected: selectedStatusFilterKeys,
     setSelected: setSelectedStatusFilterKeys,
-  } = useFilterSingleSelect(new Set(["all"]));
+  } = SingleSelectDropdown.useDropdown(new Set(["all"]));
   const hasSearchFilter = Boolean(filterValue);
 
   const selectedStatusFilterValue = React.useMemo(
@@ -270,6 +270,10 @@ export default function AdminManagementPage() {
     setModalTitle(t("invite-user-modal-title"));
   };
 
+  const onStatusFilterChange = (keys: Set<string>) => {
+    setSelectedStatusFilterKeys(keys);
+  };
+
   const handleDelete = (user: AdminData) => {
     openModal("delete");
     setModalTitle(
@@ -328,9 +332,9 @@ export default function AdminManagementPage() {
         onSearchClear={onClear}
         selectedStatusFilterValue={selectedStatusFilterValue}
         selectedStatusFilterKeys={selectedStatusFilterKeys}
-        onStatusFilterChange={(keys) => {
-          setSelectedStatusFilterKeys(keys as Set<string>);
-        }}
+        onStatusFilterChange={
+          onStatusFilterChange as (keys: SharedSelection) => void
+        }
         isMobile={isMobile}
         isSaveButtonLoading={isSaveLoading}
         isSaveButtonDisabled={updatedAdmins.length === 0}
@@ -358,7 +362,7 @@ export default function AdminManagementPage() {
         isLast={isLast}
         selfId={selfId}
         onSuperAdminToggle={() =>
-          handleToggle({
+          transformAdmins({
             user,
             setAdmins,
             setUpdatedAdmins,
@@ -368,7 +372,7 @@ export default function AdminManagementPage() {
         onDeleteUser={() => handleDelete(user)}
       />
     ),
-    [selfId, handleToggle, handleDelete, isMobile, admins],
+    [selfId, transformAdmins, handleDelete, isMobile, admins],
   );
 
   return (

@@ -15,14 +15,13 @@ import { fetchAdminById } from "@/api/admin";
 import { logout } from "@/api/auth";
 import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
 import { Modal } from "@/components/modal";
-import { useModal } from "@/components/modal/use-modal";
 import { ProfileData } from "@/types/user.types";
 
 export const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("Navbar");
-  const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, openModal, closeModal } = Modal.useModal();
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(false);
   const [user, setUser] = useState<ProfileData | null>(null);
