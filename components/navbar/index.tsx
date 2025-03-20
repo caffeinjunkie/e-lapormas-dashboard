@@ -94,22 +94,20 @@ export const Navbar = () => {
       <MobileNavbar isSuperAdmin={isSuperAdmin} onLogout={openModal}>
         {mobileHeaderLabel}
       </MobileNavbar>
-      <div className="ml-2">
-        <Sidebar
-          isSuperAdmin={isSuperAdmin}
-          pathname={pathname}
-          isLoaded={isNavbarFullyLoaded}
-          user={user}
-          onLogout={openModal}
-        >
-          <div className="flex justify-center px-6 pt-4 w-full">
-            <div className="flex-col justify-center">
-              <Logo />
-              <p className="text-[10px] mt-[-12px] mr-3 text-end"></p>
-            </div>
+      <Sidebar
+        isSuperAdmin={isSuperAdmin}
+        pathname={pathname}
+        isLoaded={isNavbarFullyLoaded}
+        user={user}
+        onLogout={openModal}
+      >
+        <div className="flex justify-center px-6 pt-4 w-full">
+          <div className="flex-col justify-center">
+            <Logo />
+            <p className="text-[10px] mt-[-12px] mr-3 text-end"></p>
           </div>
-        </Sidebar>
-      </div>
+        </div>
+      </Sidebar>
       <Modal
         isOpen={isOpen}
         onClose={closeModal}

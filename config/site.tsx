@@ -15,7 +15,7 @@ const iconClassname = "h-6 w-6";
 const sidebarTheme = {
   sidebarBackground: "#1a1c1e",
   linkText: "#ffffff",
-  linkIndicator: "#ffffff",
+  linkIndicator: "#FF9F29",
 };
 
 export const adminManagementItem = {

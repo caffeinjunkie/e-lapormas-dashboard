@@ -7,7 +7,7 @@ import { Providers } from "./providers";
 
 import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
-import { PrivateProvider, usePrivate } from "@/providers/private-provider";
+import { PrivateProvider } from "@/providers/private-provider";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -45,7 +45,7 @@ export default async function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <div className="relative flex flex-col md:flex-row h-screen bg-white">
+          <div className="relative flex flex-col md:flex-row h-screen">
             <NextIntlClientProvider>
               <PrivateProvider>
                 <main className="light overflow-auto flex-grow">

@@ -22,6 +22,7 @@ export const FilterDropdown: React.FC<
   items,
   children,
   triggerClassname,
+  className,
   selectionMode = "single",
   ...props
 }) => {
@@ -29,7 +30,7 @@ export const FilterDropdown: React.FC<
     <Dropdown>
       <DropdownTrigger className={`flex ${triggerClassname}`}>
         <Button
-          className="text-default-700"
+          className={`text-default-700 ${className}`}
           endContent={
             <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
           }
