@@ -5,6 +5,7 @@ import { Input } from "@heroui/input";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
 import { ToastProps, addToast } from "@heroui/toast";
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import React, {
   FormEvent,
@@ -26,11 +27,7 @@ import {
 import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
-import {
-  columns,
-  footerClassNames,
-  headerClassNames,
-} from "@/app/admin-management/config";
+import { columns } from "@/app/admin-management/config";
 import {
   calculateRowNumber,
   fetchAdminsHandler,
@@ -386,15 +383,23 @@ export default function AdminManagementPage() {
   return (
     <Layout
       ref={layoutRef}
+      headerComponent={topContent}
+      isMobile={isMobile}
       title={t("title")}
-      classNames={{ container: "py-0", title: "px-6 pt-6" }}
+      classNames={{ container: "py-0", header: "gap-4" }}
     >
-      <div className={headerClassNames}>{topContent}</div>
-      <div className="flex px-6 pb-20 md:pb-2 pt-28 md:pt-0 md:mt-0 mb-1">
+      <div
+        className={clsx(
+          "flex mb-1",
+          isMobile ? "pb-20 pt-1 px-4" : " px-6 pb-2",
+        )}
+      >
         <AdminTable
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}
           items={items}
+          isCompact
+          removeWrapper={isMobile}
           hideHeader={isMobile}
           isLoading={isDataLoading}
           renderCell={renderCell}
@@ -402,7 +407,14 @@ export default function AdminManagementPage() {
         />
       </div>
       {pages > 0 && (
-        <div className={footerClassNames}>
+        <div
+          className={clsx(
+            "flex w-full justify-center pt-4 md:pt-2 pb-4 bg-white",
+            isMobile
+              ? "shadow-[rgba(5,5,5,0.1)_0_-1px_1px_0px] absolute bottom-0 z-10"
+              : "shadow-none sticky",
+          )}
+        >
           <Pagination
             showControls
             showShadow

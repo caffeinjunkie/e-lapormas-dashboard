@@ -17,5 +17,17 @@ module.exports = {
     },
   },
   darkMode: "class",
-  plugins: [heroui()],
+  plugins: [
+    heroui(),
+    function ({ addUtilities }) {
+      addUtilities(
+        {
+          ".overflow-initial": {
+            overflow: "initial !important",
+          },
+        },
+        ["responsive", "hover"],
+      );
+    },
+  ],
 };

@@ -25,9 +25,11 @@ export const calculateRowNumber = (setRowsPerPage: (rows: number) => void) => {
     orientation === "portrait-primary" ||
     orientation === "portrait-secondary"
   ) {
-    setRowsPerPage(height >= 1100 ? 12 : height >= 1024 ? 6 : 5);
+    setRowsPerPage(
+      height >= 1100 ? Math.floor(height / 100) : height >= 1024 ? 6 : 5,
+    );
   } else {
-    setRowsPerPage(height >= 1024 ? 8 : height > 884 ? 7 : 6);
+    setRowsPerPage(height > 884 ? Math.floor(height / 110) : 6);
   }
 };
 
