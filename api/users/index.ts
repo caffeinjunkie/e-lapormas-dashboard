@@ -31,8 +31,8 @@ export const resetPassword = async (email: string) => {
 type UpdateAuthUserData = {
   email?: string;
   data?: {
-    fullName?: string;
-    passKey?: string;
+    full_name?: string;
+    pass_key?: string;
   };
   password?: string;
 };

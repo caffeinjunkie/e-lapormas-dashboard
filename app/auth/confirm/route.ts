@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
 
-import { updateAdminByEmail } from "@/api/admin";
-
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
 
@@ -19,20 +17,6 @@ export async function GET(request: NextRequest) {
     return redirect(`/error?${errorParams.toString()}`);
   }
 
-  const email = searchParams.get("email");
   const next = searchParams.get("next") || "/";
-  let redirectPath = next;
-
-  try {
-    await updateAdminByEmail({
-      email: email as string,
-      is_verified: true,
-    });
-  } catch (error: any) {
-    redirectPath = "/error?errorCode=default";
-  } finally {
-    if (redirectPath) {
-      return redirect(redirectPath);
-    }
-  }
+  return redirect(next);
 }

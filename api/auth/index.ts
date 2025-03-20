@@ -27,19 +27,14 @@ export const createAuthUser = async (email: string) => {
     password,
     options: {
       data: {
-        passKey: password,
+        email,
+        pass_key: password,
       },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_HOSTNAME}/auth/confirm`,
     },
   };
 
   const { data, error } = await client.auth.signUp(registrationData);
-  await client.auth.admin.updateUserById(data?.user?.id as string, {
-    user_metadata: {
-      email_verified: true,
-      passKey: "123",
-    },
-  });
 
   if (error) {
     throw error;

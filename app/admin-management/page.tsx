@@ -21,7 +21,6 @@ import { TopContent } from "./components/top-content";
 
 import {
   checkIsUserAlreadyInvited,
-  createAdmin,
   upsertAdmins,
 } from "@/api/admin";
 import { createAuthUser } from "@/api/auth";
@@ -247,11 +246,6 @@ export default function AdminManagementPage() {
         const userId = data?.user?.id as string;
         const timestamp = Date.now().toString();
         setCookie(timestamp, userId, 1);
-
-        await createAdmin({
-          email,
-          user_id: userId,
-        });
       }
 
       await fetchAdmins();

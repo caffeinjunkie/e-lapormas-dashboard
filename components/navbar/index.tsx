@@ -11,7 +11,6 @@ import { Logo } from "../icons";
 import { MobileNavbar } from "./navbar-mobile";
 import { Sidebar } from "./navbar-sidebar";
 
-import { updateAdminById } from "@/api/admin";
 import { fetchAdminById } from "@/api/admin";
 import { logout } from "@/api/auth";
 import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
@@ -40,11 +39,7 @@ export const Navbar = () => {
         const fakeName = await generateFakeName();
         displayName = fakeName;
 
-        await updateAuthUser({ data: { fullName: displayName, passKey: "" } });
-        await updateAdminById({
-          display_name: displayName as string,
-          user_id: result.user_id as string,
-        });
+        await updateAuthUser({ data: { full_name: displayName } });
       }
 
       setUser({
