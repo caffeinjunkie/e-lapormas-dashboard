@@ -31,6 +31,7 @@ export const usePrivate = () => {
 export function PrivateProvider({ children }: PrivateLayoutProps) {
   const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
   const { isOpen, openModal, closeModal } = useModal();
+  const [userId, setUserId] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -44,6 +45,9 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         const {
           data: { session },
         } = await supabase.auth.getSession();
+        setUserId(session?.user.id as string);
+
+        console.log(session?.user);
 
         if (!session && !isPublicPath && !isErrorPath) {
           router.replace("/login");
@@ -71,14 +75,17 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   }, [pathname, router, supabase]);
 
   useEffect(() => {
-    const visited = getCookie("visited");
+    if (userId === null) return;
+
+    const visited = getCookie(userId as string);
+    console.log(userId, visited);
 
     if (!visited) {
       openModal();
+      document.cookie = `${userId}=true;path=/`;
     }
 
     function onComplete() {
-      document.cookie = `visited=true;path=/`;
       setTimeout(() => {
         closeModal();
       }, 1500);
@@ -93,7 +100,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         dotLottie.removeEventListener("complete", onComplete);
       }
     };
-  }, [dotLottie]);
+  }, [dotLottie, userId]);
 
   const dotLottieRefCallback = (dotLottie: DotLottie | null) => {
     setDotLottie(dotLottie);

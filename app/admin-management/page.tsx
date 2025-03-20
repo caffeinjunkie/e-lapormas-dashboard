@@ -19,10 +19,7 @@ import React, {
 import { AdminCell } from "./components/admin-cell";
 import { TopContent } from "./components/top-content";
 
-import {
-  checkIsUserAlreadyInvited,
-  upsertAdmins,
-} from "@/api/admin";
+import { checkIsUserAlreadyInvited, upsertAdmins } from "@/api/admin";
 import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
