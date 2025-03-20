@@ -386,7 +386,7 @@ export default function AdminManagementPage() {
       headerComponent={topContent}
       isMobile={isMobile}
       title={t("title")}
-      classNames={{ container: "py-0", header: "gap-4" }}
+      classNames={{ container: `py-0 ${!isMobile && "px-2"}`, header: "gap-4" }}
     >
       <div
         className={clsx(

@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import React, { PropsWithChildren, useEffect, useRef } from "react";
+import React, { PropsWithChildren } from "react";
 
 import { title as titleClass } from "@/components/primitives";
 
