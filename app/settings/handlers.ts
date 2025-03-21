@@ -2,10 +2,11 @@ import { ToastProps, addToast } from "@heroui/toast";
 import { Dispatch, SetStateAction } from "react";
 
 import { fetchAdminById, updateAdminById } from "@/api/admin";
+import { updateAppConfig } from "@/api/app-config";
 import { fetchUserData, resetPassword, updateAuthUser } from "@/api/users";
 import { ProfileData } from "@/types/user.types";
 
-export const getProfile = async () => {
+export const fetchProfile = async () => {
   const { data } = await fetchUserData();
   const admin = await fetchAdminById(data.user.id);
 
@@ -78,20 +79,37 @@ export const saveImageToAdmin = async (
 export const saveAllSettings = async (
   formData: FormData,
   setLoading: Dispatch<SetStateAction<boolean>>,
+  t: (key: string) => string,
 ) => {
+  let toastProps;
   setLoading(true);
-  const fullName = formData.get("name");
+  try {
+    const fullName = formData.get("name");
 
-  if (fullName) {
-    await updateAuthUser({ data: { full_name: fullName as string } });
-  }
+    if (fullName) {
+      await updateAuthUser({ data: { full_name: fullName as string } });
+    }
 
-  const updatedAppConfig = {
-    org_name: formData.get("org-name"),
-    timezone: formData.get("timezone"),
-  };
+    const updatedAppConfig = {
+      org_name: formData.get("org-name") as string,
+      timezone: formData.get("timezone") as string,
+    };
 
-  setTimeout(() => {
+    await updateAppConfig(updatedAppConfig);
+
+    toastProps = {
+      title: t("save-success-toast-title"),
+      description: t("save-success-toast-description"),
+      color: "success",
+    };
+  } catch (e) {
+    toastProps = {
+      title: t("save-error-toast-title"),
+      description: t("save-error-toast-description"),
+      color: "danger",
+    };
+  } finally {
     setLoading(false);
-  }, 3000);
+    addToast(toastProps as ToastProps);
+  }
 };

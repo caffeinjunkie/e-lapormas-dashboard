@@ -17,15 +17,18 @@ import { useTranslations } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
 
 import {
-  getProfile,
+  fetchProfile,
   handleSendResetPasswordRequest,
   saveAllSettings,
   saveImageToAdmin,
 } from "./handlers";
 
+import { fetchAppConfig, fetchTimezones } from "@/api/app-config";
 import { FloppyIcon } from "@/components/icons";
 import { Input } from "@/components/input";
 import { Layout } from "@/components/layout";
+import { AppConfig } from "@/types/app-config.types";
+import { Timezone } from "@/types/timezone.types";
 import { ProfileData } from "@/types/user.types";
 import { buildFormData } from "@/utils/form";
 import { validateIsRequired } from "@/utils/string";
@@ -33,23 +36,26 @@ import { validateIsRequired } from "@/utils/string";
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
   //TODO: fetch from settings
-  const [selectedTimezone, setSelectedTimezone] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
   const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
-  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
+  const [isProfileLoading, setIsProfileLoading] = useState<boolean>(false);
+  const [isSettingLoading, setIsSettingLoading] = useState<boolean>(false);
   const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
   const [isResetLoading, setIsResetLoading] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isPageError, setIsPageError] = useState<boolean>(false);
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [appSettings, setAppSettings] = useState<AppConfig | null>(null);
+  const [timezonesOptions, setTimezonesOptions] = useState<Timezone[]>([]);
+  const [selectedTimezone, setSelectedTimezone] = useState<string>("");
+  const isPageLoading = isProfileLoading || isSettingLoading;
 
-  const fetchProfile = async () => {
-    setIsPageLoading(true);
+  const getProfile = async () => {
+    setIsProfileLoading(true);
     try {
-      const admin = await getProfile();
+      const admin = await fetchProfile();
 
       setImage(admin.profile_img);
-
       setProfile({
         id: admin.user_id,
         fullName: admin.display_name,
@@ -57,39 +63,35 @@ export default function SettingsPage() {
         imageSrc: admin.profile_img,
       });
     } catch (e) {
-      // page error needs refresh
+      // error page
     } finally {
-      setIsPageLoading(false);
+      setIsProfileLoading(false);
+    }
+  };
+
+  const getAppConfig = async () => {
+    setIsSettingLoading(true);
+    try {
+      const { timezone, ...appConfig } = await fetchAppConfig();
+      const timezones = await fetchTimezones();
+
+      setAppSettings(appConfig);
+      setSelectedTimezone(timezone !== null ? timezone : timezones[0].key);
+      setTimezonesOptions(timezones);
+    } catch (e) {
+      //page error
+    } finally {
+      setIsSettingLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProfile();
+    getProfile();
+    getAppConfig();
   }, []);
 
-  // TODO: use db later
-  const timezones = [
-    {
-      id: 1,
-      zone: "Asia/Jakarta",
-      key: "wib",
-      utc: 7,
-    },
-    {
-      id: 2,
-      zone: "Asia/Makassar",
-      key: "wita",
-      utc: 8,
-    },
-    {
-      id: 3,
-      zone: "Asia/Jayapura",
-      key: "wit",
-      utc: 9,
-    },
-  ];
-
   const onTimezoneSelect = (keys: SharedSelection) => {
+    setUnsavedChanges(true);
     setSelectedTimezone(Array.from(keys)[0] as string);
   };
 
@@ -132,7 +134,7 @@ export default function SettingsPage() {
     setUnsavedChanges(false);
     const formData = buildFormData(e);
 
-    saveAllSettings(formData, setIsSaveLoading);
+    saveAllSettings(formData, setIsSaveLoading, t);
   };
 
   return (
@@ -207,7 +209,7 @@ export default function SettingsPage() {
                 radius="md"
                 isRequired
                 onChange={() => setUnsavedChanges(true)}
-                defaultValue=""
+                defaultValue={appSettings?.org_name}
                 className="w-[100%] lg:w-[80%]"
                 name="org-name"
                 validate={(value) => validateIsRequired(t, value, "org-name")}
@@ -225,15 +227,15 @@ export default function SettingsPage() {
               defaultValue={profile?.email}
               name="email"
             />
-
             <Select
               id="react-aria-:R1dcvfal7:"
               className="w-64 lg:w-[80%]"
               radius="md"
               name="timezone"
               label={t("app-settings-timezone-select-label")}
-              value={selectedTimezone}
-              items={timezones}
+              selectedKeys={[selectedTimezone]}
+              disabledKeys={[selectedTimezone]}
+              items={timezonesOptions}
               placeholder={t("app-settings-timezone-placeholder-text")}
               onSelectionChange={onTimezoneSelect}
             >
