@@ -46,6 +46,7 @@ export const Navbar = () => {
         id: result.user_id,
         email: result.email as string,
         fullName: displayName,
+        imageSrc: result.profile_img,
       });
       setIsSuperAdmin(result.is_super_admin);
     } catch (error) {
@@ -57,7 +58,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     getUserData();
-  }, []);
+  }, [pathname]);
 
   const handleLogout = async () => {
     setIsButtonLoading(true);

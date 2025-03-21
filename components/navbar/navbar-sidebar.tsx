@@ -156,11 +156,11 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                         } else {
                           redirect(key as string);
                         }
+                        setIsOpen(false);
                       }}
                     >
                       {settingsItems.map((item, index) => (
                         <ListboxItem
-                          onPress={() => setIsOpen(false)}
                           key={item.href}
                           className={`${index === settingsItems.length - 1 ? "text-danger" : ""}`}
                         >

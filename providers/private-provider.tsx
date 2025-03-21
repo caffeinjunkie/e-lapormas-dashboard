@@ -79,10 +79,10 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
 
     if (!visited) {
       openModal();
-      document.cookie = `${userId}=true;path=/`;
     }
 
     function onComplete() {
+      document.cookie = `${userId}=true;path=/`;
       setTimeout(() => {
         closeModal();
       }, 1500);
@@ -97,7 +97,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         dotLottie.removeEventListener("complete", onComplete);
       }
     };
-  }, [dotLottie, userId]);
+  }, [dotLottie]);
 
   const dotLottieRefCallback = (dotLottie: DotLottie | null) => {
     setDotLottie(dotLottie);

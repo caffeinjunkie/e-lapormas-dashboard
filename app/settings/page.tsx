@@ -10,12 +10,18 @@ import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Select, SelectItem } from "@heroui/select";
+import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
 
-import { getProfile, handleSendResetPasswordRequest } from "./handlers";
+import {
+  getProfile,
+  handleSendResetPasswordRequest,
+  saveAllSettings,
+  saveImageToAdmin,
+} from "./handlers";
 
 import { FloppyIcon } from "@/components/icons";
 import { Input } from "@/components/input";
@@ -33,6 +39,7 @@ export default function SettingsPage() {
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
   const [isResetLoading, setIsResetLoading] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isPageError, setIsPageError] = useState<boolean>(false);
   const [profile, setProfile] = useState<ProfileData | null>(null);
 
@@ -95,39 +102,37 @@ export default function SettingsPage() {
   };
 
   const onUploadPP = () => {
-    // change to upload image, after getting the url, setImage
+    //upload image, get url
+    //directly update admin pp with url
+
+    setIsUploading(true);
     setImage("https://i.pravatar.cc/150?u=a04258114e29026708c");
-    setUnsavedChanges(true);
+    saveImageToAdmin(
+      t,
+      profile!,
+      setIsUploading,
+      "https://i.pravatar.cc/150?u=a04258114e29026708c",
+    );
+
+    setTimeout(() => {
+      setIsUploading(false);
+    }, 3000);
   };
 
   const onDeletePP = () => {
     setImage(null);
-    setUnsavedChanges(true);
+
+    //modal question
+
+    saveImageToAdmin(t, profile!, setIsUploading);
   };
 
   const onSaveProfile = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setUnsavedChanges(false);
     const formData = buildFormData(e);
 
-    const updatedAdminData = {
-      profile_img: image ?? "",
-    };
-
-    const updatedAuthUserData = {
-      full_name: formData.get("name"),
-    };
-
-    const updatedAppConfig = {
-      org_name: formData.get("org-name"),
-      timezone: formData.get("timezone"),
-    };
-
-    setIsSaveLoading(true);
-    setUnsavedChanges(false);
-
-    setTimeout(() => {
-      setIsSaveLoading(false);
-    }, 3000);
+    saveAllSettings(formData, setIsSaveLoading);
   };
 
   return (
@@ -150,15 +155,20 @@ export default function SettingsPage() {
         >
           <div className="flex flex-col w-full gap-10">
             <div className="flex flex-col w-full items-center gap-6">
-              <Avatar
-                className="w-24 h-24 md:w-32 md:h-32 text-small"
-                src={image ?? ""}
-                fallback={<UserIcon className="size-8 md:size-9 text-white" />}
-              />
+              <Skeleton isLoaded={!isUploading} className="rounded-full">
+                <Avatar
+                  className="w-24 h-24 md:w-32 md:h-32 text-small"
+                  src={image ?? ""}
+                  fallback={
+                    <UserIcon className="size-8 md:size-9 text-white" />
+                  }
+                />
+              </Skeleton>
               <div className="flex flex-row gap-3">
                 <Button
                   color="primary"
                   onPress={onUploadPP}
+                  isDisabled={isUploading}
                   className="text-white"
                   size="sm"
                   startContent={<CameraIcon className="size-4 md:size-5" />}
@@ -170,7 +180,7 @@ export default function SettingsPage() {
                   size="sm"
                   color="danger"
                   variant="bordered"
-                  isDisabled={!image}
+                  isDisabled={!image || isUploading}
                   startContent={<TrashIcon className="size-4 md:size-5" />}
                 >
                   {t("profile-picture-delete-text")}
