@@ -43,12 +43,18 @@ export default function SettingsPage() {
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
   const [isResetLoading, setIsResetLoading] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isPageError, setIsPageError] = useState<boolean>(false);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [appSettings, setAppSettings] = useState<AppConfig | null>(null);
   const [timezonesOptions, setTimezonesOptions] = useState<Timezone[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>("");
+
+  useEffect(() => {
+    // workaround for Select Hydration error on Hero UI. Waiting for an update
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     setShouldShowConfirmation(unsavedChanges);
@@ -148,15 +154,23 @@ export default function SettingsPage() {
     }
   };
 
-  return (
-    <Layout title={t("title")} classNames={{ body: "px-6" }}>
-      {isPageLoading && (
-        <div className={`flex w-full absolute left-0 items-center justify-center ${isPageError ? "top-20" : "bottom-0 h-screen"}`}>
+  if (!isMounted || isPageLoading) {
+    return (
+      <Layout title={t("title")} classNames={{ body: "px-6" }}>
+        <div className="flex w-full absolute left-0 items-center justify-center bottom-0 h-screen">
           <Spinner />
         </div>
-      )}
-      {isPageError && (
-        <Error message={t("page-error-message")} onReset={getProfileAndAppConfig} />
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout title={t("title")} classNames={{ body: "px-6" }}>
+      {isPageError && !isPageLoading && (
+        <Error
+          message={t("page-error-message")}
+          onReset={getProfileAndAppConfig}
+        />
       )}
       {!isPageLoading && !isPageError && (
         <Form
@@ -237,7 +251,6 @@ export default function SettingsPage() {
               name="email"
             />
             <Select
-              id="react-aria-:R1dcvfal7:"
               className="w-64 lg:w-[80%]"
               radius="md"
               name="timezone"
@@ -248,11 +261,11 @@ export default function SettingsPage() {
               placeholder={t("app-settings-timezone-placeholder-text")}
               onSelectionChange={onTimezoneSelect}
             >
-              {({ key }) => (
-                <SelectItem key={key} className="outline-none">
-                  {t(`timezone-label-${key}-label`)}
+              {timezonesOptions.map((timezone) => (
+                <SelectItem key={timezone.key} className="outline-none">
+                  {t(`timezone-label-${timezone.key}-label`)}
                 </SelectItem>
-              )}
+              ))}
             </Select>
           </div>
           <div className="flex w-full h-24 items-center justify-center rounded-xl bg-default-50">

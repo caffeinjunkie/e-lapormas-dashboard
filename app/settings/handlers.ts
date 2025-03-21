@@ -9,7 +9,6 @@ import { ProfileData } from "@/types/user.types";
 export const fetchProfile = async () => {
   const { data } = await fetchUserData();
   const admin = await fetchAdminById(data.user.id);
-  
   return admin;
 };
 
