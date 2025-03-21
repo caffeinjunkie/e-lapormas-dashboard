@@ -125,7 +125,8 @@
     "save-success-toast-title": "Simpan Berhasil",
     "save-success-toast-description": "Data berhasil disimpan",
     "save-error-toast-title": "Terjadi Kesalahan",
-    "save-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi"
+    "save-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi",
+    "page-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi"
   },
   "UnauthorizedPage": {
     "unauthorized-tab-description": "Anda tidak memiliki akses ke halaman ini. Mohon kembali ke halaman utama",
@@ -156,5 +157,8 @@
     "navbar-announcements-label": "Pengumuman",
     "navbar-settings-label": "Pengaturan",
     "navbar-logout-label": "Keluar"
+  },
+  "ErrorComponent": {
+    "try-again-button-text": "Coba lagi"
   }
 }

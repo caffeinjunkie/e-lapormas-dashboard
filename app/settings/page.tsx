@@ -14,7 +14,6 @@ import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
 import {
@@ -25,6 +24,7 @@ import {
 } from "./handlers";
 
 import { fetchAppConfig, fetchTimezones } from "@/api/app-config";
+import Error from "@/components/error/error";
 import { FloppyIcon } from "@/components/icons";
 import { Input } from "@/components/input";
 import { Layout } from "@/components/layout";
@@ -40,8 +40,7 @@ export default function SettingsPage() {
   const { setShouldShowConfirmation, setIsRevalidated } = usePrivate();
   const [image, setImage] = useState<string | null>(null);
   const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
-  const [isProfileLoading, setIsProfileLoading] = useState<boolean>(false);
-  const [isSettingLoading, setIsSettingLoading] = useState<boolean>(false);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
   const [isResetLoading, setIsResetLoading] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -50,50 +49,46 @@ export default function SettingsPage() {
   const [appSettings, setAppSettings] = useState<AppConfig | null>(null);
   const [timezonesOptions, setTimezonesOptions] = useState<Timezone[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>("");
-  const isPageLoading = isProfileLoading || isSettingLoading;
 
   useEffect(() => {
     setShouldShowConfirmation(unsavedChanges);
   }, [unsavedChanges]);
 
   const getProfile = async () => {
-    setIsProfileLoading(true);
-    try {
-      const admin = await fetchProfile();
+    const admin = await fetchProfile();
 
-      setImage(admin.profile_img);
-      setProfile({
-        id: admin.user_id,
-        fullName: admin.display_name,
-        email: admin.email,
-        imageSrc: admin.profile_img,
-      });
-    } catch (e) {
-      // error page
-    } finally {
-      setIsProfileLoading(false);
-    }
+    setImage(admin.profile_img);
+    setProfile({
+      id: admin.user_id,
+      fullName: admin.display_name,
+      email: admin.email,
+      imageSrc: admin.profile_img,
+    });
   };
 
   const getAppConfig = async () => {
-    setIsSettingLoading(true);
-    try {
-      const { timezone, ...appConfig } = await fetchAppConfig();
-      const timezones = await fetchTimezones();
+    const { timezone, ...appConfig } = await fetchAppConfig();
+    const timezones = await fetchTimezones();
 
-      setAppSettings(appConfig);
-      setSelectedTimezone(timezone !== null ? timezone : timezones[0].key);
-      setTimezonesOptions(timezones);
+    setAppSettings(appConfig);
+    setSelectedTimezone(timezone !== null ? timezone : timezones[0].key);
+    setTimezonesOptions(timezones);
+  };
+
+  const getProfileAndAppConfig = async () => {
+    setIsPageLoading(true);
+    try {
+      await Promise.all([getProfile(), getAppConfig()]);
+      setIsPageError(false);
     } catch (e) {
-      //page error
+      setIsPageError(true);
     } finally {
-      setIsSettingLoading(false);
+      setIsPageLoading(false);
     }
   };
 
   useEffect(() => {
-    getProfile();
-    getAppConfig();
+    getProfileAndAppConfig();
   }, []);
 
   const handleUnsavedChanges = (hasUnsavedChanges: boolean) => {
@@ -156,14 +151,12 @@ export default function SettingsPage() {
   return (
     <Layout title={t("title")} classNames={{ body: "px-6" }}>
       {isPageLoading && (
-        <div className="flex w-full absolute bottom-0 left-0 h-screen items-center justify-center">
+        <div className={`flex w-full absolute left-0 items-center justify-center ${isPageError ? "top-20" : "bottom-0 h-screen"}`}>
           <Spinner />
         </div>
       )}
       {isPageError && (
-        <div className="flex w-full absolute bottom-0 left-0 h-screen items-center justify-center">
-          error
-        </div>
+        <Error message={t("page-error-message")} onReset={getProfileAndAppConfig} />
       )}
       {!isPageLoading && !isPageError && (
         <Form
