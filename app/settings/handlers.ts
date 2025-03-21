@@ -43,6 +43,7 @@ export const handleSendResetPasswordRequest = async (
 
 export const saveImageToAdmin = async (
   t: (key: string) => string,
+  setIsRevalidated: (value: boolean) => void,
   user: ProfileData,
   setLoading: Dispatch<SetStateAction<boolean>>,
   image: string = "",
@@ -73,6 +74,7 @@ export const saveImageToAdmin = async (
   } finally {
     addToast(toastProps as ToastProps);
     setLoading(false);
+    setIsRevalidated(true);
   }
 };
 

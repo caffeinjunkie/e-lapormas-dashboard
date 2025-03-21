@@ -117,11 +117,13 @@ export default function SettingsPage() {
   const onUploadPP = () => {
     //upload image, get url
     //directly update admin pp with url
+    setIsRevalidated(false);
 
     setIsUploading(true);
     setImage("https://i.pravatar.cc/150?u=a04258114e29026708c");
     saveImageToAdmin(
       t,
+      setIsRevalidated,
       profile!,
       setIsUploading,
       "https://i.pravatar.cc/150?u=a04258114e29026708c",
@@ -133,11 +135,12 @@ export default function SettingsPage() {
   };
 
   const onDeletePP = () => {
+    setIsRevalidated(false);
     setImage(null);
 
     //modal question
 
-    saveImageToAdmin(t, profile!, setIsUploading);
+    saveImageToAdmin(t, setIsRevalidated, profile!, setIsUploading);
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
