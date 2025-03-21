@@ -34,7 +34,7 @@ export const ErrorProvider = ({ children }: ErrorProviderProps) => {
   }, [router]);
 
   const clearError = () => {
-    router.push("/");
+    router.replace("/");
   };
 
   return (
