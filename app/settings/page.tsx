@@ -28,6 +28,7 @@ import { fetchAppConfig, fetchTimezones } from "@/api/app-config";
 import { FloppyIcon } from "@/components/icons";
 import { Input } from "@/components/input";
 import { Layout } from "@/components/layout";
+import { usePrivate } from "@/providers/private-provider";
 import { AppConfig } from "@/types/app-config.types";
 import { Timezone } from "@/types/timezone.types";
 import { ProfileData } from "@/types/user.types";
@@ -36,8 +37,7 @@ import { validateIsRequired } from "@/utils/string";
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
-  const router = useRouter();
-  //TODO: fetch from settings
+  const { setShouldShowConfirmation, setIsRevalidated } = usePrivate();
   const [image, setImage] = useState<string | null>(null);
   const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
   const [isProfileLoading, setIsProfileLoading] = useState<boolean>(false);
@@ -51,6 +51,10 @@ export default function SettingsPage() {
   const [timezonesOptions, setTimezonesOptions] = useState<Timezone[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>("");
   const isPageLoading = isProfileLoading || isSettingLoading;
+
+  useEffect(() => {
+    setShouldShowConfirmation(unsavedChanges);
+  }, [unsavedChanges]);
 
   const getProfile = async () => {
     setIsProfileLoading(true);
@@ -92,8 +96,13 @@ export default function SettingsPage() {
     getAppConfig();
   }, []);
 
+  const handleUnsavedChanges = (hasUnsavedChanges: boolean) => {
+    setUnsavedChanges(hasUnsavedChanges);
+    setIsRevalidated(!hasUnsavedChanges);
+  };
+
   const onTimezoneSelect = (keys: SharedSelection) => {
-    setUnsavedChanges(true);
+    handleUnsavedChanges(true);
     setSelectedTimezone(Array.from(keys)[0] as string);
   };
 
@@ -133,12 +142,11 @@ export default function SettingsPage() {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setUnsavedChanges(false);
     const formData = buildFormData(e);
 
     const { success } = await saveAllSettings(formData, setIsSaveLoading, t);
     if (success) {
-      router.push("/settings");
+      handleUnsavedChanges(false);
     }
   };
 
@@ -201,7 +209,7 @@ export default function SettingsPage() {
                 type="text"
                 radius="md"
                 isRequired
-                onChange={() => setUnsavedChanges(true)}
+                onChange={() => handleUnsavedChanges(true)}
                 defaultValue={profile?.fullName}
                 name="name"
                 placeholder={t("profile-name-placeholder-text")}
@@ -213,7 +221,7 @@ export default function SettingsPage() {
                 type="text"
                 radius="md"
                 isRequired
-                onChange={() => setUnsavedChanges(true)}
+                onChange={() => handleUnsavedChanges(true)}
                 defaultValue={appSettings?.org_name}
                 className="w-[100%] lg:w-[80%]"
                 name="org-name"

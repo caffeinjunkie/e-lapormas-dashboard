@@ -24,7 +24,8 @@ import { ProfileData } from "@/types/user.types";
 export const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { shouldShowConfirmation, setShouldShowConfirmation } = usePrivate()!;
+  const { shouldShowConfirmation, setShouldShowConfirmation, isRevalidated } =
+    usePrivate()!;
   const t = useTranslations("Navbar");
   const { isOpen, openModal, closeModal } = Modal.useModal();
   const [isButtonLoading, setIsButtonLoading] = useState(false);
@@ -67,7 +68,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     getData();
-  }, [pathname]);
+  }, [isRevalidated]);
 
   const handleLogout = async () => {
     setIsButtonLoading(true);
