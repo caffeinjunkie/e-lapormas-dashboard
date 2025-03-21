@@ -1,6 +1,7 @@
 "use client";
 
 import { ModalHeader } from "@heroui/modal";
+import { Skeleton } from "@heroui/skeleton";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,26 +13,32 @@ import { MobileNavbar } from "./navbar-mobile";
 import { Sidebar } from "./navbar-sidebar";
 
 import { fetchAdminById } from "@/api/admin";
+import { fetchAppConfig } from "@/api/app-config";
 import { logout } from "@/api/auth";
 import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
 import { Modal } from "@/components/modal";
 import { siteConfig } from "@/config/site";
+import { usePrivate } from "@/providers/private-provider";
 import { ProfileData } from "@/types/user.types";
 
 export const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const { shouldShowConfirmation, setShouldShowConfirmation } = usePrivate()!;
   const t = useTranslations("Navbar");
   const { isOpen, openModal, closeModal } = Modal.useModal();
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(false);
   const [user, setUser] = useState<ProfileData | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [orgName, setOrgName] = useState("");
+  const [nextPath, setNextPath] = useState("");
 
-  const getUserData = async () => {
+  const getData = async () => {
     try {
       const { data } = await fetchUserData();
       const result = await fetchAdminById(data.user.id);
+      const appConfig = await fetchAppConfig();
 
       let displayName = result.display_name as string;
 
@@ -41,6 +48,8 @@ export const Navbar = () => {
 
         await updateAuthUser({ data: { full_name: displayName } });
       }
+
+      setOrgName(appConfig.org_name);
 
       setUser({
         id: result.user_id,
@@ -57,7 +66,7 @@ export const Navbar = () => {
   };
 
   useEffect(() => {
-    getUserData();
+    getData();
   }, [pathname]);
 
   const handleLogout = async () => {
@@ -85,26 +94,56 @@ export const Navbar = () => {
     </NextLink>
   );
 
+  const handleNavigation = (href: string) => {
+    if (href === "/logout") {
+      handleLogout();
+      return;
+    }
+    router.push(href);
+    setShouldShowConfirmation(false);
+    closeModal();
+    setNextPath("");
+  };
+
+  const openSpecificModal = (href: string) => {
+    openModal();
+    setNextPath(href);
+  };
+
   return (
     <>
-      <MobileNavbar isSuperAdmin={isSuperAdmin} onLogout={openModal}>
+      <MobileNavbar
+        isSuperAdmin={isSuperAdmin}
+        onNavigate={handleNavigation}
+        shouldShowConfirmation={shouldShowConfirmation}
+        openModal={openSpecificModal}
+      >
         {mobileHeaderLabel}
       </MobileNavbar>
       <Sidebar
         isSuperAdmin={isSuperAdmin}
         pathname={pathname}
         isLoaded={isNavbarFullyLoaded}
+        onNavigate={handleNavigation}
+        shouldShowConfirmation={shouldShowConfirmation}
         user={user}
-        onLogout={openModal}
+        openModal={openSpecificModal}
       >
         <div className="flex justify-center px-6 pt-4 w-full">
-          <div className="flex-col justify-center">
-            <Logo
-              color={siteConfig.sidebarTheme.secondary}
-              fill={siteConfig.sidebarTheme.text}
-            />
-            <p className="text-[10px] mt-[-12px] mr-3 text-end"></p>
-          </div>
+          <Skeleton
+            className="rounded-full h-14"
+            isLoaded={isNavbarFullyLoaded}
+          >
+            <div className="flex flex-col justify-center pb-4">
+              <Logo
+                color={siteConfig.sidebarTheme.secondary}
+                fill={siteConfig.sidebarTheme.text}
+              />
+              <p className="text-[10px] mt-[-12px] mr-3 text-right">
+                {orgName}
+              </p>
+            </div>
+          </Skeleton>
         </div>
       </Sidebar>
       <Modal
@@ -112,13 +151,19 @@ export const Navbar = () => {
         onClose={closeModal}
         buttons={[
           {
-            title: t("logout-confirmation-button-text"),
-            onPress: handleLogout,
+            title: shouldShowConfirmation
+              ? t("navigate-confirmation-button-text")
+              : t("logout-confirmation-button-text"),
+            onPress: shouldShowConfirmation
+              ? () => handleNavigation(nextPath)
+              : handleLogout,
             color: "danger",
             isLoading: isButtonLoading,
           },
           {
-            title: t("logout-cancellation-button-text"),
+            title: shouldShowConfirmation
+              ? t("navigate-cancellation-button-text")
+              : t("logout-cancellation-button-text"),
             onPress: closeModal,
             color: "primary",
             variant: "solid",
@@ -126,7 +171,9 @@ export const Navbar = () => {
         ]}
       >
         <ModalHeader className="text-black">
-          {t("logout-confirmation-title")}
+          {shouldShowConfirmation
+            ? t("navigate-confirmation-title")
+            : t("logout-confirmation-title")}
         </ModalHeader>
       </Modal>
     </>

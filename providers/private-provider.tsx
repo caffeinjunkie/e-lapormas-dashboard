@@ -5,7 +5,6 @@ import { DotLottie, DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { useModal } from "@/components/modal/use-modal";
 import { Navbar } from "@/components/navbar";
 import { getCookie } from "@/utils/cookie";
 import { createClient } from "@/utils/supabase-auth/client";
@@ -16,9 +15,16 @@ interface PrivateLayoutProps {
 
 const publicPaths = ["/login", "/create-password"];
 
-const PrivateContext = createContext<{ isPrivate: boolean } | undefined>(
-  undefined,
-);
+const PrivateContext = createContext<
+  | {
+      isPrivate: boolean;
+      isRevalidated: boolean;
+      setIsRevalidated: (value: boolean) => void;
+      shouldShowConfirmation: boolean;
+      setShouldShowConfirmation: (value: boolean) => void;
+    }
+  | undefined
+>(undefined);
 
 export const usePrivate = () => {
   const context = useContext(PrivateContext);
@@ -30,8 +36,11 @@ export const usePrivate = () => {
 
 export function PrivateProvider({ children }: PrivateLayoutProps) {
   const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
-  const { isOpen, openModal, closeModal } = useModal();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
+  const [shouldShowConfirmation, setShouldShowConfirmation] =
+    useState<boolean>(false);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -78,13 +87,13 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
     const visited = getCookie(userId as string);
 
     if (!visited) {
-      openModal();
+      setIsModalOpen(true);
     }
 
     function onComplete() {
       document.cookie = `${userId}=true;path=/`;
       setTimeout(() => {
-        closeModal();
+        onCloseModal();
       }, 1500);
     }
 
@@ -99,21 +108,33 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
     };
   }, [dotLottie]);
 
+  const onCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const dotLottieRefCallback = (dotLottie: DotLottie | null) => {
     setDotLottie(dotLottie);
   };
 
   return (
-    <PrivateContext.Provider value={{ isPrivate: !isPublicPath }}>
+    <PrivateContext.Provider
+      value={{
+        isPrivate: !isPublicPath,
+        isRevalidated,
+        setIsRevalidated,
+        shouldShowConfirmation,
+        setShouldShowConfirmation,
+      }}
+    >
       {!isPublicPath && !isErrorPath && (
         <>
           <Navbar />
           <Modal
-            isOpen={isOpen}
+            isOpen={isModalOpen}
             hideCloseButton
             placement="center"
             backdrop="blur"
-            onClose={closeModal}
+            onClose={onCloseModal}
             className="bg-transparent shadow-none"
           >
             <ModalContent>

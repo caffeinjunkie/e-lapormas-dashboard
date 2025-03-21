@@ -36,12 +36,14 @@ import { setCookie } from "@/app/admin-management/utils";
 import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
+import { usePrivate } from "@/providers/private-provider";
 import { AdminData } from "@/types/user.types";
 import { buildFormData } from "@/utils/form";
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 export default function AdminManagementPage() {
   const t = useTranslations("AdminManagementPage");
+  const { setShouldShowConfirmation } = usePrivate();
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
@@ -101,6 +103,10 @@ export default function AdminManagementPage() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    setShouldShowConfirmation(updatedAdmins.length > 0);
+  }, [updatedAdmins]);
 
   const filteredItems = React.useMemo(
     () =>

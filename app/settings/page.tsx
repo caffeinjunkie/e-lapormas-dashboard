@@ -14,6 +14,7 @@ import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
 import {
@@ -35,6 +36,7 @@ import { validateIsRequired } from "@/utils/string";
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
+  const router = useRouter();
   //TODO: fetch from settings
   const [image, setImage] = useState<string | null>(null);
   const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
@@ -129,12 +131,15 @@ export default function SettingsPage() {
     saveImageToAdmin(t, profile!, setIsUploading);
   };
 
-  const onSaveProfile = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setUnsavedChanges(false);
     const formData = buildFormData(e);
 
-    saveAllSettings(formData, setIsSaveLoading, t);
+    const { success } = await saveAllSettings(formData, setIsSaveLoading, t);
+    if (success) {
+      router.push("/settings");
+    }
   };
 
   return (
@@ -152,7 +157,7 @@ export default function SettingsPage() {
       {!isPageLoading && !isPageError && (
         <Form
           id="profile"
-          onSubmit={onSaveProfile}
+          onSubmit={onSubmit}
           className="gap-3 md:gap-5 px-0 sm:px-12 md:px-0 lg:px-[14%] xl:px-[20%] md:pt-4"
         >
           <div className="flex flex-col w-full gap-10">

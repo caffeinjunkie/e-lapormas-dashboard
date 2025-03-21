@@ -102,12 +102,14 @@ export const saveAllSettings = async (
       description: t("save-success-toast-description"),
       color: "success",
     };
+    return { success: true };
   } catch (e) {
     toastProps = {
       title: t("save-error-toast-title"),
       description: t("save-error-toast-description"),
       color: "danger",
     };
+    return { success: false };
   } finally {
     setLoading(false);
     addToast(toastProps as ToastProps);

@@ -5,7 +5,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { Skeleton } from "@heroui/skeleton";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
-import { redirect } from "next/navigation";
 import { PropsWithChildren, useState } from "react";
 
 import { UserAva } from "../user-ava";
@@ -15,7 +14,9 @@ import { ProfileData } from "@/types/user.types";
 
 interface SidebarProps {
   isSuperAdmin: boolean;
-  onLogout: () => void;
+  openModal: (href: string) => void;
+  onNavigate: (href: string) => void;
+  shouldShowConfirmation: boolean;
   pathname: string;
   user?: ProfileData | null;
   isLoaded?: boolean;
@@ -37,7 +38,9 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
   isSuperAdmin,
   pathname,
   user,
-  onLogout,
+  onNavigate,
+  shouldShowConfirmation,
+  openModal,
   isLoaded,
   children,
 }) => {
@@ -60,7 +63,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
       }}
     >
       <div className="fixed bottom-0 top-0 gap-4 w-[274px] flex flex-col justify-between overflow-y-scroll">
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-16">
           <div className="flex items-center justify-start text-md font-semibold text-gray-200">
             {children}
           </div>
@@ -85,6 +88,11 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                   className="flex w-full space-x-2 text-sm py-3 font-semibold"
                   color="foreground"
                   href={href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    shouldShowConfirmation ? openModal(href) : onNavigate(href);
+                  }}
                 >
                   <div
                     style={{
@@ -152,9 +160,11 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                       aria-label="Actions"
                       onAction={(key) => {
                         if (key === "/logout") {
-                          onLogout();
+                          openModal(key);
                         } else {
-                          redirect(key as string);
+                          shouldShowConfirmation
+                            ? openModal(key as string)
+                            : onNavigate(key as string);
                         }
                         setIsOpen(false);
                       }}
