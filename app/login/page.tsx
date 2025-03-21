@@ -63,6 +63,7 @@ export default function LoginPage() {
       setSuccess: setSubmissionSuccess,
       openModal,
       setModalProps,
+      t,
     });
   };
 

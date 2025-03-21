@@ -24,7 +24,7 @@ export const UserAva = ({
   indicator,
   theme = {
     name: "black",
-    description: ""
+    description: "",
   },
   classNames,
 }: UserAvaProps) => {

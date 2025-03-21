@@ -25,7 +25,7 @@ import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
 import { columns } from "@/app/admin-management/config";
-import { fetchAdminsHandler } from "@/app/admin-management/handlers";
+import { getAllAdmins } from "@/app/admin-management/handlers";
 import {
   calculateRowNumber,
   filterUsers,
@@ -71,13 +71,13 @@ export default function AdminManagementPage() {
 
   const fetchAdmins = async () => {
     try {
-      const { admins, currentUserId } = await fetchAdminsHandler();
+      const { admins, currentUserId } = await getAllAdmins();
 
       setAdmins(admins as AdminData[]);
       setOriginalAdmins(admins as AdminData[]);
       setSelfId(currentUserId);
     } catch (error) {
-      addToast(getErrorToastProps(t) as ToastProps);
+      addToast(getErrorToastProps(t, "fetch") as ToastProps);
     } finally {
       setIsDataLoading(false);
     }

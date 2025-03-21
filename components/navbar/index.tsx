@@ -15,8 +15,8 @@ import { fetchAdminById } from "@/api/admin";
 import { logout } from "@/api/auth";
 import { fetchUserData, generateFakeName, updateAuthUser } from "@/api/users";
 import { Modal } from "@/components/modal";
-import { ProfileData } from "@/types/user.types";
 import { siteConfig } from "@/config/site";
+import { ProfileData } from "@/types/user.types";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -98,7 +98,10 @@ export const Navbar = () => {
       >
         <div className="flex justify-center px-6 pt-4 w-full">
           <div className="flex-col justify-center">
-            <Logo color={siteConfig.sidebarTheme.secondary} fill={siteConfig.sidebarTheme.text} />
+            <Logo
+              color={siteConfig.sidebarTheme.secondary}
+              fill={siteConfig.sidebarTheme.text}
+            />
             <p className="text-[10px] mt-[-12px] mr-3 text-end"></p>
           </div>
         </div>

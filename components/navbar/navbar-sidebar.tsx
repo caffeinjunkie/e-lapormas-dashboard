@@ -107,17 +107,18 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
           </div>
         </div>
         <div className="py-6 px-6">
-          <div className="py-2 px-2 rounded-full flex flex-row items-center justify-between gap-2"
+          <div
+            className="py-2 px-2 rounded-full flex flex-row items-center justify-between gap-2"
             style={{
-              backgroundColor: `${sidebarTheme.text}10`
+              backgroundColor: `${sidebarTheme.text}10`,
             }}
           >
             {isLoaded && user ? (
               <>
                 <UserAva
-                  imageSrc=""
+                  imageSrc={user?.imageSrc}
                   theme={{
-                    name: sidebarTheme.text
+                    name: sidebarTheme.text,
                   }}
                   displayName={user?.fullName}
                   description={user?.email}
