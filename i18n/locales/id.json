@@ -150,6 +150,7 @@
     "navigate-confirmation-title": "Ada data yang belum tersimpan. Apakah anda yakin ingin keluar dari halaman ini?",
     "navigate-confirmation-button-text": "Ya",
     "navigate-cancellation-button-text": "Tidak",
+    "navbar-unauthorized-label": "Tidak memiliki akses",
     "navbar-dashboard-label": "Ikhtisar",
     "navbar-reports-label": "Laporan",
     "navbar-statistics-label": "Statistik",

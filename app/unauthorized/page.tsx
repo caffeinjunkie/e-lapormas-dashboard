@@ -8,9 +8,9 @@ export default function UnauthorizedPage() {
   const t = useTranslations("UnauthorizedPage");
 
   return (
-    <Layout className="h-[calc(100vh-4rem)] md:h-screen">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <p className="text-sm text-default-500">
+    <Layout>
+      <div className="flex flex-col items-center px-6 justify-center gap-6 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)]">
+        <p className="text-sm text-default-500 text-center">
           {t("unauthorized-tab-description")}
         </p>
         <Button as={Link} href="/" color="primary">

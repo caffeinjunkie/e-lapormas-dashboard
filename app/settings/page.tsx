@@ -32,9 +32,9 @@ import { usePrivate } from "@/providers/private-provider";
 import { AppConfig } from "@/types/app-config.types";
 import { Timezone } from "@/types/timezone.types";
 import { ProfileData } from "@/types/user.types";
+import { getCookie } from "@/utils/cookie";
 import { buildFormData } from "@/utils/form";
 import { validateIsRequired } from "@/utils/string";
-import { getCookie } from "@/utils/cookie";
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");

@@ -41,7 +41,7 @@ export const Navbar = () => {
       const { data } = await fetchUserData();
       const result = await fetchAdminById(data.user.id);
       let orgName = getCookie("org_name");
-      
+
       if (!orgName) {
         const appConfig = await fetchAppConfig();
         orgName = appConfig.org_name;
