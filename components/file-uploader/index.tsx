@@ -52,9 +52,12 @@ export const FileUploader = ({
         labelMaxFileSize={`${t("max-file-size-error")} {filesize}`}
         labelFileTypeNotAllowed={t("file-type-not-allowed-error")}
         fileValidateTypeLabelExpectedTypes={t("file-type-expected-types-error")}
-        onupdatefiles={(files) =>
-          setFiles(files.map((file) => file.file as File))
-        }
+        onupdatefiles={(files) => {
+          const transformedFiles = files
+            .map((file) => file.file as File)
+            .filter((file) => file.type.includes("image"));
+          setFiles(transformedFiles);
+        }}
         labelIdle={`${t("upload-input-dragndrop-text")} <span class="filepond--label-action">${t("upload-input-browse-text")}</span>`}
         {...(resize ? additionalProps : {})}
       />
