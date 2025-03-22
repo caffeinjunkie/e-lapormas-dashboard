@@ -82,16 +82,14 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   }, [pathname, router, supabase]);
 
   useEffect(() => {
-    if (userId === null) return;
-
-    const visited = getCookie(userId as string);
+    const visited = getCookie("visited");
 
     if (!visited) {
       setIsModalOpen(true);
+      document.cookie = "visited=true;path=/";
     }
 
     function onComplete() {
-      document.cookie = `${userId}=true;path=/`;
       setTimeout(() => {
         onCloseModal();
       }, 1500);
@@ -106,7 +104,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         dotLottie.removeEventListener("complete", onComplete);
       }
     };
-  }, [dotLottie, userId]);
+  }, [dotLottie]);
 
   const onCloseModal = () => {
     setIsModalOpen(false);
