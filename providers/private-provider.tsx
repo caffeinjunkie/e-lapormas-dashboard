@@ -106,7 +106,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         dotLottie.removeEventListener("complete", onComplete);
       }
     };
-  }, [dotLottie]);
+  }, [dotLottie, userId]);
 
   const onCloseModal = () => {
     setIsModalOpen(false);
