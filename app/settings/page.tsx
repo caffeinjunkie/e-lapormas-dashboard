@@ -1,16 +1,10 @@
 "use client";
 
-import {
-  CameraIcon,
-  KeyIcon,
-  TrashIcon,
-  UserIcon,
-} from "@heroicons/react/24/solid";
-import { Avatar } from "@heroui/avatar";
+import { KeyIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
+import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Select, SelectItem } from "@heroui/select";
-import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
@@ -22,12 +16,14 @@ import {
   saveAllSettings,
   saveImageToAdmin,
 } from "./handlers";
+import { ProfilePicture } from "./profile-picture";
 
 import { fetchAppConfig, fetchTimezones } from "@/api/app-config";
 import Error from "@/components/error/error";
 import { FloppyIcon } from "@/components/icons";
 import { Input } from "@/components/input";
 import { Layout } from "@/components/layout";
+import { Modal } from "@/components/modal";
 import { usePrivate } from "@/providers/private-provider";
 import { AppConfig } from "@/types/app-config.types";
 import { Timezone } from "@/types/timezone.types";
@@ -51,6 +47,8 @@ export default function SettingsPage() {
   const [appSettings, setAppSettings] = useState<AppConfig | null>(null);
   const [timezonesOptions, setTimezonesOptions] = useState<Timezone[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>("");
+  const { isOpen, openModal, closeModal } = Modal.useModal();
+  const [modalType, setModalType] = useState<string>("upload");
 
   useEffect(() => {
     // workaround for Select Hydration error on Hero UI. Waiting for an update
@@ -64,7 +62,7 @@ export default function SettingsPage() {
   const getProfile = async () => {
     const admin = await fetchProfile();
 
-    setImage(admin.profile_img);
+    // setImage(admin.profile_img);
     setProfile({
       id: admin.user_id,
       fullName: admin.display_name,
@@ -125,12 +123,7 @@ export default function SettingsPage() {
     );
   };
 
-  const onPressUpload = () => {
-    //upload image, get url
-    //directly update admin pp with url
-    setIsRevalidated(false);
-
-    setIsUploading(true);
+  const onConfirmUpload = () => {
     setImage("https://i.pravatar.cc/150?u=a04258114e29026708c");
     saveImageToAdmin(
       t,
@@ -139,21 +132,35 @@ export default function SettingsPage() {
       setIsUploading,
       "https://i.pravatar.cc/150?u=a04258114e29026708c",
     );
-
-    setTimeout(() => {
-      setIsUploading(false);
-    }, 3000);
+    closeModal();
+    setProfile({
+      ...profile!,
+      imageSrc: "https://i.pravatar.cc/150?u=a04258114e29026708c",
+    });
   };
 
-  const onPressDelete = () => {
+  const onPressUpload = () => {
+    setIsRevalidated(false);
+
+    setModalType("upload");
+    openModal();
+  };
+
+  const onConfirmDelete = () => {
     setIsRevalidated(false);
     setImage(null);
 
-    //modal question are you sure
-    //possibly kalo bisa, ada opsi untuk delete
-    //pakai supabase storage aja karena pp scope kecil dan jumlahnya sedikit
-
     saveImageToAdmin(t, setIsRevalidated, profile!, setIsUploading);
+    setProfile({
+      ...profile!,
+      imageSrc: null!,
+    });
+    closeModal();
+  };
+
+  const onPressDelete = () => {
+    setModalType("delete");
+    openModal();
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -190,40 +197,14 @@ export default function SettingsPage() {
           onSubmit={onSubmit}
           className="gap-3 md:gap-5 px-0 sm:px-12 md:px-0 lg:px-[14%] xl:px-[20%] md:pt-4"
         >
+          <ProfilePicture
+            image={profile?.imageSrc as string}
+            isUploading={isUploading}
+            onPressUpload={onPressUpload}
+            onPressDelete={onPressDelete}
+            t={t}
+          />
           <div className="flex flex-col w-full gap-5">
-            <div className="flex flex-col w-full items-center gap-6 bg-default-50 rounded-xl py-6">
-              <Skeleton isLoaded={!isUploading} className="rounded-full">
-                <Avatar
-                  className="w-24 h-24 md:w-32 md:h-32 text-small"
-                  src={image ?? ""}
-                  fallback={
-                    <UserIcon className="size-8 md:size-9 text-white" />
-                  }
-                />
-              </Skeleton>
-              <div className="flex flex-row gap-3">
-                <Button
-                  color="primary"
-                  onPress={onPressUpload}
-                  isDisabled={isUploading}
-                  className="text-white"
-                  size="sm"
-                  startContent={<CameraIcon className="size-4 md:size-5" />}
-                >
-                  {t("profile-picture-upload-text")}
-                </Button>
-                <Button
-                  onPress={onPressDelete}
-                  size="sm"
-                  color="danger"
-                  variant="bordered"
-                  isDisabled={!image || isUploading}
-                  startContent={<TrashIcon className="size-4 md:size-5" />}
-                >
-                  {t("profile-picture-delete-text")}
-                </Button>
-              </div>
-            </div>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <Input
                 aria-label="name"
@@ -310,6 +291,53 @@ export default function SettingsPage() {
           </div>
         </Form>
       )}
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        buttons={[
+          {
+            title: t(`${modalType}-profile-picture-modal-first-button-text`),
+            color: modalType === "upload" ? "default" : "danger",
+            variant: "light",
+            isLoading: modalType === "upload" ? false : isUploading,
+            isDisabled: isUploading,
+            onPress: () => {
+              if (modalType === "upload") {
+                closeModal();
+              } else {
+                onConfirmDelete();
+              }
+            },
+          },
+          {
+            title: t(`${modalType}-profile-picture-modal-second-button-text`),
+            color: "primary",
+            variant: "solid",
+            isLoading: modalType === "upload" ? isUploading : false,
+            isDisabled: isUploading,
+            onPress: () => {
+              if (modalType === "upload") {
+                onConfirmUpload();
+              } else {
+                closeModal();
+              }
+            },
+          },
+        ]}
+      >
+        <ModalHeader>
+          {t(`${modalType}-profile-picture-modal-header`)}
+        </ModalHeader>
+        <ModalBody>
+          {modalType === "upload" ? (
+            <div>tes</div>
+          ) : (
+            <p className="text-default-500">
+              {t(`${modalType}-profile-picture-modal-body`)}
+            </p>
+          )}
+        </ModalBody>
+      </Modal>
     </Layout>
   );
 }

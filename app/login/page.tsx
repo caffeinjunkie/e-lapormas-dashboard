@@ -8,9 +8,9 @@ import NextImage from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
+import { handleLogin, handleResetPassword } from "@/app/login/handlers";
 import { LoginForm } from "@/app/login/login-form";
 import { ResetPasswordForm } from "@/app/login/reset-password-form";
-import { handleLogin, handleResetPassword } from "@/app/login/handlers";
 import { Modal } from "@/components/modal";
 import { siteConfig } from "@/config/site";
 import { buildFormData } from "@/utils/form";

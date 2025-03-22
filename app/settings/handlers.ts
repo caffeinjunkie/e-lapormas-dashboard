@@ -57,18 +57,18 @@ export const saveImageToAdmin = async (
   try {
     const data = await updateAdminById(updatedAdminData);
     if (data) {
-      const preText = image === "" ? "remove" : "update";
+      const preText = image === "" ? "delete" : "upload";
       toastProps = {
-        title: t(`${preText}-photo-success-toast-title`),
-        description: t(`${preText}-photo-success-toast-description`),
+        title: t(`${preText}-profile-picture-success-toast-title`),
+        description: t(`${preText}-profile-picture-success-toast-description`),
         color: "success",
       };
     }
   } catch (e) {
     toastProps = {
-      title: t("update-photo-error-toast-title"),
-      description: t("update-photo-error-toast-description"),
-      color: "success",
+      title: t("upload-profile-picture-error-toast-title"),
+      description: t("upload-profile-picture-error-toast-description"),
+      color: "danger",
     };
   } finally {
     addToast(toastProps as ToastProps);
