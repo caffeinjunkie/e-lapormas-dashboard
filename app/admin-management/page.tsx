@@ -17,13 +17,13 @@ import React, {
   useState,
 } from "react";
 
-import { AdminCell } from "./components/admin-cell";
-import { TopContent } from "./components/top-content";
+import { AdminCell } from "./admin-cell";
+import { TopContent } from "./top-content";
 
 import { checkIsUserAlreadyInvited, upsertAdmins } from "@/api/admin";
 import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
-import { AdminTable } from "@/app/admin-management/components/admin-table";
+import { AdminTable } from "@/app/admin-management/admin-table";
 import { columns } from "@/app/admin-management/config";
 import { getAllAdmins } from "@/app/admin-management/handlers";
 import {

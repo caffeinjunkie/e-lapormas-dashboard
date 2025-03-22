@@ -125,7 +125,7 @@ export default function SettingsPage() {
     );
   };
 
-  const onUploadPP = () => {
+  const onPressUpload = () => {
     //upload image, get url
     //directly update admin pp with url
     setIsRevalidated(false);
@@ -145,7 +145,7 @@ export default function SettingsPage() {
     }, 3000);
   };
 
-  const onDeletePP = () => {
+  const onPressDelete = () => {
     setIsRevalidated(false);
     setImage(null);
 
@@ -204,7 +204,7 @@ export default function SettingsPage() {
               <div className="flex flex-row gap-3">
                 <Button
                   color="primary"
-                  onPress={onUploadPP}
+                  onPress={onPressUpload}
                   isDisabled={isUploading}
                   className="text-white"
                   size="sm"
@@ -213,7 +213,7 @@ export default function SettingsPage() {
                   {t("profile-picture-upload-text")}
                 </Button>
                 <Button
-                  onPress={onDeletePP}
+                  onPress={onPressDelete}
                   size="sm"
                   color="danger"
                   variant="bordered"
@@ -273,11 +273,11 @@ export default function SettingsPage() {
               placeholder={t("app-settings-timezone-placeholder-text")}
               onSelectionChange={onTimezoneSelect}
             >
-              {timezonesOptions.map((timezone) => (
+              {(timezone) => (
                 <SelectItem key={timezone.key} className="outline-none">
                   {t(`timezone-label-${timezone.key}-label`)}
                 </SelectItem>
-              ))}
+              )}
             </Select>
           </div>
           <div className="flex w-full h-24 items-center justify-center rounded-xl bg-default-50">
