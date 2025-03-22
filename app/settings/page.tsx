@@ -328,7 +328,8 @@ export default function SettingsPage() {
             color: "primary",
             variant: "solid",
             isLoading: modalType === "upload" ? isUploading : false,
-            isDisabled: isUploading,
+            isDisabled:
+              isUploading || (modalType === "upload" && files.length === 0),
             onPress: () => {
               if (modalType === "upload") {
                 onConfirmUpload();
@@ -347,6 +348,7 @@ export default function SettingsPage() {
             <FileUploader
               files={files}
               imageType="profile"
+              isDisabled={isUploading}
               setFiles={setFiles}
               legend={t("upload-profile-picture-disclaimer-label")}
             />

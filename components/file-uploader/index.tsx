@@ -22,6 +22,7 @@ interface FileUploaderProps {
   resize?: boolean;
   imageType: "profile" | "task" | "announcement";
   legend?: string;
+  isDisabled?: boolean;
 }
 
 export const FileUploader = ({
@@ -29,6 +30,7 @@ export const FileUploader = ({
   setFiles,
   resize = true,
   imageType,
+  isDisabled = false,
   legend,
 }: FileUploaderProps) => {
   const t = useTranslations("FileUploader");
@@ -43,6 +45,7 @@ export const FileUploader = ({
       <FilePond
         files={files}
         allowImageResize={resize}
+        disabled={isDisabled}
         maxFileSize={maxFileSize}
         acceptedFileTypes={["image/*"]}
         labelMaxFileSizeExceeded={t("max-file-size-exceeded-error")}
