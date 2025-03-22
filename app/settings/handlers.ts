@@ -45,19 +45,22 @@ export const saveImageToAdmin = async (
   setIsRevalidated: (value: boolean) => void,
   user: ProfileData,
   setLoading: Dispatch<SetStateAction<boolean>>,
-  image: string = "",
+  image: File | null = null,
 ) => {
-  const updatedAdminData = {
-    user_id: user.id,
-    profile_img: image,
-  };
   let toastProps;
   setLoading(true);
 
   try {
+    // upload image in supabase, get url. if image is null, delete image from supabase
+
+    const updatedAdminData = {
+      user_id: user.id,
+      profile_img: image ? image.toString() : "",
+    };
     const data = await updateAdminById(updatedAdminData);
+
     if (data) {
-      const preText = image === "" ? "delete" : "upload";
+      const preText = image === null ? "delete" : "upload";
       toastProps = {
         title: t(`${preText}-profile-picture-success-toast-title`),
         description: t(`${preText}-profile-picture-success-toast-description`),

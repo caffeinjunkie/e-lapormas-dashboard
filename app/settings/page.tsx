@@ -20,6 +20,7 @@ import { ProfilePicture } from "./profile-picture";
 
 import { fetchAppConfig, fetchTimezones } from "@/api/app-config";
 import Error from "@/components/error/error";
+import { FileUploader } from "@/components/file-uploader";
 import { FloppyIcon } from "@/components/icons";
 import { Input } from "@/components/input";
 import { Layout } from "@/components/layout";
@@ -35,7 +36,6 @@ import { validateIsRequired } from "@/utils/string";
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
   const { setShouldShowConfirmation, setIsRevalidated } = usePrivate();
-  const [image, setImage] = useState<string | null>(null);
   const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
@@ -49,6 +49,7 @@ export default function SettingsPage() {
   const [selectedTimezone, setSelectedTimezone] = useState<string>("");
   const { isOpen, openModal, closeModal } = Modal.useModal();
   const [modalType, setModalType] = useState<string>("upload");
+  const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
     // workaround for Select Hydration error on Hero UI. Waiting for an update
@@ -124,31 +125,32 @@ export default function SettingsPage() {
   };
 
   const onConfirmUpload = () => {
-    setImage("https://i.pravatar.cc/150?u=a04258114e29026708c");
-    saveImageToAdmin(
-      t,
-      setIsRevalidated,
-      profile!,
-      setIsUploading,
-      "https://i.pravatar.cc/150?u=a04258114e29026708c",
-    );
-    closeModal();
-    setProfile({
-      ...profile!,
-      imageSrc: "https://i.pravatar.cc/150?u=a04258114e29026708c",
-    });
+    setIsRevalidated(false);
+
+    const imageFile = Array.from(files).map((file) => {
+      const newFile = new File([file], profile?.id as string, {
+        type: file.type,
+      });
+      return newFile;
+    })[0];
+
+    // saveImageToAdmin(t, setIsRevalidated, profile!, setIsUploading, imageFile);
+
+    // closeModal();
+    // setProfile({
+    //   ...profile!,
+    //   imageSrc: "https://i.pravatar.cc/150?u=a04258114e29026708c",
+    // });
+    setFiles([]);
   };
 
   const onPressUpload = () => {
-    setIsRevalidated(false);
-
     setModalType("upload");
     openModal();
   };
 
   const onConfirmDelete = () => {
     setIsRevalidated(false);
-    setImage(null);
 
     saveImageToAdmin(t, setIsRevalidated, profile!, setIsUploading);
     setProfile({
@@ -171,6 +173,11 @@ export default function SettingsPage() {
     if (success) {
       handleUnsavedChanges(false);
     }
+  };
+
+  const onCloseModal = () => {
+    closeModal();
+    setFiles([]);
   };
 
   if (!isMounted || isPageLoading) {
@@ -293,7 +300,7 @@ export default function SettingsPage() {
       )}
       <Modal
         isOpen={isOpen}
-        onClose={closeModal}
+        onClose={onCloseModal}
         buttons={[
           {
             title: t(`${modalType}-profile-picture-modal-first-button-text`),
@@ -303,7 +310,7 @@ export default function SettingsPage() {
             isDisabled: isUploading,
             onPress: () => {
               if (modalType === "upload") {
-                closeModal();
+                onCloseModal();
               } else {
                 onConfirmDelete();
               }
@@ -319,7 +326,7 @@ export default function SettingsPage() {
               if (modalType === "upload") {
                 onConfirmUpload();
               } else {
-                closeModal();
+                onCloseModal();
               }
             },
           },
@@ -330,7 +337,12 @@ export default function SettingsPage() {
         </ModalHeader>
         <ModalBody>
           {modalType === "upload" ? (
-            <div>tes</div>
+            <FileUploader
+              files={files}
+              imageType="profile"
+              setFiles={setFiles}
+              legend={t("upload-profile-picture-disclaimer-label")}
+            />
           ) : (
             <p className="text-default-500">
               {t(`${modalType}-profile-picture-modal-body`)}
