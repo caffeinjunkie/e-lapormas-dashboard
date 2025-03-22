@@ -55,7 +55,9 @@ export const FileUploader = ({
         labelIdle={`${t("upload-input-dragndrop-text")} <span class="filepond--label-action">${t("upload-input-browse-text")}</span>`}
         {...(resize ? additionalProps : {})}
       />
-      {legend && <p className="text-default-500 text-xs text-center pt-5">{legend}</p>}
+      {legend && (
+        <p className="text-default-500 text-xs text-center pt-5">{legend}</p>
+      )}
     </div>
   );
 };

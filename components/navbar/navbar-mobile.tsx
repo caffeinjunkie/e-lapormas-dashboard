@@ -16,6 +16,7 @@ interface MobileNavbarProps {
   onNavigate: (href: string) => void;
   openModal: (href: string) => void;
   shouldShowConfirmation: boolean;
+  pathname: string;
 }
 
 export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
@@ -23,6 +24,7 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
   openModal,
   onNavigate,
   shouldShowConfirmation,
+  pathname,
   children,
 }) => {
   const t = useTranslations("Navbar");
@@ -58,12 +60,19 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  if (item.href === pathname) {
+                    setIsOpen(false);
+                    return;
+                  }
                   if (item.href === "/logout") {
                     openModal(item.href);
+                    setIsOpen(false);
+                    return;
+                  } else {
+                    shouldShowConfirmation
+                      ? openModal(item.href)
+                      : onNavigate(item.href);
                   }
-                  shouldShowConfirmation
-                    ? openModal(item.href)
-                    : onNavigate(item.href);
                   setIsOpen(false);
                 }}
               >

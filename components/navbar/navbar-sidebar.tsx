@@ -91,6 +91,9 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    if (href === pathname) {
+                      return;
+                    }
                     shouldShowConfirmation ? openModal(href) : onNavigate(href);
                   }}
                 >
@@ -159,6 +162,10 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     <Listbox
                       aria-label="Actions"
                       onAction={(key) => {
+                        if (key === pathname) {
+                          setIsOpen(false);
+                          return;
+                        }
                         if (key === "/logout") {
                           openModal(key);
                         } else {

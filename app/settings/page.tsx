@@ -60,10 +60,13 @@ export default function SettingsPage() {
     setShouldShowConfirmation(unsavedChanges);
   }, [unsavedChanges]);
 
+  useEffect(() => {
+    getProfileAndAppConfig();
+  }, []);
+
   const getProfile = async () => {
     const admin = await fetchProfile();
 
-    // setImage(admin.profile_img);
     setProfile({
       id: admin.user_id,
       fullName: admin.display_name,
@@ -102,10 +105,6 @@ export default function SettingsPage() {
     }
   };
 
-  useEffect(() => {
-    getProfileAndAppConfig();
-  }, []);
-
   const handleUnsavedChanges = (hasUnsavedChanges: boolean) => {
     setUnsavedChanges(hasUnsavedChanges);
     setIsRevalidated(!hasUnsavedChanges);
@@ -124,7 +123,7 @@ export default function SettingsPage() {
     );
   };
 
-  const onConfirmUpload = () => {
+  const onConfirmUpload = async () => {
     setIsRevalidated(false);
 
     const imageFile = Array.from(files).map((file) => {
@@ -134,13 +133,21 @@ export default function SettingsPage() {
       return newFile;
     })[0];
 
-    // saveImageToAdmin(t, setIsRevalidated, profile!, setIsUploading, imageFile);
+    const data = await saveImageToAdmin(
+      t,
+      setIsRevalidated,
+      profile!,
+      setIsUploading,
+      imageFile,
+    );
+    if (data) {
+      setProfile({
+        ...profile!,
+        imageSrc: data.profile_img,
+      });
+    }
 
-    // closeModal();
-    // setProfile({
-    //   ...profile!,
-    //   imageSrc: "https://i.pravatar.cc/150?u=a04258114e29026708c",
-    // });
+    closeModal();
     setFiles([]);
   };
 

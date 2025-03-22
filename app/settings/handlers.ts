@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 import { fetchAdminById, updateAdminById } from "@/api/admin";
 import { updateAppConfig } from "@/api/app-config";
+import { deleteImage, uploadImage } from "@/api/storage";
 import { fetchUserData, resetPassword, updateAuthUser } from "@/api/users";
 import { ProfileData } from "@/types/user.types";
 
@@ -51,11 +52,25 @@ export const saveImageToAdmin = async (
   setLoading(true);
 
   try {
-    // upload image in supabase, get url. if image is null, delete image from supabase
+    let uploadResult = null;
 
+    if (image) {
+      uploadResult = await uploadImage({
+        file: image,
+        path: `user/${user.id}`,
+        bucket: "profile-picture",
+      });
+    }
+    if (!image) {
+      await deleteImage({ path: `user/${user.id}`, bucket: "profile-picture" });
+    }
+
+    const randomNumber = Math.random() * 10;
     const updatedAdminData = {
       user_id: user.id,
-      profile_img: image ? image.toString() : "",
+      profile_img: image
+        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-picture/user/${user.id}?c=${randomNumber}`
+        : "",
     };
     const data = await updateAdminById(updatedAdminData);
 
@@ -67,12 +82,14 @@ export const saveImageToAdmin = async (
         color: "success",
       };
     }
+    return data;
   } catch (e) {
     toastProps = {
       title: t("upload-profile-picture-error-toast-title"),
       description: t("upload-profile-picture-error-toast-description"),
       color: "danger",
     };
+    return null;
   } finally {
     addToast(toastProps as ToastProps);
     setLoading(false);
