@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { Button } from "@heroui/button";
+import { Button, ButtonProps } from "@heroui/button";
 import {
   Dropdown,
   DropdownItem,
@@ -9,19 +9,25 @@ import {
 } from "@heroui/dropdown";
 import { PropsWithChildren } from "react";
 
-interface FilterDropdownProps extends DropdownMenuProps {
+import { useSingleSelectDropdown } from "./use-single-select-dropdown";
+
+interface SingleSelectDropdownProps extends DropdownMenuProps {
   label: string;
   items: { id: string; label: string }[];
+  radius?: ButtonProps["radius"];
   triggerClassname?: string;
 }
 
-export const FilterDropdown: React.FC<
-  PropsWithChildren<FilterDropdownProps>
-> = ({
+const SingleSelectDropdown: React.FC<
+  PropsWithChildren<SingleSelectDropdownProps>
+> & { useDropdown: typeof useSingleSelectDropdown } = ({
   label,
   items,
+  selectedKeys,
   children,
+  radius = "md",
   triggerClassname,
+  className,
   selectionMode = "single",
   ...props
 }) => {
@@ -29,7 +35,8 @@ export const FilterDropdown: React.FC<
     <Dropdown>
       <DropdownTrigger className={`flex ${triggerClassname}`}>
         <Button
-          className="text-default-700"
+          className={`text-default-700 ${className}`}
+          radius={radius}
           endContent={
             <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
           }
@@ -41,15 +48,18 @@ export const FilterDropdown: React.FC<
       <DropdownMenu
         aria-label={label}
         closeOnSelect
+        disabledKeys={selectedKeys}
         selectionMode={selectionMode}
         {...props}
       >
         {items.map((item) => (
-          <DropdownItem key={item.id} className="capitalize">
-            {item.label}
-          </DropdownItem>
+          <DropdownItem key={item.id}>{item.label}</DropdownItem>
         ))}
       </DropdownMenu>
     </Dropdown>
   );
 };
+
+SingleSelectDropdown.useDropdown = useSingleSelectDropdown;
+
+export { SingleSelectDropdown };

@@ -1,7 +1,8 @@
 export type ProfileData = {
   id: string;
   email: string;
-  fullName: string;
+  fullName?: string;
+  imageSrc?: string;
 };
 
 export type AdminData = {

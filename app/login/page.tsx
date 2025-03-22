@@ -12,20 +12,24 @@ import { LoginForm } from "@/app/login/components/login-form";
 import { ResetPasswordForm } from "@/app/login/components/reset-password-form";
 import { handleLogin, handleResetPassword } from "@/app/login/handlers";
 import { Modal } from "@/components/modal";
-import { useModal } from "@/components/modal/use-modal";
 import { siteConfig } from "@/config/site";
 import { buildFormData } from "@/utils/form";
+
+enum LoginTabEnum {
+  LOGIN = "login",
+  REGISTER = "register",
+}
 
 export default function LoginPage() {
   const t = useTranslations("LoginPage");
   const router = useRouter();
-  const [tab, setTab] = useState<"login" | "register">("login");
+  const [tab, setTab] = useState<LoginTabEnum>(LoginTabEnum.LOGIN);
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [isLoginButtonLoading, setIsLoginButtonLoading] = useState(false);
   const [isResetPasswordButtonLoading, setIsResetPasswordButtonLoading] =
     useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
-  const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, openModal, closeModal } = Modal.useModal();
   const [modalProps, setModalProps] = useState({
     title: "",
     message: "",
@@ -59,6 +63,7 @@ export default function LoginPage() {
       setSuccess: setSubmissionSuccess,
       openModal,
       setModalProps,
+      t,
     });
   };
 
@@ -72,7 +77,7 @@ export default function LoginPage() {
   };
 
   const handleTabChange = (key: string) => {
-    setTab(key as "login" | "register");
+    setTab(key as LoginTabEnum);
     handleReset();
   };
 
@@ -106,12 +111,12 @@ export default function LoginPage() {
             style={{
               maxHeight: isResetPassword
                 ? "240px"
-                : tab === "login"
+                : tab === LoginTabEnum.LOGIN
                   ? "400px"
                   : "230px",
               minHeight: isResetPassword
                 ? "100px"
-                : tab === "login"
+                : tab === LoginTabEnum.LOGIN
                   ? "280px"
                   : "128px",
             }}
@@ -167,7 +172,7 @@ export default function LoginPage() {
             if (isResetPassword) {
               setIsResetPassword(false);
             }
-            handleTabChange("login");
+            handleTabChange(LoginTabEnum.LOGIN);
             handleReset();
           }}
         >

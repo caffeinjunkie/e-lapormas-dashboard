@@ -13,9 +13,9 @@ export type SiteConfig = typeof siteConfig;
 const iconClassname = "h-6 w-6";
 
 const sidebarTheme = {
-  sidebarBackground: "#1a1c1e",
-  linkText: "#ffffff",
-  linkIndicator: "#ffffff",
+  primary: "#1a1c1e",
+  secondary: "#FF9F29",
+  text: "#ffffff",
 };
 
 export const adminManagementItem = {

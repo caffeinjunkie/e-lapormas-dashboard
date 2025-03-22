@@ -49,7 +49,7 @@ export const AdminTable = ({
       layout={layout}
       bottomContentPlacement={bottomContentPlacement}
       topContentPlacement={topContentPlacement}
-      aria-label={t("admin-management-title")}
+      aria-label={t("title")}
       {...props}
     >
       <TableHeader columns={columns}>

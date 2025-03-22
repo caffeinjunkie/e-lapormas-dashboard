@@ -16,14 +16,13 @@ import { TooltipButton } from "./tooltip-button";
 
 import { createAuthUser } from "@/api/auth";
 import {
-  deleteCookie,
   formatTime,
-  getCookie,
+  getErrorToastProps,
   setCookie,
-} from "@/app/admin-management/handlers";
-import { getErrorToastProps } from "@/app/admin-management/handlers";
+} from "@/app/admin-management/utils";
 import { UserAva } from "@/components/user-ava";
 import { AdminData } from "@/types/user.types";
+import { deleteCookie, getCookie } from "@/utils/cookie";
 
 interface AdminCellProps {
   columnKey: string;
@@ -129,7 +128,7 @@ export const AdminCell = ({
     case "display_name":
       return isMobile ? (
         <div
-          className={`border-b-1 border-default-200 ${isLast ? "border-b-0 pb-0" : "pb-4"}`}
+          className={`${isLast ? "border-b-0 pb-0" : "border-b-1 border-default-200 pb-4"}`}
         >
           <div className="flex items-center justify-between">
             <UserAva
@@ -181,7 +180,7 @@ export const AdminCell = ({
             >
               {isResendButtonDisabled
                 ? formatTime(timers[user.user_id as string])
-                : t("admin-management-invite-tooltip-text")}
+                : t("invite-tooltip-text")}
             </Button>
             <Button
               isDisabled={selfId === user?.user_id}
@@ -191,7 +190,7 @@ export const AdminCell = ({
               startContent={<TrashIcon className="size-4" />}
               onPress={onDeleteUser}
             >
-              {t("admin-management-delete-tooltip-text")}
+              {t("delete-tooltip-text")}
             </Button>
           </div>
         </div>
@@ -224,9 +223,7 @@ export const AdminCell = ({
           size="sm"
           variant="dot"
         >
-          {user.is_verified
-            ? t("admin-management-status-verified")
-            : t("admin-management-status-pending")}
+          {user.is_verified ? t("status-verified") : t("status-pending")}
         </Chip>
       );
     case "actions":
@@ -242,7 +239,7 @@ export const AdminCell = ({
             isLoading={isResendButtonLoading}
             onPress={() => onResend(user.user_id as string)}
             color="warning"
-            content={t("admin-management-invite-tooltip-text")}
+            content={t("invite-tooltip-text")}
             icon={
               isResendButtonDisabled ? (
                 <p>{formatTime(timers[user.user_id as string])}</p>
@@ -255,7 +252,7 @@ export const AdminCell = ({
             isDisabled={selfId === user?.user_id}
             onPress={onDeleteUser}
             color="danger"
-            content={t("admin-management-delete-tooltip-text")}
+            content={t("delete-tooltip-text")}
             icon={<TrashIcon className="size-5 text-danger" />}
           />
         </div>

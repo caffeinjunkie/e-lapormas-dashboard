@@ -2,6 +2,7 @@ import { heroui } from "@heroui/theme";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  important: true,
   content: [
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -16,5 +17,17 @@ module.exports = {
     },
   },
   darkMode: "class",
-  plugins: [heroui()],
+  plugins: [
+    heroui(),
+    function ({ addUtilities }) {
+      addUtilities(
+        {
+          ".overflow-initial": {
+            overflow: "initial !important",
+          },
+        },
+        ["responsive", "hover"],
+      );
+    },
+  ],
 };

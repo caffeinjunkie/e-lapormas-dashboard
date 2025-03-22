@@ -66,6 +66,31 @@ export type Database = {
         };
         Relationships: [];
       };
+      app_config: {
+        Row: {
+          id: number;
+          org_name: string;
+          timezone: string;
+        };
+        Insert: {
+          org_name?: string;
+          timezone?: string;
+        };
+        Update: {
+          org_name?: string;
+          timezone?: string;
+        };
+        Relationships: [];
+      };
+      timezones: {
+        Row: {
+          id: number;
+          zone: string;
+          key: string;
+          utc: number;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

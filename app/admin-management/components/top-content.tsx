@@ -4,9 +4,9 @@ import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
 
 import { statusOptions } from "@/app/admin-management/config";
-import { FilterDropdown } from "@/components/filter-dropdown";
 import { FloppyIcon } from "@/components/icons";
 import { SearchBar } from "@/components/search-bar";
+import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 
 interface TopContentProps {
   searchValue: string;
@@ -37,16 +37,16 @@ export const TopContent = ({
 }: TopContentProps) => {
   const t = useTranslations("AdminManagementPage");
 
-  const transformedStatusOptions = statusOptions.map((status) => ({
-    id: status.uid,
-    label: t(status.translationKey),
+  const transformedStatusOptions = statusOptions.map(({ id, labelKey }) => ({
+    id,
+    label: t(labelKey),
   }));
 
   const statusFilterValue = t(
-    `admin-management-status-${selectedStatusFilterValue === "all" ? "filter-label" : selectedStatusFilterValue}`,
+    `status-${selectedStatusFilterValue === "all" ? "filter-label" : selectedStatusFilterValue}`,
   );
   const abbreviatedStatusFilterValue = t(
-    `admin-management-status-${selectedStatusFilterValue === "all" ? "filter-label" : selectedStatusFilterValue}`,
+    `status-${selectedStatusFilterValue === "all" ? "filter-label" : selectedStatusFilterValue}`,
   )
     .slice(0, 3)
     .toUpperCase();
@@ -55,14 +55,14 @@ export const TopContent = ({
     <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
       <SearchBar
         className="w-full lg:max-w-[44%]"
-        placeholder={t("admin-management-search-placeholder")}
+        placeholder={t("search-placeholder")}
         value={searchValue}
         onClear={onSearchClear}
         onValueChange={onSearchChange}
       />
       <div className="flex gap-2 items-center w-full lg:w-fit">
-        <FilterDropdown
-          label={t("admin-management-status-filter-label")}
+        <SingleSelectDropdown
+          label={t("status-filter-label")}
           items={transformedStatusOptions}
           triggerClassname="w-full lg:w-fit"
           closeOnSelect
@@ -70,20 +70,22 @@ export const TopContent = ({
           onSelectionChange={onStatusFilterChange}
         >
           <p>{isMobile ? abbreviatedStatusFilterValue : statusFilterValue}</p>
-        </FilterDropdown>
+        </SingleSelectDropdown>
         <Button
           color="warning"
           isIconOnly={isMobile}
+          radius="md"
           className="text-white w-full lg:w-fit"
           startContent={<UserPlusIcon className="size-5" />}
           onPress={onInviteUser}
         >
-          {isMobile ? null : t("admin-management-invite-button-text")}
+          {isMobile ? null : t("invite-button-text")}
         </Button>
         <Button
           color="success"
           isLoading={isSaveButtonLoading}
           isIconOnly={isMobile}
+          radius="md"
           isDisabled={isSaveButtonDisabled}
           className="text-white w-full lg:w-fit"
           startContent={
@@ -91,7 +93,7 @@ export const TopContent = ({
           }
           onPress={onSave}
         >
-          {isMobile ? null : t("admin-management-save-button-text")}
+          {isMobile ? null : t("save-button-text")}
         </Button>
       </div>
     </div>

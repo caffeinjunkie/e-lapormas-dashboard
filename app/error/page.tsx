@@ -4,6 +4,7 @@ import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 import { useError } from "@/providers/error-provider";
 
@@ -16,6 +17,12 @@ export default function ErrorPage() {
   const message = errorCode
     ? t(`error-description-${errorCode?.replaceAll("_", "-")}`)
     : t("error-description-default");
+
+  useEffect(() => {
+    if (!errorCode) {
+      error?.clearError();
+    }
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center">

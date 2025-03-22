@@ -5,6 +5,10 @@ interface UserAvaProps {
   displayName?: string;
   description: string;
   indicator?: React.ReactNode;
+  theme?: {
+    name?: string;
+    description?: string;
+  };
   classNames?: {
     container?: string;
     avatar?: string;
@@ -18,6 +22,10 @@ export const UserAva = ({
   displayName = "",
   description,
   indicator,
+  theme = {
+    name: "black",
+    description: "",
+  },
   classNames,
 }: UserAvaProps) => {
   const {
@@ -36,7 +44,12 @@ export const UserAva = ({
         className={avatar}
       />
       <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-        <span className={`text-sm truncate flex items-center ${name}`}>
+        <span
+          className={`text-sm truncate flex items-center ${name}`}
+          style={{
+            color: theme.name,
+          }}
+        >
           {displayName || "-"}
           {indicator && <span>{indicator}</span>}
         </span>

@@ -4,7 +4,9 @@ import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
+import { SharedSelection } from "@heroui/system";
 import { ToastProps, addToast } from "@heroui/toast";
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import React, {
   FormEvent,
@@ -18,33 +20,30 @@ import React, {
 import { AdminCell } from "./components/admin-cell";
 import { TopContent } from "./components/top-content";
 
-import {
-  checkIsUserAlreadyInvited,
-  createAdmin,
-  upsertAdmins,
-} from "@/api/admin";
+import { checkIsUserAlreadyInvited, upsertAdmins } from "@/api/admin";
 import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { AdminTable } from "@/app/admin-management/components/admin-table";
 import { columns } from "@/app/admin-management/config";
+import { getAllAdmins } from "@/app/admin-management/handlers";
 import {
   calculateRowNumber,
-  fetchAdminsHandler,
   filterUsers,
   getErrorToastProps,
-  handleToggle,
-} from "@/app/admin-management/handlers";
-import { setCookie } from "@/app/admin-management/handlers";
-import { useFilterSingleSelect } from "@/components/filter-dropdown/use-filter-single-select";
+  transformAdmins,
+} from "@/app/admin-management/utils";
+import { setCookie } from "@/app/admin-management/utils";
 import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
-import { useMultipleModal } from "@/components/modal/use-modal";
+import { SingleSelectDropdown } from "@/components/single-select-dropdown";
+import { usePrivate } from "@/providers/private-provider";
 import { AdminData } from "@/types/user.types";
 import { buildFormData } from "@/utils/form";
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 export default function AdminManagementPage() {
   const t = useTranslations("AdminManagementPage");
+  const { setShouldShowConfirmation } = usePrivate();
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
@@ -58,13 +57,13 @@ export default function AdminManagementPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const { modals, openModal, closeModal } = useMultipleModal();
+  const { modals, openModal, closeModal } = Modal.useMultipleModal();
   const layoutRef = useRef<HTMLDivElement>(null);
 
   const {
     selected: selectedStatusFilterKeys,
     setSelected: setSelectedStatusFilterKeys,
-  } = useFilterSingleSelect(new Set(["all"]));
+  } = SingleSelectDropdown.useDropdown(new Set(["all"]));
   const hasSearchFilter = Boolean(filterValue);
 
   const selectedStatusFilterValue = React.useMemo(
@@ -74,13 +73,13 @@ export default function AdminManagementPage() {
 
   const fetchAdmins = async () => {
     try {
-      const { admins, currentUserId } = await fetchAdminsHandler();
+      const { admins, currentUserId } = await getAllAdmins();
 
       setAdmins(admins as AdminData[]);
       setOriginalAdmins(admins as AdminData[]);
       setSelfId(currentUserId);
     } catch (error) {
-      addToast(getErrorToastProps(t) as ToastProps);
+      addToast(getErrorToastProps(t, "fetch") as ToastProps);
     } finally {
       setIsDataLoading(false);
     }
@@ -92,7 +91,6 @@ export default function AdminManagementPage() {
 
     const handleResize = () => {
       calculateRowNumber(setRowsPerPage);
-      setPage(1);
 
       if (!layoutRef.current) return;
       setIsMobile(layoutRef.current?.offsetWidth < 520);
@@ -105,6 +103,10 @@ export default function AdminManagementPage() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    setShouldShowConfirmation(updatedAdmins.length > 0);
+  }, [updatedAdmins]);
 
   const filteredItems = React.useMemo(
     () =>
@@ -127,19 +129,19 @@ export default function AdminManagementPage() {
     return filteredItems.slice(start, end);
   }, [page, filteredItems, rowsPerPage]);
 
-  const onSearchChange = React.useCallback((value: string) => {
+  const onSearchChange = (value: string) => {
     if (value) {
       setFilterValue(value);
-      setPage(1);
     } else {
       setFilterValue("");
     }
-  }, []);
+    setPage(1);
+  };
 
-  const onClear = React.useCallback(() => {
+  const onClear = () => {
     setFilterValue("");
     setPage(1);
-  }, []);
+  };
 
   const onSave = async () => {
     setIsSaveLoading(true);
@@ -156,20 +158,20 @@ export default function AdminManagementPage() {
 
       if (onlyOneAdmin) {
         description = t.rich(
-          `admin-management-${targetIsSuperAdmin ? "save" : "remove"}-super-admin-success-toast-description`,
+          `${targetIsSuperAdmin ? "save" : "remove"}-super-admin-success-toast-description`,
           {
             label: targetEmail,
             bold: (chunks) => <strong>{chunks}</strong>,
           },
         ) as string;
       } else {
-        description = t("admin-management-save-all-success-toast-description", {
+        description = t("save-all-success-toast-description", {
           count: updatedAdmins.length,
         });
       }
 
       toastProps = {
-        title: t("admin-management-save-success-toast-title"),
+        title: t("save-success-toast-title"),
         description,
         color: "success",
       };
@@ -201,14 +203,11 @@ export default function AdminManagementPage() {
       if (success) {
         await fetchAdmins();
         toastProps = {
-          title: t("admin-management-delete-success-toast-title"),
-          description: t.rich(
-            "admin-management-delete-success-toast-description",
-            {
-              email: deletedAdmin.email as string,
-              bold: (chunks) => <strong>{chunks}</strong>,
-            },
-          ) as string,
+          title: t("delete-success-toast-title"),
+          description: t.rich("delete-success-toast-description", {
+            email: deletedAdmin.email as string,
+            bold: (chunks) => <strong>{chunks}</strong>,
+          }) as string,
           color: "success",
         };
       }
@@ -233,14 +232,11 @@ export default function AdminManagementPage() {
       );
       if (isUserAlreadyInvited) {
         toastProps = {
-          title: t("admin-management-invite-user-warning-toast-title"),
-          description: t.rich(
-            "admin-management-invite-user-warning-toast-description",
-            {
-              email: formData.get("email") as string,
-              bold: (chunks) => <strong>{chunks}</strong>,
-            },
-          ) as string,
+          title: t("invite-user-warning-toast-title"),
+          description: t.rich("invite-user-warning-toast-description", {
+            email: formData.get("email") as string,
+            bold: (chunks) => <strong>{chunks}</strong>,
+          }) as string,
           timeout: 6000,
           color: "warning",
         };
@@ -253,24 +249,16 @@ export default function AdminManagementPage() {
         const userId = data?.user?.id as string;
         const timestamp = Date.now().toString();
         setCookie(timestamp, userId, 1);
-
-        await createAdmin({
-          email,
-          user_id: userId,
-        });
       }
 
       await fetchAdmins();
 
       toastProps = {
-        title: t("admin-management-invite-user-success-toast-title"),
-        description: t.rich(
-          "admin-management-invite-user-success-toast-description",
-          {
-            email: formData.get("email") as string,
-            bold: (chunks) => <strong>{chunks}</strong>,
-          },
-        ) as string,
+        title: t("invite-user-success-toast-title"),
+        description: t.rich("invite-user-success-toast-description", {
+          email: formData.get("email") as string,
+          bold: (chunks) => <strong>{chunks}</strong>,
+        }) as string,
         timeout: 6000,
         color: "success",
       };
@@ -285,13 +273,17 @@ export default function AdminManagementPage() {
 
   const onInviteUser = () => {
     openModal("invite");
-    setModalTitle(t("admin-management-invite-user-modal-title"));
+    setModalTitle(t("invite-user-modal-title"));
+  };
+
+  const onStatusFilterChange = (keys: Set<string>) => {
+    setSelectedStatusFilterKeys(keys);
   };
 
   const handleDelete = (user: AdminData) => {
     openModal("delete");
     setModalTitle(
-      t.rich("admin-management-delete-user-modal-title", {
+      t.rich("delete-user-modal-title", {
         email: user.email as string,
         bold: (chunks) => <strong>{chunks}</strong>,
       }) as string,
@@ -303,16 +295,12 @@ export default function AdminManagementPage() {
     if (modals.invite) {
       return [
         {
-          title: t(
-            "admin-management-invite-user-modal-cancellation-button-text",
-          ),
+          title: t("invite-user-modal-cancellation-button-text"),
           isDisabled: isInviteLoading,
           onPress: () => onCloseModal("invite"),
         },
         {
-          title: t(
-            "admin-management-invite-user-modal-confirmation-button-text",
-          ),
+          title: t("invite-user-modal-confirmation-button-text"),
           isLoading: isInviteLoading,
           color: "warning",
           type: "submit",
@@ -326,16 +314,12 @@ export default function AdminManagementPage() {
     if (modals.delete) {
       return [
         {
-          title: t(
-            "admin-management-delete-user-modal-confirmation-button-text",
-          ),
+          title: t("delete-user-modal-confirmation-button-text"),
           color: "danger",
           onPress: onConfirmDelete,
         },
         {
-          title: t(
-            "admin-management-delete-user-modal-cancellation-button-text",
-          ),
+          title: t("delete-user-modal-cancellation-button-text"),
           color: "primary",
           variant: "solid",
           onPress: () => onCloseModal("delete"),
@@ -354,9 +338,9 @@ export default function AdminManagementPage() {
         onSearchClear={onClear}
         selectedStatusFilterValue={selectedStatusFilterValue}
         selectedStatusFilterKeys={selectedStatusFilterKeys}
-        onStatusFilterChange={(keys) => {
-          setSelectedStatusFilterKeys(keys as Set<string>);
-        }}
+        onStatusFilterChange={
+          onStatusFilterChange as (keys: SharedSelection) => void
+        }
         isMobile={isMobile}
         isSaveButtonLoading={isSaveLoading}
         isSaveButtonDisabled={updatedAdmins.length === 0}
@@ -384,7 +368,7 @@ export default function AdminManagementPage() {
         isLast={isLast}
         selfId={selfId}
         onSuperAdminToggle={() =>
-          handleToggle({
+          transformAdmins({
             user,
             setAdmins,
             setUpdatedAdmins,
@@ -394,37 +378,54 @@ export default function AdminManagementPage() {
         onDeleteUser={() => handleDelete(user)}
       />
     ),
-    [selfId, handleToggle, handleDelete, isMobile, admins],
+    [selfId, transformAdmins, handleDelete, isMobile, admins],
   );
 
   return (
-    <Layout ref={layoutRef} title={t("admin-management-title")}>
-      <div className="flex pt-2 md:pt-6">
+    <Layout
+      ref={layoutRef}
+      headerComponent={topContent}
+      isMobile={isMobile}
+      title={t("title")}
+      classNames={{ header: "gap-4" }}
+    >
+      <div
+        className={clsx(
+          "flex mb-1",
+          isMobile ? "pb-20 pt-1 px-4" : " px-6 pb-2",
+        )}
+      >
         <AdminTable
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}
           items={items}
+          isCompact
+          removeWrapper={isMobile}
           hideHeader={isMobile}
           isLoading={isDataLoading}
           renderCell={renderCell}
-          topContent={topContent}
-          bottomContent={
-            pages > 0 ? (
-              <div className="flex w-full justify-center">
-                <Pagination
-                  showControls
-                  showShadow
-                  color="primary"
-                  page={page}
-                  total={pages}
-                  onChange={setPage}
-                />
-              </div>
-            ) : null
-          }
           translationKey="AdminManagementPage"
         />
       </div>
+      {pages > 0 && (
+        <div
+          className={clsx(
+            "flex w-full justify-center pt-4 md:pt-2 pb-4 bg-white",
+            isMobile
+              ? "shadow-[rgba(5,5,5,0.1)_0_-1px_1px_0px] absolute bottom-0 z-10"
+              : "shadow-none sticky",
+          )}
+        >
+          <Pagination
+            showControls
+            showShadow
+            color="primary"
+            page={page}
+            total={pages}
+            onChange={setPage}
+          />
+        </div>
+      )}
       <Modal
         className="focus:outline-none"
         onClose={() => onCloseModal(modals.invite ? "invite" : "delete")}
@@ -438,7 +439,7 @@ export default function AdminManagementPage() {
           {modals.invite && (
             <Form method="post" id="invite-form" onSubmit={onSendInvite}>
               <Input
-                label={t("admin-management-invite-user-modal-input-label")}
+                label={t("invite-user-modal-input-label")}
                 name="email"
                 type="email"
                 aria-label="email"
@@ -450,9 +451,7 @@ export default function AdminManagementPage() {
               />
             </Form>
           )}
-          {modals.delete && (
-            <p>{t("admin-management-delete-user-modal-description")}</p>
-          )}
+          {modals.delete && <p>{t("delete-user-modal-description")}</p>}
         </ModalBody>
       </Modal>
     </Layout>

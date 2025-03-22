@@ -1,4 +1,3 @@
-import { Link } from "@heroui/link";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -7,18 +6,23 @@ import {
   NavbarMenuToggle,
 } from "@heroui/navbar";
 import { useTranslations } from "next-intl";
+import NextLink from "next/link";
 import { PropsWithChildren, useState } from "react";
 
 import { adminManagementItem, siteConfig } from "@/config/site";
 
 interface MobileNavbarProps {
   isSuperAdmin: boolean;
-  onLogout: () => void;
+  onNavigate: (href: string) => void;
+  openModal: (href: string) => void;
+  shouldShowConfirmation: boolean;
 }
 
 export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
   isSuperAdmin,
-  onLogout,
+  openModal,
+  onNavigate,
+  shouldShowConfirmation,
   children,
 }) => {
   const t = useTranslations("Navbar");
@@ -48,21 +52,23 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {mobileMenu.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === mobileMenu.length - 1 ? "danger" : "foreground"
-                }
+              <NextLink
+                className={index === mobileMenu.length - 1 ? "text-danger" : ""}
                 href={item.href === "/logout" ? "#" : item.href}
-                size="lg"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   if (item.href === "/logout") {
-                    onLogout();
+                    openModal(item.href);
                   }
+                  shouldShowConfirmation
+                    ? openModal(item.href)
+                    : onNavigate(item.href);
                   setIsOpen(false);
                 }}
               >
                 {t(item.label)}
-              </Link>
+              </NextLink>
             </NavbarMenuItem>
           ))}
         </div>

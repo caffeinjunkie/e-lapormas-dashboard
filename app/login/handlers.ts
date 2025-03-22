@@ -51,6 +51,7 @@ interface HandleResetPasswordProps {
   setSuccess: (success: boolean) => void;
   openModal: () => void;
   setModalProps: (props: { title: string; message: string }) => void;
+  t: (key: string) => string;
 }
 
 const handleResetPassword = async ({
@@ -60,6 +61,7 @@ const handleResetPassword = async ({
   setSuccess,
   openModal,
   setModalProps,
+  t,
 }: HandleResetPasswordProps) => {
   setLoading(true);
 
@@ -68,16 +70,15 @@ const handleResetPassword = async ({
     if (result.success) {
       setSuccess(true);
       setModalProps({
-        title: "Reset Password",
-        message:
-          "Link untuk reset password telah dikirim ke email Anda. Silakan cek email Anda untuk melanjutkan.",
+        title: t("reset-password-success-title"),
+        message: t("reset-password-success-message"),
       });
       setTimeout(() => {
         openModal();
       }, 500);
     }
   } catch (error: any) {
-    setError("Terjadi kesalahan. Mohon coba sesaat lagi.");
+    setError(t("reset-password-error-message"));
   } finally {
     setLoading(false);
   }

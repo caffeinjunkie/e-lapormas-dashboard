@@ -5,8 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { Skeleton } from "@heroui/skeleton";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
-import { redirect } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 
 import { UserAva } from "../user-ava";
 
@@ -15,7 +14,9 @@ import { ProfileData } from "@/types/user.types";
 
 interface SidebarProps {
   isSuperAdmin: boolean;
-  onLogout: () => void;
+  openModal: (href: string) => void;
+  onNavigate: (href: string) => void;
+  shouldShowConfirmation: boolean;
   pathname: string;
   user?: ProfileData | null;
   isLoaded?: boolean;
@@ -37,12 +38,15 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
   isSuperAdmin,
   pathname,
   user,
-  onLogout,
+  onNavigate,
+  shouldShowConfirmation,
+  openModal,
   isLoaded,
   children,
 }) => {
   const t = useTranslations("Navbar");
   const isActive = (path: string) => pathname === path;
+  const [isOpen, setIsOpen] = useState(false);
   const { sidebarTheme, menuItems, settingsItems } = siteConfig;
   const sidebarItems = [
     ...menuItems,
@@ -53,103 +57,134 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
 
   return (
     <div
-      className="hidden md:flex flex-col overflow-y-scroll fixed bottom-2 top-2 gap-4 w-72 justify-between rounded-xl shadow-lg"
+      className="hidden md:flex flex-col w-full fixed bottom-0 top-0"
       style={{
-        backgroundColor: sidebarTheme.sidebarBackground,
+        backgroundColor: sidebarTheme.primary,
       }}
     >
-      <div className="flex flex-col gap-8">
-        <div className="flex items-center justify-start py-6 px-9 text-md font-semibold text-gray-200">
-          {children}
-        </div>
-        <div className="relative">
-          <div
-            className={`${activeIndex === -1 ? "hidden" : "flex"} h-14 items-center absolute left-0 transition-all duration-300 ease-in-out`}
-            style={{
-              top: `${activeIndex !== 0 ? activeIndex * 3.5 : 0}rem`,
-            }}
-          >
-            <div
-              className="w-1 py-4 rounded-r-lg"
-              style={{
-                backgroundColor: sidebarTheme.linkIndicator,
-              }}
-            />
+      <div className="fixed bottom-0 top-0 gap-4 w-[274px] flex flex-col justify-between overflow-y-scroll">
+        <div className="flex flex-col gap-16">
+          <div className="flex items-center justify-start text-md font-semibold text-gray-200">
+            {children}
           </div>
-          <nav className="flex flex-col">
-            {sidebarItems.map(({ href, label, Icon }) => (
-              <NextLink
-                key={href}
-                className="flex w-full space-x-2 text-sm py-3 font-semibold"
-                color="foreground"
-                href={href}
-              >
-                <div
-                  style={{
-                    color: sidebarTheme.linkText,
-                  }}
-                  className={`flex items-center gap-2 py-1 px-8 transition-colors duration-300 ease-in-out ${isActive(href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
-                >
-                  <Icon color={sidebarTheme.linkText} />
-                  {t(label)}
-                </div>
-              </NextLink>
-            ))}
-          </nav>
-        </div>
-      </div>
-      <div className="py-6 px-6">
-        <div className="py-2 px-2 bg-white/5 rounded-full flex flex-row items-center justify-between gap-2">
-          {isLoaded && user ? (
-            <>
-              <UserAva
-                imageSrc=""
-                displayName={user?.fullName}
-                description={user?.email}
-                classNames={{
-                  container: "contents",
-                  name: "font-semibold text-white",
-                  description: "text-gray-400",
+          <div className="relative">
+            <div
+              className={`${activeIndex === -1 ? "hidden" : "flex"} h-14 items-center absolute left-0 transition-all duration-300 ease-in-out`}
+              style={{
+                top: `${activeIndex !== 0 ? activeIndex * 3.5 : 0}rem`,
+              }}
+            >
+              <div
+                className="w-1 py-4 rounded-r-lg"
+                style={{
+                  backgroundColor: sidebarTheme.secondary,
                 }}
               />
-              <Popover placement="right">
-                <PopoverTrigger>
-                  <Button
-                    variant="light"
-                    size="sm"
-                    radius="full"
-                    isIconOnly
-                    aria-label="Other"
-                  >
-                    <EllipsisHorizontalIcon className="size-5" color="white" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Listbox
-                    aria-label="Actions"
-                    onAction={(key) => {
-                      if (key === "/logout") {
-                        onLogout();
-                      } else {
-                        redirect(key as string);
-                      }
+            </div>
+            <nav className="flex flex-col">
+              {sidebarItems.map(({ href, label, Icon }) => (
+                <NextLink
+                  key={href}
+                  className="flex w-full space-x-2 text-sm py-3 font-semibold"
+                  color="foreground"
+                  href={href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    shouldShowConfirmation ? openModal(href) : onNavigate(href);
+                  }}
+                >
+                  <div
+                    style={{
+                      color: sidebarTheme.text,
                     }}
+                    className={`flex items-center gap-2 py-1 pl-10 transition-colors duration-300 ease-in-out ${isActive(href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
                   >
-                    {settingsItems.map((item, index) => (
-                      <ListboxItem
-                        key={item.href}
-                        className={`${index === settingsItems.length - 1 ? "text-danger" : ""}`}
-                      >
-                        {t(item.label)}
-                      </ListboxItem>
-                    ))}
-                  </Listbox>
-                </PopoverContent>
-              </Popover>
-            </>
-          ) : (
-            <ProfileSkeleton />
-          )}
+                    <Icon
+                      color={
+                        isActive(href)
+                          ? sidebarTheme.secondary
+                          : sidebarTheme.text
+                      }
+                    />
+                    {t(label)}
+                  </div>
+                </NextLink>
+              ))}
+            </nav>
+          </div>
+        </div>
+        <div className="py-6 px-6">
+          <div
+            className="py-2 px-2 rounded-full flex flex-row items-center justify-between gap-2"
+            style={{
+              backgroundColor: `${sidebarTheme.text}10`,
+            }}
+          >
+            {isLoaded && user ? (
+              <>
+                <UserAva
+                  imageSrc={user?.imageSrc}
+                  theme={{
+                    name: sidebarTheme.text,
+                  }}
+                  displayName={user?.fullName}
+                  description={user?.email}
+                  classNames={{
+                    container: "contents",
+                    name: "font-semibold",
+                    description: "text-gray-400",
+                  }}
+                />
+                <Popover
+                  placement="right"
+                  isOpen={isOpen}
+                  onOpenChange={() => setIsOpen(!isOpen)}
+                >
+                  <PopoverTrigger>
+                    <Button
+                      variant="light"
+                      size="sm"
+                      radius="full"
+                      isIconOnly
+                      aria-label="Other"
+                    >
+                      <EllipsisHorizontalIcon
+                        className="size-5"
+                        color={sidebarTheme.text}
+                      />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <Listbox
+                      aria-label="Actions"
+                      onAction={(key) => {
+                        if (key === "/logout") {
+                          openModal(key);
+                        } else {
+                          shouldShowConfirmation
+                            ? openModal(key as string)
+                            : onNavigate(key as string);
+                        }
+                        setIsOpen(false);
+                      }}
+                    >
+                      {settingsItems.map((item, index) => (
+                        <ListboxItem
+                          key={item.href}
+                          className={`${index === settingsItems.length - 1 ? "text-danger" : ""}`}
+                        >
+                          {t(item.label)}
+                        </ListboxItem>
+                      ))}
+                    </Listbox>
+                  </PopoverContent>
+                </Popover>
+              </>
+            ) : (
+              <ProfileSkeleton />
+            )}
+          </div>
         </div>
       </div>
     </div>
