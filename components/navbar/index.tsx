@@ -20,6 +20,7 @@ import { Modal } from "@/components/modal";
 import { siteConfig } from "@/config/site";
 import { usePrivate } from "@/providers/private-provider";
 import { ProfileData } from "@/types/user.types";
+import { getCookie } from "@/utils/cookie";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -39,7 +40,14 @@ export const Navbar = () => {
     try {
       const { data } = await fetchUserData();
       const result = await fetchAdminById(data.user.id);
-      const appConfig = await fetchAppConfig();
+      let orgName = getCookie("org_name");
+      
+      if (!orgName) {
+        const appConfig = await fetchAppConfig();
+        orgName = appConfig.org_name;
+      }
+
+      setOrgName(orgName!);
 
       let displayName = result.display_name as string;
 
@@ -49,8 +57,6 @@ export const Navbar = () => {
 
         await updateAuthUser({ data: { full_name: displayName } });
       }
-
-      setOrgName(appConfig.org_name);
 
       setUser({
         id: result.user_id,

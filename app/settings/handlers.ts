@@ -97,6 +97,8 @@ export const saveAllSettings = async (
     };
 
     await updateAppConfig(updatedAppConfig);
+    document.cookie = `timezone=${updatedAppConfig.timezone}; path=/`;
+    document.cookie = `org_name=${updatedAppConfig.org_name}; path=/`;
 
     toastProps = {
       title: t("save-success-toast-title"),

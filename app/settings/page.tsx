@@ -34,6 +34,7 @@ import { Timezone } from "@/types/timezone.types";
 import { ProfileData } from "@/types/user.types";
 import { buildFormData } from "@/utils/form";
 import { validateIsRequired } from "@/utils/string";
+import { getCookie } from "@/utils/cookie";
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
@@ -73,12 +74,23 @@ export default function SettingsPage() {
   };
 
   const getAppConfig = async () => {
-    const { timezone, ...appConfig } = await fetchAppConfig();
     const timezones = await fetchTimezones();
-
-    setAppSettings(appConfig);
-    setSelectedTimezone(timezone !== null ? timezone : timezones[0].key);
     setTimezonesOptions(timezones);
+    const cookieTimezone = getCookie("timezone");
+    const cookieOrgName = getCookie("org_name");
+
+    if (cookieTimezone && cookieOrgName) {
+      setAppSettings({ timezone: cookieTimezone, org_name: cookieOrgName });
+      setSelectedTimezone(cookieTimezone);
+      return;
+    }
+    const { timezone, org_name } = await fetchAppConfig();
+    console.log("timezone", timezone);
+    console.log("org_name", org_name);
+    document.cookie = `timezone=${timezone}; path=/`;
+    document.cookie = `org_name=${org_name}; path=/`;
+    setAppSettings({ timezone, org_name });
+    setSelectedTimezone(timezone !== null ? timezone : timezones[0].key);
   };
 
   const getProfileAndAppConfig = async () => {
