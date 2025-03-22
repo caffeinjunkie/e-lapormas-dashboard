@@ -139,7 +139,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
           >
             <ModalContent>
               <DotLottieReact
-                autoplay
+                autoplay={isModalOpen}
                 className="d-lg-block d-md-block d-sm-none d-none"
                 src="https://lottie.host/9a57dcf3-865b-4c05-9135-93252148017c/cQDH4AffBr.lottie"
                 dotLottieRefCallback={dotLottieRefCallback}

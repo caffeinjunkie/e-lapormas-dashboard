@@ -85,8 +85,6 @@ export default function SettingsPage() {
       return;
     }
     const { timezone, org_name } = await fetchAppConfig();
-    console.log("timezone", timezone);
-    console.log("org_name", org_name);
     document.cookie = `timezone=${timezone}; path=/`;
     document.cookie = `org_name=${org_name}; path=/`;
     setAppSettings({ timezone, org_name });
