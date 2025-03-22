@@ -41,7 +41,7 @@ export default function ErrorPage() {
             variant="light"
             className="w-full"
           >
-            {t("back-to-login-button")}
+            {t("back-button-text")}
           </Button>
         </CardFooter>
       </Card>
