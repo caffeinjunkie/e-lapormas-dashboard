@@ -149,7 +149,9 @@ export default function SettingsPage() {
     setIsRevalidated(false);
     setImage(null);
 
-    //modal question
+    //modal question are you sure
+    //possibly kalo bisa, ada opsi untuk delete
+    //pakai supabase storage aja karena pp scope kecil dan jumlahnya sedikit
 
     saveImageToAdmin(t, setIsRevalidated, profile!, setIsUploading);
   };
@@ -188,8 +190,8 @@ export default function SettingsPage() {
           onSubmit={onSubmit}
           className="gap-3 md:gap-5 px-0 sm:px-12 md:px-0 lg:px-[14%] xl:px-[20%] md:pt-4"
         >
-          <div className="flex flex-col w-full gap-10">
-            <div className="flex flex-col w-full items-center gap-6">
+          <div className="flex flex-col w-full gap-5">
+            <div className="flex flex-col w-full items-center gap-6 bg-default-50 rounded-xl py-6">
               <Skeleton isLoaded={!isUploading} className="rounded-full">
                 <Avatar
                   className="w-24 h-24 md:w-32 md:h-32 text-small"
