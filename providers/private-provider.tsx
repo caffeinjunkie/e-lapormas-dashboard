@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { Navbar } from "@/components/navbar";
+import { privatePaths } from "@/config/site";
 import { getCookie } from "@/utils/cookie";
 import { createClient } from "@/utils/supabase-auth/client";
 
@@ -37,7 +38,6 @@ export const usePrivate = () => {
 export function PrivateProvider({ children }: PrivateLayoutProps) {
   const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [userId, setUserId] = useState<string | null>(null);
   const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
   const [shouldShowConfirmation, setShouldShowConfirmation] =
     useState<boolean>(false);
@@ -45,8 +45,9 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
   const router = useRouter();
   const supabase = createClient();
 
+  const isPrivatePath = [...privatePaths, "/unauthorized"].includes(pathname);
   const isPublicPath = publicPaths.includes(pathname);
-  const isErrorPath = pathname === "/error";
+  const isErrorPath = pathname.includes("/error");
 
   useEffect(() => {
     const checkUser = async () => {
@@ -54,15 +55,20 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         const {
           data: { session },
         } = await supabase.auth.getSession();
-        setUserId(session?.user.id as string);
 
-        if (!session && !isPublicPath && !isErrorPath) {
+        if (!session && isPrivatePath && !isErrorPath) {
           router.replace("/login");
-        } else if (session && isPublicPath) {
+        }
+
+        if (session && !isPrivatePath && !isErrorPath) {
           router.replace("/");
         }
+
+        if (session && !isPublicPath && !isPrivatePath && !isErrorPath) {
+          router.replace("/error?errorCode=404");
+        }
       } catch (error) {
-        router.replace("/error");
+        router.replace("/error?errorCode=unexpected-failure");
       }
     };
 
@@ -124,7 +130,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         setShouldShowConfirmation,
       }}
     >
-      {!isPublicPath && !isErrorPath && (
+      {isPrivatePath && !isErrorPath && (
         <>
           <Navbar />
           <Modal

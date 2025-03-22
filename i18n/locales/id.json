@@ -136,10 +136,11 @@
     "error-title": "Terjadi Kesalahan",
     "error-description-otp-expired": "Link sudah kadaluarsa. Mohon ajukan permintaan baru",
     "error-description-invalid-token": "Link tidak valid. Mohon ajukan permintaan baru",
-    "error-description-default": "Terjadi kesalahan. Silakan kembali ke halaman login.",
+    "error-description-default": "Terjadi kesalahan. Silakan kembali ke halaman sebelumnya.",
     "error-description-unexpected-failure": "Terjadi kesalahan. Mohon coba sesaat lagi",
     "error-description-auth-error": "Terjadi kesalahan saat verifikasi. Mohon coba sesaat lagi",
-    "back-to-login-button": "Kembali ke halaman login"
+    "error-description-404": "Halaman tidak ditemukan. Mohon kembali ke halaman sebelumnya",
+    "back-button-text": "Kembali ke halaman sebelumnya"
   },
   "Modal": {
     "default-button-text": "Tutup"

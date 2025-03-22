@@ -68,6 +68,12 @@ const additionalMenuItems = [
   },
 ];
 
+export const privatePaths = [
+  ...sidebarMenuItems,
+  additionalMenuItems[0],
+  adminManagementItem,
+].map((item) => item.href);
+
 export const siteConfig = {
   name: "E-Lapor Dashboard",
   description: "Dashboard Pelaporan Elektronik",

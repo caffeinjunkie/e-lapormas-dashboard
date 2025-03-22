@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@heroui/button";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
