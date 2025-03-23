@@ -151,11 +151,10 @@ export default function SettingsPage() {
   };
 
   const onCameraPress = () => {
-    // setModalType("upload");
     openModal();
   };
 
-  const onConfirmDelete = () => {
+  const onDelete = () => {
     setIsRevalidated(false);
 
     saveImageToAdmin(t, setIsRevalidated, profile!, setIsUploading);
@@ -306,7 +305,7 @@ export default function SettingsPage() {
             color: "danger",
             variant: "light",
             isDisabled: isUploading || !profile?.imageSrc,
-            onPress: onConfirmDelete,
+            onPress: onDelete,
           },
           {
             title: t("upload-profile-picture-modal-save-button-text"),

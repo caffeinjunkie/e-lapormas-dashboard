@@ -130,7 +130,7 @@
     "delete-profile-picture-success-toast-description": "Foto berhasil dihapus",
     "upload-profile-picture-error-toast-title": "Terjadi Kesalahan",
     "upload-profile-picture-error-toast-description": "Foto gagal diperbaharui. Mohon coba sesaat lagi.",
-    "upload-profile-picture-disclaimer-label": "Pilih foto dengan ukuran maksimal 2MB"
+    "upload-profile-picture-disclaimer-label": "Pilih foto dengan ukuran maksimal 2MB. Gunakan foto ukuran persegi untuk hasil lebih maksimal."
   },
   "UnauthorizedPage": {
     "unauthorized-tab-description": "Anda tidak memiliki akses ke halaman ini. Mohon kembali ke halaman utama",
