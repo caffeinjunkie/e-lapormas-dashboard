@@ -10,8 +10,6 @@ import {
 } from "@heroui/table";
 import { useTranslations } from "next-intl";
 
-import { AdminData } from "@/types/user.types";
-
 interface AdminTableProps extends TableProps {
   columns: {
     name: string;
@@ -19,11 +17,11 @@ interface AdminTableProps extends TableProps {
     width?: number;
     align?: string;
   }[];
-  items: AdminData[];
+  items: any[];
   isLoading?: boolean;
   translationKey: string;
   renderCell: (
-    user: AdminData,
+    item: any,
     columnKey: string,
     isLast: boolean,
   ) => React.ReactNode;

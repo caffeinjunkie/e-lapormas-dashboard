@@ -25,9 +25,7 @@ import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { columns } from "@/app/admin-management/config";
 import { getAllAdmins } from "@/app/admin-management/handlers";
-import { Table } from "@/components/table";
 import {
-  calculateRowNumber,
   filterUsers,
   getErrorToastProps,
   transformAdmins,
@@ -36,9 +34,11 @@ import { setCookie } from "@/app/admin-management/utils";
 import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
+import { Table } from "@/components/table";
 import { usePrivate } from "@/providers/private-provider";
 import { AdminData } from "@/types/user.types";
 import { buildFormData } from "@/utils/form";
+import { calculateRowNumber } from "@/utils/screen";
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 export default function AdminManagementPage() {
@@ -52,8 +52,8 @@ export default function AdminManagementPage() {
   const [originalAdmins, setOriginalAdmins] = useState<AdminData[]>([]);
   const [updatedAdmins, setUpdatedAdmins] = useState<AdminData[]>([]);
   const [selfId, setSelfId] = useState<string | null>(null);
-  const [rowsPerPage, setRowsPerPage] = React.useState(8);
-  const [filterValue, setFilterValue] = React.useState("");
+  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [filterValue, setFilterValue] = useState("");
   const [modalTitle, setModalTitle] = useState("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -66,7 +66,7 @@ export default function AdminManagementPage() {
   } = SingleSelectDropdown.useDropdown(new Set(["all"]));
   const hasSearchFilter = Boolean(filterValue);
 
-  const selectedStatusFilterValue = React.useMemo(
+  const selectedStatusFilterValue = useMemo(
     () => Array.from(selectedStatusFilterKeys).join(", ").replace(/_/g, ""),
     [selectedStatusFilterKeys],
   );
@@ -108,7 +108,7 @@ export default function AdminManagementPage() {
     setShouldShowConfirmation(updatedAdmins.length > 0);
   }, [updatedAdmins]);
 
-  const filteredItems = React.useMemo(
+  const filteredItems = useMemo(
     () =>
       filterUsers(
         admins,
@@ -122,7 +122,7 @@ export default function AdminManagementPage() {
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
@@ -330,7 +330,7 @@ export default function AdminManagementPage() {
     return [];
   }, [modals, isInviteLoading]);
 
-  const topContent = React.useMemo(() => {
+  const topContent = useMemo(() => {
     return (
       <TopContent
         searchValue={filterValue}
