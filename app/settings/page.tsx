@@ -48,7 +48,6 @@ export default function SettingsPage() {
   const [timezonesOptions, setTimezonesOptions] = useState<Timezone[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>("");
   const { isOpen, openModal, closeModal } = Modal.useModal();
-  const [modalType, setModalType] = useState<string>("upload");
   const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
@@ -151,8 +150,8 @@ export default function SettingsPage() {
     setFiles([]);
   };
 
-  const onPressUpload = () => {
-    setModalType("upload");
+  const onCameraPress = () => {
+    // setModalType("upload");
     openModal();
   };
 
@@ -165,11 +164,6 @@ export default function SettingsPage() {
       imageSrc: null!,
     });
     closeModal();
-  };
-
-  const onPressDelete = () => {
-    setModalType("delete");
-    openModal();
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -214,9 +208,7 @@ export default function SettingsPage() {
           <ProfilePicture
             image={profile?.imageSrc as string}
             isUploading={isUploading}
-            onPressUpload={onPressUpload}
-            onPressDelete={onPressDelete}
-            t={t}
+            onCameraPress={onCameraPress}
           />
           <div className="flex flex-col w-full gap-5">
             <div className="flex flex-col sm:flex-row justify-center gap-3">
@@ -310,53 +302,31 @@ export default function SettingsPage() {
         onClose={onCloseModal}
         buttons={[
           {
-            title: t(`${modalType}-profile-picture-modal-first-button-text`),
-            color: modalType === "upload" ? "default" : "danger",
+            title: t("upload-profile-picture-modal-remove-button-text"),
+            color: "danger",
             variant: "light",
-            isLoading: modalType === "upload" ? false : isUploading,
-            isDisabled: isUploading,
-            onPress: () => {
-              if (modalType === "upload") {
-                onCloseModal();
-              } else {
-                onConfirmDelete();
-              }
-            },
+            isDisabled: isUploading || !profile?.imageSrc,
+            onPress: onConfirmDelete,
           },
           {
-            title: t(`${modalType}-profile-picture-modal-second-button-text`),
+            title: t("upload-profile-picture-modal-save-button-text"),
             color: "primary",
             variant: "solid",
-            isLoading: modalType === "upload" ? isUploading : false,
-            isDisabled:
-              isUploading || (modalType === "upload" && files.length === 0),
-            onPress: () => {
-              if (modalType === "upload") {
-                onConfirmUpload();
-              } else {
-                onCloseModal();
-              }
-            },
+            isLoading: isUploading,
+            isDisabled: isUploading || files.length === 0,
+            onPress: onConfirmUpload,
           },
         ]}
       >
-        <ModalHeader>
-          {t(`${modalType}-profile-picture-modal-header`)}
-        </ModalHeader>
+        <ModalHeader>{t("upload-profile-picture-modal-header")}</ModalHeader>
         <ModalBody>
-          {modalType === "upload" ? (
-            <FileUploader
-              files={files}
-              imageType="profile"
-              isDisabled={isUploading}
-              setFiles={setFiles}
-              legend={t("upload-profile-picture-disclaimer-label")}
-            />
-          ) : (
-            <p className="text-default-500">
-              {t(`${modalType}-profile-picture-modal-body`)}
-            </p>
-          )}
+          <FileUploader
+            files={files}
+            imageType="profile"
+            isDisabled={isUploading}
+            setFiles={setFiles}
+            legend={t("upload-profile-picture-disclaimer-label")}
+          />
         </ModalBody>
       </Modal>
     </Layout>
