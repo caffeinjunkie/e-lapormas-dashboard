@@ -23,9 +23,9 @@ import { TopContent } from "./top-content";
 import { checkIsUserAlreadyInvited, upsertAdmins } from "@/api/admin";
 import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
-import { AdminTable } from "@/app/admin-management/admin-table";
 import { columns } from "@/app/admin-management/config";
 import { getAllAdmins } from "@/app/admin-management/handlers";
+import { Table } from "@/components/table";
 import {
   calculateRowNumber,
   filterUsers,
@@ -395,7 +395,7 @@ export default function AdminManagementPage() {
           isMobile ? "pb-20 pt-1 px-4" : " px-6 pb-2",
         )}
       >
-        <AdminTable
+        <Table
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}
           items={items}
