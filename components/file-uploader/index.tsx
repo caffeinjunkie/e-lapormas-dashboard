@@ -2,6 +2,7 @@ import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import "filepond/dist/filepond.min.css";
@@ -14,6 +15,7 @@ registerPlugin(
   FilePondPluginFileValidateType,
   FilePondPluginFileValidateSize,
   FilePondPluginImageResize,
+  FilePondPluginImageCrop
 );
 
 interface FileUploaderProps {
@@ -39,6 +41,9 @@ export const FileUploader = ({
     imageResizeTargetHeight: imageType === "profile" ? 512 : 1440,
   };
   const maxFileSize = imageType === "profile" ? "2MB" : "5MB";
+  const allowCrop = imageType !== "task";
+  const imageCropRatio = imageType === "profile" ? "1:1" : "16:9";
+
 
   return (
     <div>
@@ -46,6 +51,8 @@ export const FileUploader = ({
         files={files}
         allowImageResize={resize}
         disabled={isDisabled}
+        allowImageCrop={allowCrop}
+        imageCropAspectRatio={imageCropRatio}
         maxFileSize={maxFileSize}
         acceptedFileTypes={["image/*"]}
         labelMaxFileSizeExceeded={t("max-file-size-exceeded-error")}
