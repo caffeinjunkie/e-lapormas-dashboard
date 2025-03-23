@@ -102,14 +102,15 @@ export const Navbar = () => {
   );
 
   const handleNavigation = (href: string) => {
+    setShouldShowConfirmation(false);
+    setNextPath("");
     if (href === "/logout") {
       handleLogout();
       return;
     }
     router.push(href);
-    setShouldShowConfirmation(false);
+
     closeModal();
-    setNextPath("");
   };
 
   const openSpecificModal = (href: string) => {
@@ -120,6 +121,7 @@ export const Navbar = () => {
   return (
     <>
       <MobileNavbar
+        pathname={pathname}
         isSuperAdmin={isSuperAdmin}
         onNavigate={handleNavigation}
         shouldShowConfirmation={shouldShowConfirmation}

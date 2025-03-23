@@ -116,17 +116,21 @@
     "reset-request-success-toast-description": "Permintaan reset kata sandi telah berhasil dikirim. Silakan cek email anda untuk melanjutkan.",
     "reset-request-error-toast-title": "Permintaan Reset Kata Sandi Gagal",
     "reset-request-error-toast-description": "Permintaan reset kata sandi gagal. Mohon coba sesaat lagi.",
-    "update-photo-success-toast-title": "Unggah Foto Berhasil",
-    "update-photo-success-toast-description": "Foto berhasil diunggah",
-    "remove-photo-success-toast-title": "Hapus Foto Berhasil",
-    "remove-photo-success-toast-description": "Foto berhasil dihapus",
-    "update-photo-error-toast-title": "Terjadi Kesalahan",
-    "update-photo-error-toast-description": "Foto gagal diperbaharui. Mohon coba sesaat lagi.",
     "save-success-toast-title": "Simpan Berhasil",
     "save-success-toast-description": "Data berhasil disimpan",
     "save-error-toast-title": "Terjadi Kesalahan",
     "save-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi",
-    "page-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi"
+    "page-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi",
+    "upload-profile-picture-modal-header": "Unggah Foto",
+    "upload-profile-picture-modal-save-button-text": "Simpan",
+    "upload-profile-picture-modal-remove-button-text": "Hapus",
+    "upload-profile-picture-success-toast-title": "Unggah Foto Berhasil",
+    "upload-profile-picture-success-toast-description": "Foto berhasil diunggah",
+    "delete-profile-picture-success-toast-title": "Hapus Foto Berhasil",
+    "delete-profile-picture-success-toast-description": "Foto berhasil dihapus",
+    "upload-profile-picture-error-toast-title": "Terjadi Kesalahan",
+    "upload-profile-picture-error-toast-description": "Foto gagal diperbaharui. Mohon coba sesaat lagi.",
+    "upload-profile-picture-disclaimer-label": "Pilih foto dengan ukuran maksimal 2MB. Gunakan foto ukuran persegi untuk hasil lebih maksimal."
   },
   "UnauthorizedPage": {
     "unauthorized-tab-description": "Anda tidak memiliki akses ke halaman ini. Mohon kembali ke halaman utama",
@@ -144,6 +148,14 @@
   },
   "Modal": {
     "default-button-text": "Tutup"
+  },
+  "FileUploader": {
+    "upload-input-dragndrop-text": "Tarik foto atau",
+    "upload-input-browse-text": "Pilih",
+    "max-file-size-error": "Ukuran file melebihi",
+    "max-file-size-exceeded-error": "Ukuran file terlalu besar",
+    "file-type-not-allowed-error": "Tipe file tidak sesuai",
+    "file-type-expected-types-error": "Hanya bisa menunggah file foto"
   },
   "Navbar": {
     "logout-confirmation-title": "Apakah anda yakin ingin keluar?",

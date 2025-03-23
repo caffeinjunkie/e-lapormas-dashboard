@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 import { fetchAdminById, updateAdminById } from "@/api/admin";
 import { updateAppConfig } from "@/api/app-config";
+import { deleteImage, uploadImage } from "@/api/storage";
 import { fetchUserData, resetPassword, updateAuthUser } from "@/api/users";
 import { ProfileData } from "@/types/user.types";
 
@@ -45,31 +46,50 @@ export const saveImageToAdmin = async (
   setIsRevalidated: (value: boolean) => void,
   user: ProfileData,
   setLoading: Dispatch<SetStateAction<boolean>>,
-  image: string = "",
+  image: File | null = null,
 ) => {
-  const updatedAdminData = {
-    user_id: user.id,
-    profile_img: image,
-  };
   let toastProps;
   setLoading(true);
 
   try {
+    let uploadResult = null;
+
+    if (image) {
+      uploadResult = await uploadImage({
+        file: image,
+        path: `user/${user.id}`,
+        bucket: "profile-picture",
+      });
+    }
+    if (!image) {
+      await deleteImage({ path: `user/${user.id}`, bucket: "profile-picture" });
+    }
+
+    const randomNumber = Math.random() * 10;
+    const updatedAdminData = {
+      user_id: user.id,
+      profile_img: image
+        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-picture/user/${user.id}?c=${randomNumber}`
+        : "",
+    };
     const data = await updateAdminById(updatedAdminData);
+
     if (data) {
-      const preText = image === "" ? "remove" : "update";
+      const preText = image === null ? "delete" : "upload";
       toastProps = {
-        title: t(`${preText}-photo-success-toast-title`),
-        description: t(`${preText}-photo-success-toast-description`),
+        title: t(`${preText}-profile-picture-success-toast-title`),
+        description: t(`${preText}-profile-picture-success-toast-description`),
         color: "success",
       };
     }
+    return data;
   } catch (e) {
     toastProps = {
-      title: t("update-photo-error-toast-title"),
-      description: t("update-photo-error-toast-description"),
-      color: "success",
+      title: t("upload-profile-picture-error-toast-title"),
+      description: t("upload-profile-picture-error-toast-description"),
+      color: "danger",
     };
+    return null;
   } finally {
     addToast(toastProps as ToastProps);
     setLoading(false);

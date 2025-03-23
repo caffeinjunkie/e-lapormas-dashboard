@@ -30,11 +30,24 @@ export const useMultipleModal = () => {
     }));
   };
 
-  const closeModal = (modalName: string) => {
-    setModals((prevModals) => ({
-      ...prevModals,
-      [modalName]: false,
-    }));
+  const closeModal = (modalName: string = "") => {
+    if (modalName === "") {
+      setModals((prevModals) => ({
+        ...prevModals,
+        ...Object.keys(prevModals).reduce(
+          (acc, key) => {
+            acc[key] = false;
+            return acc;
+          },
+          {} as Record<string, boolean>,
+        ),
+      }));
+    } else {
+      setModals((prevModals) => ({
+        ...prevModals,
+        [modalName]: false,
+      }));
+    }
   };
 
   return {
