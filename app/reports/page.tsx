@@ -3,36 +3,37 @@
 import { Pagination } from "@heroui/pagination";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { useCallback, useMemo, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { reports } from "./mock.data";
+import { handleFetchReports } from "./handlers";
 
 import { columns } from "@/app/reports/config";
 import { ReportCell } from "@/app/reports/report-cell";
 import { Layout } from "@/components/layout";
 import { Table } from "@/components/table";
-import { ReportCellType } from "@/types/report.types";
-import { calculateRowNumber } from "@/utils/screen";
+import { Report, ReportCellType } from "@/types/report.types";
+import { calculateReportRow } from "@/utils/screen";
 
 export default function ReportsPage() {
   const t = useTranslations("ReportsPage");
   const layoutRef = useRef<HTMLDivElement>(null);
   const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [pages, setPages] = useState(0);
   const [items, setItems] = useState<ReportCellType[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
-  const pages = 1;
+  const [reports, setReports] = useState<Report[]>([]);
 
   const columnsBasedOnScreen = useMemo(() => {
     return isMobile
       ? columns.slice(0, 1)
       : isWideScreen
-      ? columns
-      : [...columns.slice(0, 3), ...columns.slice(4, 7)];
+        ? columns
+        : [...columns.slice(0, 3), ...columns.slice(4, 7)];
   }, [isMobile, isWideScreen, columns]);
-  
+
   const transformedReports = useMemo(() => {
     return reports.map((report) => ({
       id: report.id,
@@ -46,24 +47,41 @@ export default function ReportsPage() {
     }));
   }, [reports]);
 
-  // const filteredItems = useMemo(
-  //   () =>
-  //     //call fetch reports again
-  //   [transformedReports, filterValue, selectedStatusFilterKeys],
-  // );
+  const fetchReports = async (offset: number = 0) => {
+    setIsDataLoading(true);
+    try {
+      const { data, count } = await handleFetchReports({
+        offset,
+        limit: rowsPerPage,
+      });
+      console.log(data, count);
+      if (!count) return;
+      setReports(data);
+      setPages(Math.ceil(count / rowsPerPage));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDataLoading(false);
+    }
+  };
+
+  const onPageChange = (newPage: number) => {
+    setPage(newPage);
+    fetchReports((newPage - 1) * rowsPerPage);
+  };
 
   useEffect(() => {
-    // setIsDataLoading(true);
-    // fetch reports
+    fetchReports();
+  }, [rowsPerPage]);
 
-    setItems(transformedReports);
-
+  useEffect(() => {
     const handleResize = () => {
-      calculateRowNumber(setRowsPerPage);
-
       if (!layoutRef.current) return;
-      setIsMobile(layoutRef.current?.offsetWidth < 720);
-      setIsWideScreen(layoutRef.current?.offsetWidth >= 900);
+      const mobile = layoutRef.current?.offsetWidth < 720;
+      const wideScreen = layoutRef.current?.offsetWidth >= 900;
+      setIsMobile(mobile);
+      setIsWideScreen(wideScreen);
+      calculateReportRow(setRowsPerPage, mobile, wideScreen);
     };
 
     handleResize();
@@ -102,7 +120,7 @@ export default function ReportsPage() {
         <Table
           layout={isMobile ? "auto" : "fixed"}
           columns={columnsBasedOnScreen}
-          items={items}
+          items={transformedReports}
           isCompact
           removeWrapper={isMobile}
           hideHeader={isMobile}
@@ -126,7 +144,7 @@ export default function ReportsPage() {
             color="primary"
             page={page}
             total={pages}
-            onChange={setPage}
+            onChange={onPageChange}
           />
         </div>
       )}

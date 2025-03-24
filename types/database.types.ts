@@ -82,6 +82,54 @@ export type Database = {
         };
         Relationships: [];
       };
+      tasks: {
+        Row: {
+          address: Json | null;
+          category: string;
+          created_at: string | null;
+          data: Json | null;
+          description: string;
+          id: string;
+          images: string[] | null;
+          priority: Database["public"]["Enums"]["task_priority"];
+          progress: Json | null;
+          rating: number | null;
+          status: Database["public"]["Enums"]["task_status"] | null;
+          title: string;
+          tracking_id: string;
+        };
+        Insert: {
+          address?: Json | null;
+          category: string;
+          created_at?: string | null;
+          data?: Json | null;
+          description: string;
+          id?: string;
+          images?: string[] | null;
+          priority: Database["public"]["Enums"]["task_priority"];
+          progress?: Json | null;
+          rating?: number | null;
+          status?: Database["public"]["Enums"]["task_status"] | null;
+          title: string;
+          tracking_id: string;
+        };
+        Update: {
+          address?: Json | null;
+          category?: string;
+          created_at?: string | null;
+          data?: Json | null;
+          description?: string;
+          id?: string;
+          images?: string[] | null;
+          priority?: Database["public"]["Enums"]["task_priority"];
+          progress?: Json | null;
+          rating?: number | null;
+          status?: Database["public"]["Enums"]["task_status"] | null;
+          title?: string;
+          tracking_id?: string;
+        };
+        Relationships: [];
+      };
       timezones: {
         Row: {
           id: number;
@@ -99,7 +147,8 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      task_priority: "LOW" | "MID" | "HIGH" | "CRITICAL";
+      task_status: "COMPLETED" | "IN_PROGRESS" | "PENDING";
     };
     CompositeTypes: {
       [_ in never]: never;

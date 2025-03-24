@@ -1,4 +1,4 @@
-export const calculateRowNumber = (setRowsPerPage: (rows: number) => void) => {
+export const calculateAdminRow = (setRowsPerPage: (rows: number) => void) => {
   const height = window.innerHeight;
   const orientation = window.screen.orientation.type;
 
@@ -12,4 +12,20 @@ export const calculateRowNumber = (setRowsPerPage: (rows: number) => void) => {
   } else {
     setRowsPerPage(height > 884 ? Math.floor(height / 110) : 6);
   }
+};
+
+export const calculateReportRow = (
+  setRowsPerPage: (rows: number) => void,
+  isMobile: boolean,
+  isWideScreen: boolean,
+) => {
+  const height = window.innerHeight;
+
+  setRowsPerPage(
+    isWideScreen
+      ? Math.floor(height / 80)
+      : isMobile
+        ? 10
+        : Math.floor(height / 100),
+  );
 };

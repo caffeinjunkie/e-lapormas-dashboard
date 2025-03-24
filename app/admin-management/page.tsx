@@ -38,7 +38,7 @@ import { Table } from "@/components/table";
 import { usePrivate } from "@/providers/private-provider";
 import { AdminData } from "@/types/user.types";
 import { buildFormData } from "@/utils/form";
-import { calculateRowNumber } from "@/utils/screen";
+import { calculateAdminRow } from "@/utils/screen";
 import { validateEmail, validateIsRequired } from "@/utils/string";
 
 export default function AdminManagementPage() {
@@ -90,7 +90,7 @@ export default function AdminManagementPage() {
     fetchAdmins();
 
     const handleResize = () => {
-      calculateRowNumber(setRowsPerPage);
+      calculateAdminRow(setRowsPerPage);
 
       if (!layoutRef.current) return;
       setIsMobile(layoutRef.current?.offsetWidth < 520);

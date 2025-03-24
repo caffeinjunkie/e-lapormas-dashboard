@@ -31,8 +31,8 @@ export const ReportCell = ({
 }: ReportCellProps) => {
   const t = useTranslations("ReportsPage");
   const cellValue = report[columnKey as keyof ReportCellType];
-  const village = report.address.village;
-  const district = report.address.district;
+  const village = report.address?.village || "";
+  const district = report.address?.district || "";
   const location = village || district || "-";
 
   switch (columnKey) {
