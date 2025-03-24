@@ -17,12 +17,19 @@ import { calculateRowNumber } from "@/utils/screen";
 export default function ReportsPage() {
   const t = useTranslations("ReportsPage");
   const layoutRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [items, setItems] = useState<ReportCellType[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isWideScreen, setIsWideScreen] = useState(false);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(0);
   const [isDataLoading, setIsDataLoading] = useState(false);
+
+  const columnsBasedOnScreen = isMobile
+    ? columns.slice(0, 1)
+    : isWideScreen
+      ? columns
+      : [...columns.slice(0, 3), ...columns.slice(4, 7)];
 
   useEffect(() => {
     // setIsDataLoading(true);
@@ -45,6 +52,7 @@ export default function ReportsPage() {
 
       if (!layoutRef.current) return;
       setIsMobile(layoutRef.current?.offsetWidth < 720);
+      setIsWideScreen(layoutRef.current?.offsetWidth >= 900);
     };
 
     handleResize();
@@ -61,10 +69,10 @@ export default function ReportsPage() {
         columnKey={columnKey}
         report={report}
         isMobile={isMobile}
-        isLast={isLast}
+        isWideScreen={isWideScreen}
       />
     ),
-    [isMobile],
+    [isMobile, isWideScreen],
   );
 
   return (
@@ -82,7 +90,7 @@ export default function ReportsPage() {
       >
         <Table
           layout={isMobile ? "auto" : "fixed"}
-          columns={isMobile ? [{ name: "NAME", uid: "report" }] : columns}
+          columns={columnsBasedOnScreen}
           items={items}
           isCompact
           removeWrapper={isMobile}

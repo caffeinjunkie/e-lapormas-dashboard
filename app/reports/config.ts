@@ -2,6 +2,7 @@ export const columns = [
   { name: "REPORT", uid: "report", width: 140, align: "start" },
   { name: "CATEGORY", uid: "category", width: 90, align: "start" },
   { name: "LOCATION", uid: "location", width: 100, align: "start" },
+  { name: "CREATED DATE", uid: "created_at", width: 70, align: "start" },
   { name: "PRIORITY", uid: "priority", width: 65, align: "center" },
   { name: "STATUS", uid: "status", width: 75, align: "center" },
   { name: "ACTIONS", uid: "actions", width: 50, align: "center" },

@@ -20,14 +20,14 @@ interface ReportCellProps {
   columnKey: string;
   report: any;
   isMobile: boolean;
-  isLast: boolean;
+  isWideScreen: boolean;
 }
 
 export const ReportCell = ({
   columnKey,
   report,
   isMobile,
-  isLast,
+  isWideScreen,
 }: ReportCellProps) => {
   const t = useTranslations("ReportsPage");
   const cellValue = report[columnKey as keyof ReportCellType];
@@ -51,7 +51,7 @@ export const ReportCell = ({
                     #{report.tracking_id}
                   </Link>
                   <span className="text-default-500">|</span>
-                  <p className="line-clamp-1">
+                  <p className="line-clamp-1 text-default-500">
                     {t(`category-${report.category}`)}
                   </p>
                 </div>
@@ -60,7 +60,9 @@ export const ReportCell = ({
                 </p>
                 <div className="flex flex-row items-center gap-1 pt-0.5 text-default-500 text-xs">
                   {location !== "-" && <p>{location}</p>}
-                  {location !== "-" && <span className="text-default-500">|</span>}
+                  {location !== "-" && (
+                    <span className="text-default-500">|</span>
+                  )}
                   <p>{formattedDate}</p>
                 </div>
               </div>
@@ -124,13 +126,17 @@ export const ReportCell = ({
             #{report.tracking_id}
           </Link>
           <p className="text-md font-semibold line-clamp-2">{report.title}</p>
-          <p className="text-xs pt-1 text-default-500">{formattedDate}</p>
+          {!isWideScreen && (
+            <p className="text-xs pt-1 text-default-500">{formattedDate}</p>
+          )}
         </div>
       );
     case "category":
       return <p className="text-sm">{t(`category-${cellValue}`)}</p>;
     case "location":
       return <p className="text-sm">{location}</p>;
+    case "created_at":
+      return <p className="text-sm">{formatLocaleDate(cellValue)}</p>;
     case "priority":
       return (
         <Chip
