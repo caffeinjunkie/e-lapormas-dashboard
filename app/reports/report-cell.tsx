@@ -1,4 +1,6 @@
 import { EyeIcon } from "@heroicons/react/24/outline";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Link } from "@heroui/link";
 import { useTranslations } from "next-intl";
@@ -29,16 +31,90 @@ export const ReportCell = ({
 }: ReportCellProps) => {
   const t = useTranslations("ReportsPage");
   const cellValue = report[columnKey as keyof ReportCellType];
+  const village = report.address.village;
+  const district = report.address.district;
+  const location = village || district || "";
 
   switch (columnKey) {
     case "report":
       const formattedDate = formatLocaleDate(report.created_at);
       return isMobile ? (
-        <div
-          className={`${isLast ? "border-b-0 pb-0" : "border-b-1 border-default-200 pb-4"}`}
-        >
-          <p className="flex items-center justify-between">{report.title}</p>
-        </div>
+        <Card>
+          <CardBody>
+            <div className="flex flex-row gap-2">
+              <div className="flex flex-col w-full">
+                <div className="flex flex-row items-center gap-1 text-xs">
+                  <Link
+                    onClick={() => console.log(report.id, "te")}
+                    className="text-xs hover:cursor-pointer"
+                  >
+                    #{report.tracking_id}
+                  </Link>
+                  <span className="text-default-500">|</span>
+                  <p className="line-clamp-1">
+                    {t(`category-${report.category}`)}
+                  </p>
+                </div>
+                <p className="text-md font-semibold line-clamp-2">
+                  {report.title}
+                </p>
+                <div className="flex flex-row items-center gap-1 pt-0.5 text-default-500 text-xs">
+                  <p>{location}</p>
+                  <span className="text-default-500">|</span>
+                  <p>{formattedDate}</p>
+                </div>
+              </div>
+              <div className="flex flex-row items-start gap-4  w-fit px-2 justify-end">
+                <div className="flex flex-col gap-2 items-center">
+                  <p className="text-xs">
+                    {t("table-priority-column-label").toUpperCase()}
+                  </p>
+                  <Chip
+                    color={
+                      PriorityColor[
+                        report.priority as keyof typeof PriorityColor
+                      ]
+                    }
+                    radius="sm"
+                    variant="solid"
+                    className={report.priority !== "LOW" ? "text-white" : ""}
+                  >
+                    {t(
+                      `${PriorityLabel[report.priority as keyof typeof PriorityLabel]}-short`,
+                    )}
+                  </Chip>
+                </div>
+                <div className="flex flex-col gap-2 items-center">
+                  <p className="text-xs">
+                    {t("table-status-column-label").toUpperCase()}
+                  </p>
+                  <Chip
+                    color={
+                      StatusColor[report.status as keyof typeof StatusColor]
+                    }
+                    radius="sm"
+                    variant="flat"
+                  >
+                    {t(
+                      `${StatusLabel[report.status as keyof typeof StatusLabel]}-short`,
+                    )}
+                  </Chip>
+                </div>
+              </div>
+            </div>
+          </CardBody>
+          <CardFooter>
+            <Button
+              className="w-full"
+              variant="ghost"
+              color="primary"
+              startContent={<EyeIcon className="size-4" />}
+              onPress={() => console.log(report.id)}
+            >
+              {t("detail-tooltip-text")}
+            </Button>
+          </CardFooter>
+        </Card>
       ) : (
         <div>
           <Link
@@ -54,16 +130,14 @@ export const ReportCell = ({
     case "category":
       return <p className="text-sm">{t(`category-${cellValue}`)}</p>;
     case "location":
-      const village = report.address.village;
-      const district = report.address.district;
-      return <p className="text-sm">{village || district || "-"}</p>;
+      return <p className="text-sm">{location}</p>;
     case "priority":
       return (
         <Chip
           className={report.priority !== "LOW" ? "text-white" : ""}
           color={PriorityColor[report.priority as keyof typeof PriorityColor]}
           size="sm"
-          variant="shadow"
+          variant="solid"
         >
           {t(PriorityLabel[report.priority as keyof typeof PriorityLabel])}
         </Chip>

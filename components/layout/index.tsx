@@ -28,14 +28,14 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
         )}
       >
         <div
-          className={`inline-block overflow-y-scroll ${classNames?.container || "px-0 sm:px-2"}`}
+          className={`inline-block overflow-y-scroll ${classNames?.container || "px-0"}`}
           ref={ref}
         >
           <div
             className={clsx(
               "flex flex-col w-full z-30 md:pt-6 pb-2 mb-2 md:mb-3 px-6",
               classNames?.header,
-              isMobile ? "sticky top-0 bg-white shadow-sm" : "shadow-none",
+              isMobile ? "sticky top-0 bg-white sm:shadow-sm" : "shadow-none",
             )}
           >
             <h1

@@ -13,7 +13,6 @@ interface Progress {
 
 interface Address {
   full_address: string;
-  street: string;
   village: string;
   district: string;
   lat: string;

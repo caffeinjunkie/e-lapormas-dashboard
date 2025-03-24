@@ -8,7 +8,6 @@ export const reports = [
     description: "Kondisi jalan yang rusak di beberapa titik.",
     address: {
       full_address: "Jl. Raya No. 5, Jakarta",
-      street: "Jl. Raya No. 5",
       village: "Pagedangan",
       district: "Jakarta",
       lat: "12.3456",
@@ -50,7 +49,6 @@ export const reports = [
     description: "Pembagian sembako oleh pemerintah.",
     address: {
       full_address: "Jl. Sembako No. 1, Surabaya",
-      street: "Jl. Sembako No. 1",
       village: "Kec. Sukasuka",
       district: "Surabaya",
       lat: "12.3456",
@@ -72,7 +70,6 @@ export const reports = [
     description: "Ada praktik pungli di pasar tradisional.",
     address: {
       full_address: "Jl. Pungli No. 3, Surabaya",
-      street: "Jl. Pungli No. 3",
       village: "Kec. Sukasuka",
       district: "Surabaya",
       lat: "12.3456",
@@ -107,7 +104,6 @@ export const reports = [
     created_at: "2025-03-04T10:15:00Z",
     address: {
       full_address: "",
-      street: "",
       village: "",
       district: "",
       lat: "",
@@ -143,7 +139,6 @@ export const reports = [
     description: "Tingkat kejahatan meningkat di lingkungan ini.",
     address: {
       full_address: "Jl. Aman No. 7, Bandung",
-      street: "Jl. Aman No. 7",
       village: "Bandung Selatan",
       district: "Bandung",
       lat: "10.1234",
@@ -179,7 +174,6 @@ export const reports = [
     category: "fasilitas-umum",
     address: {
       full_address: "Jl. Toilets No. 6, Bandung",
-      street: "Jl. Toilets No. 6",
       village: "Bandung Timur",
       district: "Bandung",
       lat: "10.1234",
@@ -199,7 +193,6 @@ export const reports = [
     description: "Bantuan kesehatan gratis di wilayah terpencil.",
     address: {
       full_address: "Jl. Kesehatan No. 3, Medan",
-      street: "Jl. Kesehatan No. 3",
       village: "Medan Timur",
       district: "Medan",
       lat: "10.1234",
@@ -236,7 +229,6 @@ export const reports = [
     description: "Tumpukan sampah yang tidak tertangani dengan baik.",
     address: {
       full_address: "",
-      street: "Jl. Sampah No. 8",
       village: "Medan Timur",
       district: "Medan",
       lat: "10.1234",
@@ -269,7 +261,6 @@ export const reports = [
     images: ["cdn.example.com/images/jalan1.jpg"],
     address: {
       full_address: "",
-      street: "",
       village: "Medan Utara",
       district: "Medan",
       lat: "10.1234",
@@ -305,7 +296,6 @@ export const reports = [
     category: "keamanan",
     address: {
       full_address: "Jl. Kejahatan No. 10, Medan Gotham City",
-      street: "Jl. Kejahatan No. 10",
       village: "Gotham City",
       district: "Medan",
       lat: "10.1234",
@@ -333,7 +323,6 @@ export const reports = [
     description: "Renovasi taman kota yang mulai tidak terawat.",
     address: {
       full_address: "Jl. Taman No. 11, Jogja",
-      street: "Jl. Taman No. 11",
       village: "Jogja",
       district: "Jogja",
       lat: "10.1234",
@@ -393,7 +382,6 @@ export const reports = [
     category: "kebijakan-publik",
     address: {
       full_address: "Jl. Pendidikan No. 12, Jogja",
-      street: "Jl. Pendidikan No. 12",
       village: "Jogja",
       district: "Jogja",
       lat: "10.1234",
@@ -412,7 +400,6 @@ export const reports = [
     description: "Kemacetan yang semakin parah di beberapa titik kota.",
     address: {
       full_address: "Jl. Lalu Lintas No. 13, Jogja",
-      street: "Jl. Lalu Lintas No. 13",
       village: "Jogja",
       district: "Jogja",
       lat: "10.1234",
@@ -482,7 +469,6 @@ export const reports = [
     status: "PENDING",
     address: {
       full_address: "Jl. Pungli No. 14, Jogja",
-      street: "Jl. Pungli No. 14",
       village: "Jogja",
       district: "Jogja",
       lat: "10.1234",
@@ -500,7 +486,6 @@ export const reports = [
     description: "Fasilitas kesehatan di daerah ini sangat terbatas.",
     address: {
       full_address: "Jl. Sehat No. 3, Bali",
-      street: "Jl. Sehat No. 3",
       village: "Kuta Bali",
       district: "Bali",
       lat: "10.1234",
@@ -560,7 +545,6 @@ export const reports = [
     created_at: "2025-03-17T10:25:00Z",
     address: {
       full_address: "",
-      street: "",
       lng: "",
       lat: "",
       village: "",
@@ -597,7 +581,6 @@ export const reports = [
     description: "Banjir yang melanda wilayah X menyebabkan kerusakan besar.",
     address: {
       full_address: "Jl. Banjir No. 9, Palembang",
-      street: "Jl. Banjir No. 9",
       lng: "58.5678",
       lat: "15.1234",
       village: "Palembang",
