@@ -3,7 +3,7 @@
 import { Pagination } from "@heroui/pagination";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useMemo, useEffect, useRef, useState } from "react";
 
 import { reports } from "./mock.data";
 
@@ -22,19 +22,19 @@ export default function ReportsPage() {
   const [isMobile, setIsMobile] = useState(false);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [page, setPage] = useState(1);
-  const [pages, setPages] = useState(0);
   const [isDataLoading, setIsDataLoading] = useState(false);
+  const pages = 1;
 
-  const columnsBasedOnScreen = isMobile
-    ? columns.slice(0, 1)
-    : isWideScreen
+  const columnsBasedOnScreen = useMemo(() => {
+    return isMobile
+      ? columns.slice(0, 1)
+      : isWideScreen
       ? columns
       : [...columns.slice(0, 3), ...columns.slice(4, 7)];
-
-  useEffect(() => {
-    // setIsDataLoading(true);
-    // fetchAdmins();
-    const transformedReports = reports.map((report) => ({
+  }, [isMobile, isWideScreen, columns]);
+  
+  const transformedReports = useMemo(() => {
+    return reports.map((report) => ({
       id: report.id,
       tracking_id: report.tracking_id,
       title: report.title,
@@ -44,6 +44,17 @@ export default function ReportsPage() {
       status: report.status,
       priority: report.priority,
     }));
+  }, [reports]);
+
+  // const filteredItems = useMemo(
+  //   () =>
+  //     //call fetch reports again
+  //   [transformedReports, filterValue, selectedStatusFilterKeys],
+  // );
+
+  useEffect(() => {
+    // setIsDataLoading(true);
+    // fetch reports
 
     setItems(transformedReports);
 
