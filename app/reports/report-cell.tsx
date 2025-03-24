@@ -33,7 +33,7 @@ export const ReportCell = ({
   const cellValue = report[columnKey as keyof ReportCellType];
   const village = report.address.village;
   const district = report.address.district;
-  const location = village || district || "";
+  const location = village || district || "-";
 
   switch (columnKey) {
     case "report":
@@ -59,8 +59,8 @@ export const ReportCell = ({
                   {report.title}
                 </p>
                 <div className="flex flex-row items-center gap-1 pt-0.5 text-default-500 text-xs">
-                  <p>{location}</p>
-                  <span className="text-default-500">|</span>
+                  {location !== "-" && <p>{location}</p>}
+                  {location !== "-" && <span className="text-default-500">|</span>}
                   <p>{formattedDate}</p>
                 </div>
               </div>
