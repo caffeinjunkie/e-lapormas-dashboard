@@ -8,7 +8,7 @@ export const reports = [
     description: "Kondisi jalan yang rusak di beberapa titik.",
     address: {
       full_address: "Jl. Raya No. 5, Jakarta",
-      village: "Pagedangan",
+      village: "Kec. Sukalaka",
       district: "Jakarta",
       lat: "12.3456",
       lng: "65.4321",
@@ -70,7 +70,7 @@ export const reports = [
     description: "Ada praktik pungli di pasar tradisional.",
     address: {
       full_address: "Jl. Pungli No. 3, Surabaya",
-      village: "Kec. Sukasuka",
+      village: "Kec. Sukaminta",
       district: "Surabaya",
       lat: "12.3456",
       lng: "65.4321",
@@ -174,8 +174,8 @@ export const reports = [
     category: "fasilitas-umum",
     address: {
       full_address: "Jl. Toilets No. 6, Bandung",
-      village: "Bandung Timur",
-      district: "Bandung",
+      village: "",
+      district: "Kec. Sukarusak",
       lat: "10.1234",
       lng: "50.6789",
     },
@@ -323,7 +323,7 @@ export const reports = [
     description: "Renovasi taman kota yang mulai tidak terawat.",
     address: {
       full_address: "Jl. Taman No. 11, Jogja",
-      village: "Jogja",
+      village: "Pandean",
       district: "Jogja",
       lat: "10.1234",
       lng: "50.6789",
@@ -382,7 +382,7 @@ export const reports = [
     category: "kebijakan-publik",
     address: {
       full_address: "Jl. Pendidikan No. 12, Jogja",
-      village: "Jogja",
+      village: "Tamsis",
       district: "Jogja",
       lat: "10.1234",
       lng: "50.6789",
@@ -469,7 +469,7 @@ export const reports = [
     status: "PENDING",
     address: {
       full_address: "Jl. Pungli No. 14, Jogja",
-      village: "Jogja",
+      village: "Desa Sukapungli",
       district: "Jogja",
       lat: "10.1234",
       lng: "50.6789",
@@ -583,7 +583,7 @@ export const reports = [
       full_address: "Jl. Banjir No. 9, Palembang",
       lng: "58.5678",
       lat: "15.1234",
-      village: "Palembang",
+      village: "Sukabandjir",
       district: "Palembang",
     },
     created_at: "2025-03-18T10:40:00Z",
