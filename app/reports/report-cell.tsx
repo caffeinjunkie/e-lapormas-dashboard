@@ -31,7 +31,8 @@ export const ReportCell = ({
   const cellValue = report[columnKey as keyof ReportCellType];
 
   switch (columnKey) {
-    case "uid_name":
+    case "report":
+      const formattedDate = formatLocaleDate(report.created_at);
       return isMobile ? (
         <div
           className={`${isLast ? "border-b-0 pb-0" : "border-b-1 border-default-200 pb-4"}`}
@@ -40,25 +41,26 @@ export const ReportCell = ({
         </div>
       ) : (
         <div>
-          <Link href={`/reports/${report.id}`} className="text-xs">
-            #{report.id}
+          <Link
+            onClick={() => console.log(report.tracking_id)}
+            className="text-xs hover:cursor-pointer"
+          >
+            #{report.tracking_id}
           </Link>
-          <p className="flex items-center text-md font-medium justify-between">
-            {report.title}
-          </p>
+          <p className="text-md font-semibold line-clamp-2">{report.title}</p>
+          <p className="text-xs pt-1 text-default-500">{formattedDate}</p>
         </div>
       );
+    case "category":
+      return <p className="text-sm">{t(`category-${cellValue}`)}</p>;
     case "location":
       const village = report.address.village;
       const district = report.address.district;
       return <p className="text-sm">{village || district || "-"}</p>;
-    case "created_at":
-      const formattedDate = formatLocaleDate(report.createdDate);
-      return <p className="text-sm">{formattedDate}</p>;
     case "priority":
       return (
         <Chip
-          className={report.priority !== "MID" ? "text-white" : ""}
+          className={report.priority !== "LOW" ? "text-white" : ""}
           color={PriorityColor[report.priority as keyof typeof PriorityColor]}
           size="sm"
           variant="shadow"

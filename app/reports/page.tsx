@@ -29,9 +29,10 @@ export default function ReportsPage() {
     // fetchAdmins();
     const transformedReports = reports.map((report) => ({
       id: report.id,
+      tracking_id: report.tracking_id,
       title: report.title,
       address: report.address,
-      createdDate: report.createdDate,
+      created_at: report.created_at,
       category: report.category,
       status: report.status,
       priority: report.priority,
@@ -81,7 +82,7 @@ export default function ReportsPage() {
       >
         <Table
           layout={isMobile ? "auto" : "fixed"}
-          columns={isMobile ? [{ name: "NAME", uid: "uid_name" }] : columns}
+          columns={isMobile ? [{ name: "NAME", uid: "report" }] : columns}
           items={items}
           isCompact
           removeWrapper={isMobile}

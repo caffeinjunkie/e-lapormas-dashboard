@@ -4,15 +4,15 @@ interface QuestionAnswer {
 }
 
 interface Progress {
-  updatedBy: string;
+  updated_by: string;
   status: "IN_PROGRESS" | "COMPLETED";
-  updatedDate: string;
+  updated_at: string;
   message: string;
   img?: string;
 }
 
 interface Address {
-  fullAddress: string;
+  full_address: string;
   street: string;
   village: string;
   district: string;
@@ -22,16 +22,10 @@ interface Address {
 
 export interface ReportCellType {
   id: string;
+  tracking_id: string;
   title: string;
   address: Address;
-  createdDate: string;
-  category: string;
-  status: "COMPLETED" | "IN_PROGRESS" | "PENDING";
-  priority: "LOW" | "MID" | "HIGH" | "CRITICAL";
-}
-
-export interface Report extends ReportCellType {
-  description: string;
+  created_at: string;
   category:
     | "kebijakan-publik"
     | "kondisi-jalan"
@@ -41,7 +35,13 @@ export interface Report extends ReportCellType {
     | "keamanan"
     | "pungli"
     | "lainnya";
-  images: string;
+  status: "COMPLETED" | "IN_PROGRESS" | "PENDING";
+  priority: "LOW" | "MID" | "HIGH" | "CRITICAL";
+}
+
+export interface Report extends ReportCellType {
+  description: string;
+  images: string[];
   data?: {
     follow_up_questions: QuestionAnswer[];
   } | null;

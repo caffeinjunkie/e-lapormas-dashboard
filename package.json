@@ -37,6 +37,7 @@
     "@react-aria/visually-hidden": "3.8.19",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.1",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "clsx": "2.1.1",
     "filepond-plugin-file-validate-size": "^2.2.8",
     "filepond-plugin-file-validate-type": "^1.2.9",

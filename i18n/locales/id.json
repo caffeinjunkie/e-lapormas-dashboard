@@ -97,12 +97,13 @@
   "ReportsPage": {
     "title": "Laporan",
     "table-empty-content": "Dafta laporan kosong",
-    "table-uid-name-column-label": "Laporan",
+    "table-report-column-label": "Laporan",
     "table-created-at-column-label": "Tanggal",
     "table-location-column-label": "Lokasi",
     "table-priority-column-label": "Prioritas",
     "table-status-column-label": "Status",
     "table-actions-column-label": "Aksi",
+    "table-category-column-label": "Kategori",
     "detail-tooltip-text": "Lihat Detail",
     "status-pending": "Menunggu",
     "status-in-progress": "Dalam Proses",
@@ -110,7 +111,15 @@
     "priority-critical": "Kritis",
     "priority-high": "Tinggi",
     "priority-mid": "Sedang",
-    "priority-low": "Rendah"
+    "priority-low": "Rendah",
+    "category-kebijakan-publik": "Kebijakan Publik",
+    "category-kondisi-jalan": "Kondisi Jalan",
+    "category-fasilitas-umum": "Fasilitas Umum",
+    "category-makanan-bergizi": "Makanan Bergizi",
+    "category-program-pemerintah": "Program Pemerintah",
+    "category-keamanan": "Keamanan",
+    "category-pungli": "Pungli",
+    "category-lainnya": "Lainnya"
   },
   "SettingsPage": {
     "title": "Pengaturan",
