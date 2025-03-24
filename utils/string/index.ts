@@ -1,3 +1,5 @@
+import { useFormatter } from "next-intl";
+
 const validateIsRequired = (
   t: (key: string) => string,
   value: string,
@@ -74,7 +76,19 @@ function generatePassword(): string {
   return password;
 }
 
+const formatLocaleDate = (date: string) => {
+  const format = useFormatter();
+  const dateTime = new Date(date);
+
+  return format.dateTime(dateTime, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
 export {
+  formatLocaleDate,
   generatePassword,
   validateIsRequired,
   validateEmail,

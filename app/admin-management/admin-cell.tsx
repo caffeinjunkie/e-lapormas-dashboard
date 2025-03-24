@@ -12,7 +12,7 @@ import {
   useState,
 } from "react";
 
-import { TooltipButton } from "./tooltip-button";
+import { TooltipButton } from "../../components/tooltip-button";
 
 import { createAuthUser } from "@/api/auth";
 import {

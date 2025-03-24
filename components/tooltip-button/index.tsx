@@ -5,6 +5,15 @@ interface TooltipButtonProps extends TooltipProps {
   onPress: () => void;
   icon?: React.ReactNode;
   isLoading?: boolean;
+  variant?:
+    | "light"
+    | "ghost"
+    | "shadow"
+    | "solid"
+    | "bordered"
+    | "flat"
+    | "faded"
+    | undefined;
 }
 
 export const TooltipButton = ({
@@ -12,6 +21,7 @@ export const TooltipButton = ({
   onPress,
   isLoading = false,
   icon,
+  variant = "light",
   ...props
 }: TooltipButtonProps) => (
   <div className="relative flex w-full justify-center items-center gap-2">
@@ -22,7 +32,7 @@ export const TooltipButton = ({
         isIconOnly
         size="sm"
         radius="full"
-        variant="light"
+        variant={variant}
         onPress={onPress}
       >
         {isLoading || icon}

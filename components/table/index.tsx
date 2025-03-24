@@ -1,6 +1,6 @@
 import { Spinner } from "@heroui/spinner";
 import {
-  Table,
+  Table as HeroUITable,
   TableBody,
   TableCell,
   TableColumn,
@@ -10,8 +10,6 @@ import {
 } from "@heroui/table";
 import { useTranslations } from "next-intl";
 
-import { AdminData } from "@/types/user.types";
-
 interface AdminTableProps extends TableProps {
   columns: {
     name: string;
@@ -19,11 +17,11 @@ interface AdminTableProps extends TableProps {
     width?: number;
     align?: string;
   }[];
-  items: AdminData[];
+  items: any[];
   isLoading?: boolean;
   translationKey: string;
   renderCell: (
-    user: AdminData,
+    item: any,
     columnKey: string,
     isLast: boolean,
   ) => React.ReactNode;
@@ -31,7 +29,7 @@ interface AdminTableProps extends TableProps {
   topContent?: React.ReactNode;
 }
 
-export const AdminTable = ({
+export const Table = ({
   columns = [],
   items = [],
   isLoading = false,
@@ -45,7 +43,7 @@ export const AdminTable = ({
   const t = useTranslations(translationKey);
 
   return (
-    <Table
+    <HeroUITable
       layout={layout}
       bottomContentPlacement={bottomContentPlacement}
       topContentPlacement={topContentPlacement}
@@ -86,6 +84,6 @@ export const AdminTable = ({
           </TableRow>
         )}
       </TableBody>
-    </Table>
+    </HeroUITable>
   );
 };
