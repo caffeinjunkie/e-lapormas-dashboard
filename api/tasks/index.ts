@@ -14,7 +14,7 @@ export type FilterType = {
 interface FetchTasksOptions {
   filters?: FilterType[];
   status?: string;
-  search?: string;
+  searchQuery?: string;
   sort?: SortType;
   offset?: number;
   limit?: number;
@@ -28,7 +28,7 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
       field: "created_at",
       order: "desc",
     },
-    search = "",
+    searchQuery = "",
     offset = 0,
     limit = 10,
   } = options;
@@ -37,24 +37,24 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     .from("tasks")
     .select("*", { count: "exact" })
     .range(offset, offset + limit - 1)
-    .eq("status", status);
+    .eq("status", status)
+    .or(`title.ilike.%${searchQuery}%, tracking_id.ilike.%${searchQuery}%`);
 
   filters.forEach((filter) => {
     const { field, operator, value } = filter;
 
-    if (operator === "in") {
-      query = query.in(field, value as string[]);
-    } else if (operator === "gte") {
-      query = query.gte(field, value);
-    } else if (operator === "lte") {
-      query = query.lte(field, value);
+    switch (operator) {
+      case "in":
+        query = query.in(field, value as string[]);
+        break;
+      case "gte":
+        query = query.gte(field, value);
+        break;
+      case "lte":
+        query = query.lte(field, value);
+        break;
     }
   });
-
-  if (search) {
-    query = query.ilike("title", `%${search}%`);
-    query = query.ilike("tracking_id", `%${search}%`);
-  }
 
   query = query.order(sort.field, { ascending: sort.order === "asc" });
 

@@ -5,6 +5,7 @@ interface GetReportsOptions {
   limit?: number;
   search?: string;
   status?: string;
+  searchQuery?: string;
   filters?: FilterType[];
   sortBy: string;
 }
@@ -33,6 +34,7 @@ export const fetchReports = async ({
   limit = 8,
   status = "PENDING",
   sortBy,
+  searchQuery = "",
   filters = [],
 }: GetReportsOptions) => {
   const sort = getSortValue(sortBy);
@@ -40,6 +42,7 @@ export const fetchReports = async ({
   const { data, count, error } = await fetchTasks({
     offset,
     limit,
+    searchQuery,
     status,
     sort: sort as SortType,
     filters,

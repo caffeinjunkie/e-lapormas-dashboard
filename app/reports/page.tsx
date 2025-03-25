@@ -5,7 +5,6 @@ import { Tab, Tabs } from "@heroui/tabs";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import {
-  FormEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -27,7 +26,6 @@ import { Modal } from "@/components/modal";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { Table } from "@/components/table";
 import { ReportCellType } from "@/types/report.types";
-import { buildFormData } from "@/utils/form";
 import { calculateReportRow } from "@/utils/screen";
 
 export default function ReportsPage() {
@@ -38,6 +36,7 @@ export default function ReportsPage() {
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const { isOpen: isFilterModalOpen, openModal, closeModal } = Modal.useModal();
   const [tab, setTab] = useState<string>("PENDING");
   const [filters, setFilters] = useState<FilterType[]>([]);
@@ -50,12 +49,21 @@ export default function ReportsPage() {
   );
   let pages = 0;
   const { data, error, isLoading, mutate } = useSWR(
-    ["reports", tab, page, rowsPerPage, selectedSortValue, filters],
+    [
+      "reports",
+      tab,
+      page,
+      rowsPerPage,
+      selectedSortValue,
+      filters,
+      searchQuery,
+    ],
     () =>
       fetchReports({
         offset: (page - 1) * rowsPerPage,
         limit: rowsPerPage,
         status: tab,
+        searchQuery,
         sortBy: selectedSortValue,
         filters,
       }),
@@ -106,6 +114,7 @@ export default function ReportsPage() {
 
   const onSortChange = (keys: Set<string>) => {
     setSelectedSortKeys(keys);
+    setPage(1);
   };
 
   const onSearchChange = (value: string) => {
@@ -114,16 +123,28 @@ export default function ReportsPage() {
     } else {
       setSearchValue("");
     }
+  };
+
+  const onSearchPress = () => {
+    if (searchValue) {
+      setSearchQuery(searchValue);
+    } else {
+      setSearchQuery("");
+    }
     setPage(1);
   };
 
   const onClear = () => {
     setSearchValue("");
+    setSearchQuery("");
     setPage(1);
   };
 
   const onApplyFilter = (constructedFilters: FilterType[]) => {
     setFilters(constructedFilters);
+    setSearchValue("");
+    setSearchQuery("");
+    setPage(1);
   };
 
   const renderCell = useCallback(
@@ -147,6 +168,7 @@ export default function ReportsPage() {
           searchValue={searchValue}
           onSearchChange={onSearchChange}
           onSearchClear={onClear}
+          onSearchPress={onSearchPress}
           onPressFilterButton={openModal}
           selectedSortValue={selectedSortValue}
           selectedSortKeys={selectedSortKeys}
@@ -176,6 +198,7 @@ export default function ReportsPage() {
     searchValue,
     onSearchChange,
     onClear,
+    onSearchPress,
     selectedSortValue,
     selectedSortKeys,
     onSortChange,

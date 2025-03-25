@@ -2,6 +2,7 @@ import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
   FunnelIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { useTranslations } from "next-intl";
@@ -15,6 +16,7 @@ interface TopContentProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   onSearchClear: () => void;
+  onSearchPress: () => void;
   onPressFilterButton: () => void;
   selectedSortValue: string;
   selectedSortKeys: Set<string>;
@@ -26,6 +28,7 @@ export const TopContent = ({
   searchValue,
   onSearchChange,
   onSearchClear,
+  onSearchPress,
   onPressFilterButton,
   selectedSortValue,
   selectedSortKeys,
@@ -46,13 +49,29 @@ export const TopContent = ({
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
-      <SearchBar
-        className="w-full lg:max-w-[44%]"
-        placeholder={t("search-placeholder")}
-        value={searchValue}
-        onClear={onSearchClear}
-        onValueChange={onSearchChange}
-      />
+      <div className="flex flex-row gap-2 items-center w-full lg:max-w-[50%]">
+        <SearchBar
+          className="w-full"
+          placeholder={t("search-placeholder")}
+          value={searchValue}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              onSearchPress();
+            }
+          }}
+          onClear={onSearchClear}
+          onValueChange={onSearchChange}
+        />
+        <Button
+          color="primary"
+          isIconOnly
+          radius="md"
+          className="text-white w-20"
+          startContent={<MagnifyingGlassIcon className="size-5" />}
+          onPress={onSearchPress}
+        />
+      </div>
+
       <div className="flex gap-2 items-center w-full lg:w-fit">
         <Button
           color="warning"
