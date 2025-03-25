@@ -1,16 +1,23 @@
 import supabase from "@/utils/supabase-db";
 
 export type SortType = {
-  field: "created_at" | "title";
+  field: "created_at" | "title" | "priority";
   order: "asc" | "desc";
 };
 
+export type FilterType = {
+  field: "category" | "priority";
+  value: string[];
+};
+
+export type FilterByDate = {
+  field: "created_at";
+  operator: "gte" | "lte";
+  value: string;
+};
+
 interface FetchTasksOptions {
-  filters?: {
-    field: "status" | "priority" | "created_at";
-    operator: "eq" | "lte" | "gte";
-    value: string;
-  }[];
+  filters?: FilterType[];
   status?: string;
   search?: string;
   sort?: SortType;
@@ -43,28 +50,16 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
   // .gte("created_at", "2025-02-10 10:50:00+00")
   // .lte("created_at", "2025-04-10 10:50:00+00");
 
-  //   filters.forEach((filter) => {
-  //     const { field, operator, value } = filter;
+  filters.forEach((filter) => {
+    const { field, value } = filter;
 
-  //     switch (operator) {
-  //       case "eq":
-  //         query = query.eq(field, value);
-  //         break;
-  //       case "lte":
-  //         query = query.lte(field, value);
-  //         break;
-  //       case "gte":
-  //         query = query.gte(field, value);
-  //         break;
-  //       default:
-  //         throw new Error(`Unsupported operator: ${operator}`);
-  //     }
-  //   });
+    query = query.in(field, value);
+  });
 
-  //   if (search) {
-  //     query = query.ilike("title", `%${search}%`);
-  //     query = query.ilike("tracking_id", `%${search}%`);
-  //   }
+  if (search) {
+    query = query.ilike("title", `%${search}%`);
+    query = query.ilike("tracking_id", `%${search}%`);
+  }
 
   query = query.order(sort.field, { ascending: sort.order === "asc" });
 

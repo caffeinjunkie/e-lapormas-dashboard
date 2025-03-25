@@ -4,19 +4,30 @@ import { Pagination } from "@heroui/pagination";
 import { Tab, Tabs } from "@heroui/tabs";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import useSWR from "swr";
 
+import { FilterModal } from "./filter-modal";
 import { TopContent } from "./top-content";
 
+import { FilterType } from "@/api/tasks";
 import { columns, swrConfig } from "@/app/reports/config";
 import { fetchReports } from "@/app/reports/handlers";
 import { ReportCell } from "@/app/reports/report-cell";
 import Error from "@/components/error";
 import { Layout } from "@/components/layout";
+import { Modal } from "@/components/modal";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { Table } from "@/components/table";
 import { ReportCellType } from "@/types/report.types";
+import { buildFormData } from "@/utils/form";
 import { calculateReportRow } from "@/utils/screen";
 
 export default function ReportsPage() {
@@ -27,7 +38,9 @@ export default function ReportsPage() {
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
+  const { isOpen: isFilterModalOpen, openModal, closeModal } = Modal.useModal();
   const [tab, setTab] = useState<string>("PENDING");
+  const [filters, setFilters] = useState<FilterType[]>([]);
   const { selected: selectedSortKeys, setSelected: setSelectedSortKeys } =
     SingleSelectDropdown.useDropdown(new Set(["newest"]));
 
@@ -37,16 +50,18 @@ export default function ReportsPage() {
   );
   let pages = 0;
   const { data, error, isLoading, mutate } = useSWR(
-    ["reports", tab, page, rowsPerPage, selectedSortValue],
+    ["reports", tab, page, rowsPerPage, selectedSortValue, filters],
     () =>
       fetchReports({
         offset: (page - 1) * rowsPerPage,
         limit: rowsPerPage,
         status: tab,
         sortBy: selectedSortValue,
+        filters,
       }),
     swrConfig,
   );
+
   if (data?.count) pages = Math.ceil(data.count / rowsPerPage);
 
   const columnsBasedOnScreen = useMemo(() => {
@@ -107,6 +122,10 @@ export default function ReportsPage() {
     setPage(1);
   };
 
+  const onApplyFilter = (constructedFilters: FilterType[]) => {
+    setFilters(constructedFilters);
+  };
+
   const renderCell = useCallback(
     (report: ReportCellType, columnKey: string, isLast: boolean) => (
       <ReportCell
@@ -128,6 +147,7 @@ export default function ReportsPage() {
           searchValue={searchValue}
           onSearchChange={onSearchChange}
           onSearchClear={onClear}
+          onPressFilterButton={openModal}
           selectedSortValue={selectedSortValue}
           selectedSortKeys={selectedSortKeys}
           onSortChange={onSortChange}
@@ -212,6 +232,11 @@ export default function ReportsPage() {
           )}
         </>
       )}
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={closeModal}
+        onApplyFilter={onApplyFilter}
+      />
     </Layout>
   );
 }

@@ -15,6 +15,7 @@ interface TopContentProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   onSearchClear: () => void;
+  onPressFilterButton: () => void;
   selectedSortValue: string;
   selectedSortKeys: Set<string>;
   onSortChange: (keys: Set<string>) => void;
@@ -25,6 +26,7 @@ export const TopContent = ({
   searchValue,
   onSearchChange,
   onSearchClear,
+  onPressFilterButton,
   selectedSortValue,
   selectedSortKeys,
   onSortChange,
@@ -36,6 +38,11 @@ export const TopContent = ({
     id,
     label: t(labelKey),
   }));
+
+  const descending =
+    selectedSortValue === "newest" ||
+    selectedSortValue === "z-to-a" ||
+    selectedSortValue === "higher-priority";
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
@@ -53,7 +60,7 @@ export const TopContent = ({
           radius="md"
           className="text-white w-full lg:w-fit"
           startContent={<FunnelIcon className="size-5" />}
-          onPress={() => console.log("open modal")}
+          onPress={onPressFilterButton}
         >
           {t("filter-button-text")}
         </Button>
@@ -63,7 +70,7 @@ export const TopContent = ({
           triggerClassname="w-full lg:w-fit"
           closeOnSelect
           buttonStartContent={
-            selectedSortValue === "newest" || selectedSortValue === "a-to-z" ? (
+            descending ? (
               <BarsArrowDownIcon className="size-5" />
             ) : (
               <BarsArrowUpIcon className="size-5" />

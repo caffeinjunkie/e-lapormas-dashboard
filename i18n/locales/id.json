@@ -133,8 +133,16 @@
     "sort-oldest": "Terlama",
     "sort-a-to-z": "A-Z",
     "sort-z-to-a": "Z-A",
+    "sort-higher-priority": "Prioritas Tinggi",
+    "sort-lower-priority": "Prioritas Rendah",
     "filter-button-text": "Saring",
-    "page-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi"
+    "page-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi",
+    "reports-modal-category-select-label": "Kategori",
+    "reports-modal-category-placeholder-text": "Pilih Kategori",
+    "reports-modal-priority-select-label": "Prioritas",
+    "reports-modal-priority-placeholder-text": "Pilih Prioritas",
+    "clear-button-text": "Hapus Filter",
+    "apply-button-text": "Terapkan"
   },
   "SettingsPage": {
     "title": "Pengaturan",
