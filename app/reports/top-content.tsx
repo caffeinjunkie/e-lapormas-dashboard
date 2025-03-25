@@ -1,4 +1,8 @@
-import { FunnelIcon } from "@heroicons/react/24/outline";
+import {
+  BarsArrowDownIcon,
+  BarsArrowUpIcon,
+  FunnelIcon,
+} from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { useTranslations } from "next-intl";
 
@@ -43,52 +47,27 @@ export const TopContent = ({
         onValueChange={onSearchChange}
       />
       <div className="flex gap-2 items-center w-full lg:w-fit">
-        <SingleSelectDropdown
-          label={t("sort-label")}
-          items={transformedSortOptions}
-          triggerClassname="w-full lg:w-fit"
-          closeOnSelect
-          buttonEndContent={
-            <FunnelIcon className="size-3 stroke-2 text-default-700" />
-          }
-          selectedKeys={selectedSortKeys}
-          onSelectionChange={(keys) => onSortChange(keys as Set<string>)}
+        <Button
+          color="warning"
+          isIconOnly={isMobile}
+          radius="md"
+          className="text-white w-full lg:w-fit"
+          startContent={<FunnelIcon className="size-5" />}
+          onPress={() => console.log("open modal")}
         >
-          <p>{t(`sort-${selectedSortValue}`)}</p>
-        </SingleSelectDropdown>
+          {t("filter-button-text")}
+        </Button>
         <SingleSelectDropdown
           label={t("sort-label")}
           items={transformedSortOptions}
           triggerClassname="w-full lg:w-fit"
           closeOnSelect
-          buttonEndContent={
-            <FunnelIcon className="size-3 stroke-2 text-default-700" />
-          }
-          selectedKeys={selectedSortKeys}
-          onSelectionChange={(keys) => onSortChange(keys as Set<string>)}
-        >
-          <p>{t(`sort-${selectedSortValue}`)}</p>
-        </SingleSelectDropdown>
-        <SingleSelectDropdown
-          label={t("sort-label")}
-          items={transformedSortOptions}
-          triggerClassname="w-full lg:w-fit"
-          closeOnSelect
-          buttonEndContent={
-            <FunnelIcon className="size-3 stroke-2 text-default-700" />
-          }
-          selectedKeys={selectedSortKeys}
-          onSelectionChange={(keys) => onSortChange(keys as Set<string>)}
-        >
-          <p>{t(`sort-${selectedSortValue}`)}</p>
-        </SingleSelectDropdown>
-        <SingleSelectDropdown
-          label={t("sort-label")}
-          items={transformedSortOptions}
-          triggerClassname="w-full lg:w-fit"
-          closeOnSelect
-          buttonEndContent={
-            <FunnelIcon className="size-3 stroke-2 text-default-700" />
+          buttonStartContent={
+            selectedSortValue === "newest" || selectedSortValue === "a-to-z" ? (
+              <BarsArrowDownIcon className="size-5" />
+            ) : (
+              <BarsArrowUpIcon className="size-5" />
+            )
           }
           selectedKeys={selectedSortKeys}
           onSelectionChange={(keys) => onSortChange(keys as Set<string>)}

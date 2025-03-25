@@ -28,14 +28,6 @@ export default function ReportsPage() {
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [tab, setTab] = useState<string>("PENDING");
-  let pages = 0;
-  const { data, error, isLoading, mutate } = useSWR(
-    ["reports", tab, page, rowsPerPage],
-    () => fetchReports((page - 1) * rowsPerPage, rowsPerPage, tab),
-    swrConfig,
-  );
-  if (data?.count) pages = Math.ceil(data.count / rowsPerPage);
-
   const { selected: selectedSortKeys, setSelected: setSelectedSortKeys } =
     SingleSelectDropdown.useDropdown(new Set(["newest"]));
 
@@ -43,6 +35,19 @@ export default function ReportsPage() {
     () => Array.from(selectedSortKeys).join(", ").replace(/_/g, ""),
     [selectedSortKeys],
   );
+  let pages = 0;
+  const { data, error, isLoading, mutate } = useSWR(
+    ["reports", tab, page, rowsPerPage, selectedSortValue],
+    () =>
+      fetchReports({
+        offset: (page - 1) * rowsPerPage,
+        limit: rowsPerPage,
+        status: tab,
+        sortBy: selectedSortValue,
+      }),
+    swrConfig,
+  );
+  if (data?.count) pages = Math.ceil(data.count / rowsPerPage);
 
   const columnsBasedOnScreen = useMemo(() => {
     return isMobile

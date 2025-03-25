@@ -1,4 +1,4 @@
-import { fetchTasks } from "@/api/tasks";
+import { SortType, fetchTasks } from "@/api/tasks";
 
 interface GetReportsOptions {
   offset?: number;
@@ -10,21 +10,37 @@ interface GetReportsOptions {
     operator: "eq" | "lte" | "gte";
     value: string;
   }[];
-  sort?: {
-    field: "created_at" | "title";
-    order: "asc" | "desc";
-  };
+  sortBy: string;
 }
 
-export const fetchReports = async (
-  offset: number = 0,
-  limit: number = 8,
-  status: string = "PENDING",
-) => {
+const getSortValue = (sortBy: string) => {
+  switch (sortBy) {
+    case "newest":
+      return { field: "created_at", order: "desc" };
+    case "oldest":
+      return { field: "created_at", order: "asc" };
+    case "a-to-z":
+      return { field: "title", order: "asc" };
+    case "z-to-a":
+      return { field: "title", order: "desc" };
+    default:
+      return { field: "created_at", order: "desc" };
+  }
+};
+
+export const fetchReports = async ({
+  offset = 0,
+  limit = 8,
+  status = "PENDING",
+  sortBy,
+}: GetReportsOptions) => {
+  const sort = getSortValue(sortBy);
+
   const { data, count, error } = await fetchTasks({
     offset,
     limit,
     status,
+    sort: sort as SortType,
   });
   return { reports: data, count, error };
 };

@@ -1,5 +1,10 @@
 import supabase from "@/utils/supabase-db";
 
+export type SortType = {
+  field: "created_at" | "title";
+  order: "asc" | "desc";
+};
+
 interface FetchTasksOptions {
   filters?: {
     field: "status" | "priority" | "created_at";
@@ -8,10 +13,7 @@ interface FetchTasksOptions {
   }[];
   status?: string;
   search?: string;
-  sort?: {
-    field: "created_at" | "title";
-    order: "asc" | "desc";
-  };
+  sort?: SortType;
   offset?: number;
   limit?: number;
 }
