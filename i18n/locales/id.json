@@ -133,7 +133,8 @@
     "sort-oldest": "Terlama",
     "sort-a-to-z": "A-Z",
     "sort-z-to-a": "Z-A",
-    "filter-button-text": "Saring"
+    "filter-button-text": "Saring",
+    "page-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi"
   },
   "SettingsPage": {
     "title": "Pengaturan",

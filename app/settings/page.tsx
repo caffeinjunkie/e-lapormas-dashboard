@@ -19,7 +19,7 @@ import {
 import { ProfilePicture } from "./profile-picture";
 
 import { fetchAppConfig, fetchTimezones } from "@/api/app-config";
-import Error from "@/components/error/error";
+import Error from "@/components/error";
 import { FileUploader } from "@/components/file-uploader";
 import { FloppyIcon } from "@/components/icons";
 import { Input } from "@/components/input";

@@ -33,7 +33,7 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     .from("tasks")
     .select("*", { count: "exact" })
     .range(offset, offset + limit - 1)
-    .eq("status", status)
+    .eq("status", status);
   // .filter("progress", "contained by", { updated_by: "John Doe" })
 
   // .in("status", ["PENDING", "IN_PROGRESS"])
@@ -66,9 +66,7 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
 
   query = query.order(sort.field, { ascending: sort.order === "asc" });
 
-  const { data, error, count } = await query;
+  const { data, count, error } = await query;
 
-  if (error) throw error;
-
-  return { data, count };
+  return { data, count, error };
 };

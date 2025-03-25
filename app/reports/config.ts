@@ -60,3 +60,9 @@ export enum StatusColor {
   IN_PROGRESS = "warning",
   COMPLETED = "success",
 }
+
+export const swrConfig = {
+  dedupingInterval: 60000,
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+};

@@ -16,8 +16,15 @@ interface GetReportsOptions {
   };
 }
 
-export const handleFetchReports = async (options: GetReportsOptions) => {
-  // construct search here
-  const { data, count } = await fetchTasks(options);
-  return { data, count };
+export const fetchReports = async (
+  offset: number = 0,
+  limit: number = 8,
+  status: string = "PENDING",
+) => {
+  const { data, count, error } = await fetchTasks({
+    offset,
+    limit,
+    status,
+  });
+  return { reports: data, count, error };
 };

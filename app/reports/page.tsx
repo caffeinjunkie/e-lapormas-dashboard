@@ -5,31 +5,36 @@ import { Tab, Tabs } from "@heroui/tabs";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import useSWR from "swr";
 
-import { handleFetchReports } from "./handlers";
 import { TopContent } from "./top-content";
 
-import { columns } from "@/app/reports/config";
+import { columns, swrConfig } from "@/app/reports/config";
+import { fetchReports } from "@/app/reports/handlers";
 import { ReportCell } from "@/app/reports/report-cell";
+import Error from "@/components/error";
 import { Layout } from "@/components/layout";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { Table } from "@/components/table";
-import { Report, ReportCellType } from "@/types/report.types";
+import { ReportCellType } from "@/types/report.types";
 import { calculateReportRow } from "@/utils/screen";
 
 export default function ReportsPage() {
   const t = useTranslations("ReportsPage");
   const layoutRef = useRef<HTMLDivElement>(null);
   const [rowsPerPage, setRowsPerPage] = useState(8);
-  const [pages, setPages] = useState(0);
-  const [items, setItems] = useState<ReportCellType[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [page, setPage] = useState(1);
-  const [isDataLoading, setIsDataLoading] = useState(false);
-  const [reports, setReports] = useState<Report[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [tab, setTab] = useState<string>("PENDING");
+  let pages = 0;
+  const { data, error, isLoading, mutate } = useSWR(
+    ["reports", tab, page, rowsPerPage],
+    () => fetchReports((page - 1) * rowsPerPage, rowsPerPage, tab),
+    swrConfig,
+  );
+  if (data?.count) pages = Math.ceil(data.count / rowsPerPage);
 
   const { selected: selectedSortKeys, setSelected: setSelectedSortKeys } =
     SingleSelectDropdown.useDropdown(new Set(["newest"]));
@@ -48,7 +53,8 @@ export default function ReportsPage() {
   }, [isMobile, isWideScreen, columns]);
 
   const transformedReports = useMemo(() => {
-    return reports.map((report) => ({
+    if (!data?.reports) return [];
+    return data?.reports.map((report) => ({
       id: report.id,
       tracking_id: report.tracking_id,
       title: report.title,
@@ -58,33 +64,7 @@ export default function ReportsPage() {
       status: report.status,
       priority: report.priority,
     }));
-  }, [reports]);
-
-  const fetchReports = async (offset: number = 0) => {
-    try {
-      const { data, count } = await handleFetchReports({
-        offset,
-        limit: rowsPerPage,
-        status: tab,
-      });
-      if (!count) return;
-      setReports(data);
-      setPages(Math.ceil(count / rowsPerPage));
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsDataLoading(false);
-    }
-  };
-
-  const onPageChange = (newPage: number) => {
-    setPage(newPage);
-    fetchReports((newPage - 1) * rowsPerPage);
-  };
-
-  useEffect(() => {
-    fetchReports();
-  }, [rowsPerPage, tab]);
+  }, [data]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -136,7 +116,9 @@ export default function ReportsPage() {
 
   const topContent = useMemo(() => {
     return (
-      <>
+      <div
+        className={`flex gap-3 ${isMobile ? "flex-col" : "flex-col-reverse"}`}
+      >
         <TopContent
           searchValue={searchValue}
           onSearchChange={onSearchChange}
@@ -154,13 +136,16 @@ export default function ReportsPage() {
           color="default"
           variant={isMobile ? "solid" : "underlined"}
           className="font-semibold"
-          onSelectionChange={(key) => setTab(key as string)}
+          onSelectionChange={(key) => {
+            setPage(1);
+            setTab(key as string);
+          }}
         >
           <Tab key="PENDING" title={t("status-pending")} />
           <Tab key="IN_PROGRESS" title={t("status-in-progress")} />
           <Tab key="COMPLETED" title={t("status-completed")} />
         </Tabs>
-      </>
+      </div>
     );
   }, [
     searchValue,
@@ -180,42 +165,47 @@ export default function ReportsPage() {
       headerComponent={topContent}
       classNames={{ header: "gap-4" }}
     >
-      <div
-        className={clsx(
-          "flex mb-1",
-          isMobile ? "pb-20 pt-1 px-1 sm:px-4" : "px-6 pb-2",
-        )}
-      >
-        <Table
-          layout={isMobile ? "auto" : "fixed"}
-          columns={columnsBasedOnScreen}
-          items={transformedReports}
-          isCompact
-          removeWrapper={isMobile}
-          hideHeader={isMobile}
-          isLoading={isDataLoading}
-          renderCell={renderCell}
-          translationKey="ReportsPage"
-        />
-      </div>
-      {pages > 0 && (
-        <div
-          className={clsx(
-            "flex w-full justify-center pt-4 md:pt-2 pb-4 bg-white",
-            isMobile
-              ? "shadow-[rgba(5,5,5,0.1)_0_-1px_1px_0px] absolute bottom-0 z-10"
-              : "shadow-none sticky",
+      {error && <Error message={t("page-error-message")} onReset={mutate} />}
+      {!error && (
+        <>
+          <div
+            className={clsx(
+              "flex mb-1",
+              isMobile ? "pb-20 pt-1 px-1 sm:px-4" : "px-6 pb-2",
+            )}
+          >
+            <Table
+              layout={isMobile ? "auto" : "fixed"}
+              columns={columnsBasedOnScreen}
+              items={transformedReports || []}
+              isCompact
+              removeWrapper={isMobile}
+              hideHeader={isMobile}
+              isLoading={isLoading}
+              renderCell={renderCell}
+              translationKey="ReportsPage"
+            />
+          </div>
+          {pages > 0 && (
+            <div
+              className={clsx(
+                "flex w-full justify-center pt-4 md:pt-2 pb-4 bg-white",
+                isMobile
+                  ? "shadow-[rgba(5,5,5,0.1)_0_-1px_1px_0px] absolute bottom-0 z-10"
+                  : "shadow-none sticky",
+              )}
+            >
+              <Pagination
+                showControls
+                showShadow
+                color="primary"
+                page={page}
+                total={pages}
+                onChange={setPage}
+              />
+            </div>
           )}
-        >
-          <Pagination
-            showControls
-            showShadow
-            color="primary"
-            page={page}
-            total={pages}
-            onChange={onPageChange}
-          />
-        </div>
+        </>
       )}
     </Layout>
   );
