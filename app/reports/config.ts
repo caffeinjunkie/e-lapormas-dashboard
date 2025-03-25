@@ -21,6 +21,20 @@ export const priorityOptions = [
   { labelKey: "priority-low", id: "low" },
 ];
 
+export const sortOptions = [
+  { labelKey: "sort-newest", id: "newest" },
+  { labelKey: "sort-oldest", id: "oldest" },
+  { labelKey: "sort-a-to-z", id: "a-to-z" },
+  { labelKey: "sort-z-to-a", id: "z-to-a" },
+];
+
+export enum SortLabel {
+  A_TO_Z = "sort-a-to-z",
+  Z_TO_A = "sort-z-to-a",
+  NEWEST = "sort-newest",
+  OLDEST = "sort-oldest",
+}
+
 export enum PriorityLabel {
   CRITICAL = "priority-critical",
   HIGH = "priority-high",

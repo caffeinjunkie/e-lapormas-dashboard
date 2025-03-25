@@ -126,7 +126,14 @@
     "category-program-pemerintah": "Program Pemerintah",
     "category-keamanan": "Keamanan",
     "category-pungli": "Pungli",
-    "category-lainnya": "Lainnya"
+    "category-lainnya": "Lainnya",
+    "search-placeholder": "Cari laporan...",
+    "sort-label": "Urutkan",
+    "sort-newest": "Terbaru",
+    "sort-oldest": "Terlama",
+    "sort-a-to-z": "A-Z",
+    "sort-z-to-a": "Z-A",
+    "filter-button-text": "Saring"
   },
   "SettingsPage": {
     "title": "Pengaturan",

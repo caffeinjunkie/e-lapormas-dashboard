@@ -6,6 +6,7 @@ interface FetchTasksOptions {
     operator: "eq" | "lte" | "gte";
     value: string;
   }[];
+  status?: string;
   search?: string;
   sort?: {
     field: "created_at" | "title";
@@ -18,6 +19,7 @@ interface FetchTasksOptions {
 export const fetchTasks = async (options: FetchTasksOptions) => {
   const {
     filters = [],
+    status = "PENDING",
     sort = {
       field: "created_at",
       order: "desc",
@@ -27,38 +29,40 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     limit = 10,
   } = options;
 
-  //   const { data, error, count } = await supabase
-  //     .from("tasks")
-  //     .select("*", { count: "exact" })
-  //     .order(sort.field, { ascending: sort.order === "asc" })
-  //     .range(offset, offset + limit - 1);
   let query = supabase
     .from("tasks")
     .select("*", { count: "exact" })
-    .range(offset, offset + limit - 1);
+    .range(offset, offset + limit - 1)
+    .eq("status", status)
+  // .filter("progress", "contained by", { updated_by: "John Doe" })
 
-  filters.forEach((filter) => {
-    const { field, operator, value } = filter;
+  // .in("status", ["PENDING", "IN_PROGRESS"])
+  // .in("category", ["keamanan", "lainnya"])
+  // .gte("created_at", "2025-02-10 10:50:00+00")
+  // .lte("created_at", "2025-04-10 10:50:00+00");
 
-    switch (operator) {
-      case "eq":
-        query = query.eq(field, value);
-        break;
-      case "lte":
-        query = query.lte(field, value);
-        break;
-      case "gte":
-        query = query.gte(field, value);
-        break;
-      default:
-        throw new Error(`Unsupported operator: ${operator}`);
-    }
-  });
+  //   filters.forEach((filter) => {
+  //     const { field, operator, value } = filter;
 
-  if (search) {
-    query = query.ilike("title", `%${search}%`);
-    query = query.ilike("tracking_id", `%${search}%`);
-  }
+  //     switch (operator) {
+  //       case "eq":
+  //         query = query.eq(field, value);
+  //         break;
+  //       case "lte":
+  //         query = query.lte(field, value);
+  //         break;
+  //       case "gte":
+  //         query = query.gte(field, value);
+  //         break;
+  //       default:
+  //         throw new Error(`Unsupported operator: ${operator}`);
+  //     }
+  //   });
+
+  //   if (search) {
+  //     query = query.ilike("title", `%${search}%`);
+  //     query = query.ilike("tracking_id", `%${search}%`);
+  //   }
 
   query = query.order(sort.field, { ascending: sort.order === "asc" });
 

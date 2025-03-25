@@ -1,15 +1,18 @@
 "use client";
 
 import { Pagination } from "@heroui/pagination";
+import { Tab, Tabs } from "@heroui/tabs";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { handleFetchReports } from "./handlers";
+import { TopContent } from "./top-content";
 
 import { columns } from "@/app/reports/config";
 import { ReportCell } from "@/app/reports/report-cell";
 import { Layout } from "@/components/layout";
+import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { Table } from "@/components/table";
 import { Report, ReportCellType } from "@/types/report.types";
 import { calculateReportRow } from "@/utils/screen";
@@ -25,6 +28,16 @@ export default function ReportsPage() {
   const [page, setPage] = useState(1);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [reports, setReports] = useState<Report[]>([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [tab, setTab] = useState<string>("PENDING");
+
+  const { selected: selectedSortKeys, setSelected: setSelectedSortKeys } =
+    SingleSelectDropdown.useDropdown(new Set(["newest"]));
+
+  const selectedSortValue = useMemo(
+    () => Array.from(selectedSortKeys).join(", ").replace(/_/g, ""),
+    [selectedSortKeys],
+  );
 
   const columnsBasedOnScreen = useMemo(() => {
     return isMobile
@@ -48,13 +61,12 @@ export default function ReportsPage() {
   }, [reports]);
 
   const fetchReports = async (offset: number = 0) => {
-    setIsDataLoading(true);
     try {
       const { data, count } = await handleFetchReports({
         offset,
         limit: rowsPerPage,
+        status: tab,
       });
-      console.log(data, count);
       if (!count) return;
       setReports(data);
       setPages(Math.ceil(count / rowsPerPage));
@@ -72,7 +84,7 @@ export default function ReportsPage() {
 
   useEffect(() => {
     fetchReports();
-  }, [rowsPerPage]);
+  }, [rowsPerPage, tab]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -92,6 +104,24 @@ export default function ReportsPage() {
     };
   }, []);
 
+  const onSortChange = (keys: Set<string>) => {
+    setSelectedSortKeys(keys);
+  };
+
+  const onSearchChange = (value: string) => {
+    if (value) {
+      setSearchValue(value);
+    } else {
+      setSearchValue("");
+    }
+    setPage(1);
+  };
+
+  const onClear = () => {
+    setSearchValue("");
+    setPage(1);
+  };
+
   const renderCell = useCallback(
     (report: ReportCellType, columnKey: string, isLast: boolean) => (
       <ReportCell
@@ -104,11 +134,50 @@ export default function ReportsPage() {
     [isMobile, isWideScreen],
   );
 
+  const topContent = useMemo(() => {
+    return (
+      <>
+        <TopContent
+          searchValue={searchValue}
+          onSearchChange={onSearchChange}
+          onSearchClear={onClear}
+          selectedSortValue={selectedSortValue}
+          selectedSortKeys={selectedSortKeys}
+          onSortChange={onSortChange}
+          isMobile={isMobile}
+        />
+        <Tabs
+          size="md"
+          fullWidth={isMobile}
+          aria-label="Login tabs"
+          selectedKey={tab}
+          color="default"
+          variant={isMobile ? "solid" : "underlined"}
+          className="font-semibold"
+          onSelectionChange={(key) => setTab(key as string)}
+        >
+          <Tab key="PENDING" title={t("status-pending")} />
+          <Tab key="IN_PROGRESS" title={t("status-in-progress")} />
+          <Tab key="COMPLETED" title={t("status-completed")} />
+        </Tabs>
+      </>
+    );
+  }, [
+    searchValue,
+    onSearchChange,
+    onClear,
+    selectedSortValue,
+    selectedSortKeys,
+    onSortChange,
+    isMobile,
+  ]);
+
   return (
     <Layout
       ref={layoutRef}
       isMobile={isMobile}
       title={t("title")}
+      headerComponent={topContent}
       classNames={{ header: "gap-4" }}
     >
       <div

@@ -1,4 +1,4 @@
-import { UserPlusIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
@@ -66,6 +66,9 @@ export const TopContent = ({
           items={transformedStatusOptions}
           triggerClassname="w-full lg:w-fit"
           closeOnSelect
+          buttonEndContent={
+            <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
+          }
           selectedKeys={selectedStatusFilterKeys}
           onSelectionChange={onStatusFilterChange}
         >
