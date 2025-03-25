@@ -36,7 +36,6 @@ export const fetchReports = async ({
   filters = [],
 }: GetReportsOptions) => {
   const sort = getSortValue(sortBy);
-  console.log("tes");
 
   const { data, count, error } = await fetchTasks({
     offset,

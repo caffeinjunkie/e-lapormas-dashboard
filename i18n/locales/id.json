@@ -142,7 +142,8 @@
     "reports-modal-priority-select-label": "Prioritas",
     "reports-modal-priority-placeholder-text": "Pilih Prioritas",
     "clear-button-text": "Hapus Filter",
-    "apply-button-text": "Terapkan"
+    "apply-button-text": "Terapkan",
+    "reports-modal-date-range-label": "Tanggal"
   },
   "SettingsPage": {
     "title": "Pengaturan",

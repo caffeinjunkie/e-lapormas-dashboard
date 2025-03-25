@@ -6,14 +6,9 @@ export type SortType = {
 };
 
 export type FilterType = {
-  field: "category" | "priority";
-  value: string[];
-};
-
-export type FilterByDate = {
-  field: "created_at";
-  operator: "gte" | "lte";
-  value: string;
+  field: "category" | "priority" | "created_at";
+  operator: "gte" | "lte" | "in";
+  value: string[] | string;
 };
 
 interface FetchTasksOptions {
@@ -43,17 +38,17 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     .select("*", { count: "exact" })
     .range(offset, offset + limit - 1)
     .eq("status", status);
-  // .filter("progress", "contained by", { updated_by: "John Doe" })
-
-  // .in("status", ["PENDING", "IN_PROGRESS"])
-  // .in("category", ["keamanan", "lainnya"])
-  // .gte("created_at", "2025-02-10 10:50:00+00")
-  // .lte("created_at", "2025-04-10 10:50:00+00");
 
   filters.forEach((filter) => {
-    const { field, value } = filter;
+    const { field, operator, value } = filter;
 
-    query = query.in(field, value);
+    if (operator === "in") {
+      query = query.in(field, value as string[]);
+    } else if (operator === "gte") {
+      query = query.gte(field, value);
+    } else if (operator === "lte") {
+      query = query.lte(field, value);
+    }
   });
 
   if (search) {

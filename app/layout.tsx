@@ -47,7 +47,7 @@ export default async function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col md:flex-row h-screen">
             <NextIntlClientProvider>
-              <PrivateProvider>
+              <PrivateProvider locale={locale}>
                 <main className="light overflow-auto flex-grow">
                   {children}
                 </main>
