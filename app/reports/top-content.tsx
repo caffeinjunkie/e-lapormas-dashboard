@@ -2,7 +2,6 @@ import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
   FunnelIcon,
-  MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Tab, Tabs } from "@heroui/tabs";
@@ -18,7 +17,6 @@ interface TopContentProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   onSearchClear: () => void;
-  onSearchPress: () => void;
   onPressFilterButton: () => void;
   selectedTab: string;
   onSelectTab: (key: string) => void;
@@ -32,7 +30,6 @@ export const TopContent = ({
   searchValue,
   onSearchChange,
   onSearchClear,
-  onSearchPress,
   selectedTab,
   onSelectTab,
   onPressFilterButton,
@@ -60,28 +57,13 @@ export const TopContent = ({
       <div
         className={`flex flex-col bg-white lg:flex-row lg:justify-between gap-3 items-end`}
       >
-        <div className="flex flex-row gap-2 items-center w-full lg:max-w-[50%]">
-          <SearchBar
-            className="w-full"
-            placeholder={t("search-placeholder")}
-            value={searchValue}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                onSearchPress();
-              }
-            }}
-            onClear={onSearchClear}
-            onValueChange={onSearchChange}
-          />
-          <Button
-            color="primary"
-            isIconOnly
-            radius="md"
-            className="text-white w-20"
-            startContent={<MagnifyingGlassIcon className="size-5" />}
-            onPress={onSearchPress}
-          />
-        </div>
+        <SearchBar
+          className="w-full lg:max-w-[50%]"
+          placeholder={t("search-placeholder")}
+          value={searchValue}
+          onClear={onSearchClear}
+          onValueChange={onSearchChange}
+        />
         <div className="flex gap-2 items-center w-full lg:w-fit">
           <Button
             color="warning"

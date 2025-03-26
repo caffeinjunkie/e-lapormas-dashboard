@@ -1,3 +1,4 @@
+import { XCircleIcon } from "@heroicons/react/24/solid";
 import { CalendarDate } from "@heroui/calendar";
 import { Chip } from "@heroui/chip";
 import { DateRangePicker } from "@heroui/date-picker";
@@ -7,7 +8,6 @@ import { Select, SelectItem } from "@heroui/select";
 import { CalendarDateTime, ZonedDateTime } from "@internationalized/date";
 import { I18nProvider } from "@react-aria/i18n";
 import { RangeValue } from "@react-types/shared";
-import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
 
@@ -96,14 +96,16 @@ export const FilterModal = ({
       <Select
         className="w-full"
         classNames={{
-          trigger: "h-fit"
+          trigger: "h-fit",
         }}
         radius="md"
         renderValue={(items) => {
           return (
             <div className="flex flex-wrap gap-2">
               {items.map(({ key }) => (
-                <Chip size="sm" key={key}>{t(`${name}-${key}`)}</Chip>
+                <Chip size="sm" key={key}>
+                  {t(`${name}-${key}`)}
+                </Chip>
               ))}
             </div>
           );

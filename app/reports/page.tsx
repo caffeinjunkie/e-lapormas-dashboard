@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
+import { useDebounce } from "use-debounce";
 
 import { FilterModal } from "./filter-modal";
 import { TopContent } from "./top-content";
@@ -30,12 +31,12 @@ export default function ReportsPage() {
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const { isOpen: isFilterModalOpen, openModal, closeModal } = Modal.useModal();
   const [tab, setTab] = useState<string>("PENDING");
   const [filters, setFilters] = useState<FilterType[]>([]);
   const { selected: selectedSortKeys, setSelected: setSelectedSortKeys } =
     SingleSelectDropdown.useDropdown(new Set(["newest"]));
+  const [debouncedSearchQuery] = useDebounce(searchValue, 500);
 
   const selectedSortValue = useMemo(
     () => Array.from(selectedSortKeys).join(", ").replace(/_/g, ""),
@@ -50,14 +51,14 @@ export default function ReportsPage() {
       rowsPerPage,
       selectedSortValue,
       filters,
-      searchQuery,
+      debouncedSearchQuery,
     ],
     () =>
       fetchReports({
         offset: (page - 1) * rowsPerPage,
         limit: rowsPerPage,
         status: tab,
-        searchQuery,
+        searchValue: debouncedSearchQuery,
         sortBy: selectedSortValue,
         filters,
       }),
@@ -112,32 +113,17 @@ export default function ReportsPage() {
   };
 
   const onSearchChange = (value: string) => {
-    if (value) {
-      setSearchValue(value);
-    } else {
-      setSearchValue("");
-    }
-  };
-
-  const onSearchPress = () => {
-    if (searchValue) {
-      setSearchQuery(searchValue);
-    } else {
-      setSearchQuery("");
-    }
-    setPage(1);
+    setSearchValue(value);
   };
 
   const onClear = () => {
     setSearchValue("");
-    setSearchQuery("");
     setPage(1);
   };
 
   const onApplyFilter = (constructedFilters: FilterType[]) => {
     setFilters(constructedFilters);
     setSearchValue("");
-    setSearchQuery("");
     setPage(1);
   };
 
@@ -164,7 +150,6 @@ export default function ReportsPage() {
         searchValue={searchValue}
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
-        onSearchPress={onSearchPress}
         onPressFilterButton={openModal}
         selectedTab={tab}
         onSelectTab={onSelectTab}
@@ -178,7 +163,6 @@ export default function ReportsPage() {
     searchValue,
     onSearchChange,
     onClear,
-    onSearchPress,
     selectedSortValue,
     selectedSortKeys,
     onSortChange,

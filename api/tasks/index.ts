@@ -14,7 +14,7 @@ export type FilterType = {
 interface FetchTasksOptions {
   filters?: FilterType[];
   status?: string;
-  searchQuery?: string;
+  searchValue?: string;
   sort?: SortType;
   offset?: number;
   limit?: number;
@@ -28,7 +28,7 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
       field: "created_at",
       order: "desc",
     },
-    searchQuery = "",
+    searchValue = "",
     offset = 0,
     limit = 10,
   } = options;
@@ -38,7 +38,7 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     .select("*", { count: "exact" })
     .range(offset, offset + limit - 1)
     .eq("status", status)
-    .or(`title.ilike.%${searchQuery}%, tracking_id.ilike.%${searchQuery}%`);
+    .or(`title.ilike.%${searchValue}%, tracking_id.ilike.%${searchValue}%`);
 
   // use to fetch by updated_by
   // .or(`progress.cs.${JSON.stringify([{updated_by: 'John Doe'}])}`);
@@ -59,7 +59,7 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     }
   });
 
-  // query = query.order(sort.field, { ascending: sort.order === "asc" });
+  query = query.order(sort.field, { ascending: sort.order === "asc" });
 
   const { data, count, error } = await query;
   console.log(data, "tes");
