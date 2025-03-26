@@ -1,4 +1,5 @@
 import { CalendarDate } from "@heroui/calendar";
+import { Chip } from "@heroui/chip";
 import { DateRangePicker } from "@heroui/date-picker";
 import { Form } from "@heroui/form";
 import { ModalBody, ModalHeader } from "@heroui/modal";
@@ -6,6 +7,7 @@ import { Select, SelectItem } from "@heroui/select";
 import { CalendarDateTime, ZonedDateTime } from "@internationalized/date";
 import { I18nProvider } from "@react-aria/i18n";
 import { RangeValue } from "@react-types/shared";
+import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
 
@@ -93,19 +95,26 @@ export const FilterModal = ({
     return (
       <Select
         className="w-full"
+        classNames={{
+          trigger: "h-fit"
+        }}
         radius="md"
-        endContent={
-          count > 0 && (
-            <div className="rounded-full bg-primary w-5 h-4.5 flex items-center justify-center">
-              <p className="text-[12px] text-white">{count}</p>
+        renderValue={(items) => {
+          return (
+            <div className="flex flex-wrap gap-2">
+              {items.map(({ key }) => (
+                <Chip size="sm" key={key}>{t(`${name}-${key}`)}</Chip>
+              ))}
             </div>
-          )
-        }
+          );
+        }}
         name={name}
         selectionMode="multiple"
+        isMultiline
         label={t(`reports-modal-${name}-select-label`)}
         selectedKeys={selectedItems}
         items={items}
+        variant="bordered"
         placeholder={t(`reports-modal-${name}-placeholder-text`)}
         onSelectionChange={(keys) => setItems(keys as Set<string>)}
       >
@@ -169,6 +178,7 @@ export const FilterModal = ({
               aria-label="Date Range Picker"
               firstDayOfWeek="mon"
               value={dateRange}
+              variant="bordered"
               onChange={setDateRange}
               visibleMonths={2}
             />

@@ -40,6 +40,9 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     .eq("status", status)
     .or(`title.ilike.%${searchQuery}%, tracking_id.ilike.%${searchQuery}%`);
 
+  // use to fetch by updated_by
+  // .or(`progress.cs.${JSON.stringify([{updated_by: 'John Doe'}])}`);
+
   filters.forEach((filter) => {
     const { field, operator, value } = filter;
 
@@ -56,9 +59,10 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     }
   });
 
-  query = query.order(sort.field, { ascending: sort.order === "asc" });
+  // query = query.order(sort.field, { ascending: sort.order === "asc" });
 
   const { data, count, error } = await query;
+  console.log(data, "tes");
 
   return { data, count, error };
 };
