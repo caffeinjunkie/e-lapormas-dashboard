@@ -33,15 +33,18 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
         >
           <div
             className={clsx(
-              "flex flex-col w-full z-30 md:pt-6 pb-2 mb-2 md:mb-3 px-6",
+              "flex flex-col w-full z-30 md:pt-6 pb-2 mb-2 md:mb-3 bg-white",
+              isMobile
+                ? "absolute top-0 shadow-none sm:shadow-sm"
+                : "px-6 shadow-none",
               classNames?.header,
-              isMobile ? "sticky top-0 bg-white sm:shadow-sm" : "shadow-none",
             )}
           >
             <h1
               className={clsx(
                 "hidden md:block",
                 titleClass(),
+                isMobile ? "sm:px-6" : "px-0",
                 classNames?.title,
               )}
             >

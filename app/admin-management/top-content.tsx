@@ -52,7 +52,9 @@ export const TopContent = ({
     .toUpperCase();
 
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
+    <div
+      className={`flex flex-col bg-white ${isMobile ? "absolute top-16 pb-2 px-6 left-0 right-0 shadow-sm sm:shadow-none sm:sticky sm:top-0" : ""} lg:flex-row lg:justify-between gap-3 items-end`}
+    >
       <SearchBar
         className="w-full lg:max-w-[44%]"
         placeholder={t("search-placeholder")}

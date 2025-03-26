@@ -1,16 +1,10 @@
 "use client";
 
 import { Pagination } from "@heroui/pagination";
-import { Tab, Tabs } from "@heroui/tabs";
+import { Key } from "@react-types/shared";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 
 import { FilterModal } from "./filter-modal";
@@ -147,6 +141,11 @@ export default function ReportsPage() {
     setPage(1);
   };
 
+  const onSelectTab = (key: Key) => {
+    setTab(key as string);
+    setPage(1);
+  };
+
   const renderCell = useCallback(
     (report: ReportCellType, columnKey: string, isLast: boolean) => (
       <ReportCell
@@ -161,38 +160,19 @@ export default function ReportsPage() {
 
   const topContent = useMemo(() => {
     return (
-      <div
-        className={`flex gap-3 ${isMobile ? "flex-col" : "flex-col-reverse"}`}
-      >
-        <TopContent
-          searchValue={searchValue}
-          onSearchChange={onSearchChange}
-          onSearchClear={onClear}
-          onSearchPress={onSearchPress}
-          onPressFilterButton={openModal}
-          selectedSortValue={selectedSortValue}
-          selectedSortKeys={selectedSortKeys}
-          onSortChange={onSortChange}
-          isMobile={isMobile}
-        />
-        <Tabs
-          size="md"
-          fullWidth={isMobile}
-          aria-label="Login tabs"
-          selectedKey={tab}
-          color="default"
-          variant={isMobile ? "solid" : "underlined"}
-          className="font-semibold"
-          onSelectionChange={(key) => {
-            setPage(1);
-            setTab(key as string);
-          }}
-        >
-          <Tab key="PENDING" title={t("status-pending")} />
-          <Tab key="IN_PROGRESS" title={t("status-in-progress")} />
-          <Tab key="COMPLETED" title={t("status-completed")} />
-        </Tabs>
-      </div>
+      <TopContent
+        searchValue={searchValue}
+        onSearchChange={onSearchChange}
+        onSearchClear={onClear}
+        onSearchPress={onSearchPress}
+        onPressFilterButton={openModal}
+        selectedTab={tab}
+        onSelectTab={onSelectTab}
+        selectedSortValue={selectedSortValue}
+        selectedSortKeys={selectedSortKeys}
+        onSortChange={onSortChange}
+        isMobile={isMobile}
+      />
     );
   }, [
     searchValue,
@@ -211,7 +191,7 @@ export default function ReportsPage() {
       isMobile={isMobile}
       title={t("title")}
       headerComponent={topContent}
-      classNames={{ header: "gap-4" }}
+      classNames={{ header: `gap-4 ${isMobile ? "sm:top-16 md:top-0" : ""}` }}
     >
       {error && <Error message={t("page-error-message")} onReset={mutate} />}
       {!error && (
@@ -219,7 +199,9 @@ export default function ReportsPage() {
           <div
             className={clsx(
               "flex mb-1",
-              isMobile ? "pb-20 pt-1 px-1 sm:px-4" : "px-6 pb-2",
+              isMobile
+                ? "pb-[72px] pt-40 sm:pt-[168px] px-1 md:px-4 md:pb-16 md:pt-60"
+                : "px-6 pb-2",
             )}
           >
             <Table

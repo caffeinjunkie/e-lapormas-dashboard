@@ -352,8 +352,6 @@ export default function AdminManagementPage() {
     filterValue,
     selectedStatusFilterKeys,
     onSearchChange,
-    hasSearchFilter,
-    isMobile,
     updatedAdmins,
     isSaveLoading,
   ]);
@@ -392,7 +390,7 @@ export default function AdminManagementPage() {
       <div
         className={clsx(
           "flex mb-1",
-          isMobile ? "pb-20 pt-1 px-4" : " px-6 pb-2",
+          isMobile ? "pb-20 pt-28 md:pt-48 px-4" : " px-6 pb-2",
         )}
       >
         <Table
