@@ -45,5 +45,5 @@ export interface Report extends ReportCellType {
     follow_up_questions: QuestionAnswer[];
   } | null;
   rating: number;
-  progress?: Progress | null;
+  progress?: Progress[] | null;
 }

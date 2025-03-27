@@ -40,16 +40,18 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
               classNames?.header,
             )}
           >
-            <h1
-              className={clsx(
-                "hidden md:block",
-                titleClass(),
-                isMobile ? "sm:px-6" : "px-0",
-                classNames?.title,
-              )}
-            >
-              {title}
-            </h1>
+            {title && (
+              <h1
+                className={clsx(
+                  "hidden md:block",
+                  titleClass(),
+                  isMobile ? "sm:px-6" : "px-0",
+                  classNames?.title,
+                )}
+              >
+                {title}
+              </h1>
+            )}
             {headerComponent}
           </div>
           <div className={classNames?.body}>{children}</div>

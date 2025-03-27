@@ -1,5 +1,14 @@
 "use client";
 
+import { Button } from "@heroui/button";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+} from "@heroui/drawer";
+import { useDisclosure } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
 import { Key } from "@react-types/shared";
 import clsx from "clsx";
@@ -8,6 +17,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import { useDebounce } from "use-debounce";
 
+import { DetailDrawer } from "./detail-drawer";
 import { FilterModal } from "./filter-modal";
 import { TopContent } from "./top-content";
 
@@ -20,7 +30,7 @@ import { Layout } from "@/components/layout";
 import { Modal } from "@/components/modal";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { Table } from "@/components/table";
-import { ReportCellType } from "@/types/report.types";
+import { Report } from "@/types/report.types";
 import { calculateReportRow } from "@/utils/screen";
 
 export default function ReportsPage() {
@@ -37,6 +47,12 @@ export default function ReportsPage() {
   const { selected: selectedSortKeys, setSelected: setSelectedSortKeys } =
     SingleSelectDropdown.useDropdown(new Set(["newest"]));
   const [debouncedSearchQuery] = useDebounce(searchValue, 500);
+  const {
+    isOpen: isReportDrawerOpen,
+    onOpenChange: onReportDrawerOpenChange,
+    onOpen: onReportDrawerOpen,
+  } = useDisclosure();
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
   const selectedSortValue = useMemo(
     () => Array.from(selectedSortKeys).join(", ").replace(/_/g, ""),
@@ -75,24 +91,10 @@ export default function ReportsPage() {
         : [...columns.slice(0, 3), ...columns.slice(4, 7)];
   }, [isMobile, isWideScreen, columns]);
 
-  const transformedReports = useMemo(() => {
-    if (!data?.reports) return [];
-    return data?.reports.map((report) => ({
-      id: report.id,
-      tracking_id: report.tracking_id,
-      title: report.title,
-      address: report.address,
-      created_at: report.created_at,
-      category: report.category,
-      status: report.status,
-      priority: report.priority,
-    }));
-  }, [data]);
-
   useEffect(() => {
     const handleResize = () => {
       if (!layoutRef.current) return;
-      const mobile = layoutRef.current?.offsetWidth < 720;
+      const mobile = layoutRef.current?.offsetWidth < 640;
       const wideScreen = layoutRef.current?.offsetWidth >= 900;
       setIsMobile(mobile);
       setIsWideScreen(wideScreen);
@@ -132,13 +134,19 @@ export default function ReportsPage() {
     setPage(1);
   };
 
+  const handleaPressPeek = (report: Report) => {
+    onReportDrawerOpen();
+    setSelectedReport(report);
+  };
+
   const renderCell = useCallback(
-    (report: ReportCellType, columnKey: string, isLast: boolean) => (
+    (report: Report, columnKey: string, isLast: boolean) => (
       <ReportCell
         columnKey={columnKey}
         report={report}
         isMobile={isMobile}
         isWideScreen={isWideScreen}
+        onPressPeek={() => handleaPressPeek(report)}
       />
     ),
     [isMobile, isWideScreen],
@@ -192,7 +200,7 @@ export default function ReportsPage() {
             <Table
               layout={isMobile ? "auto" : "fixed"}
               columns={columnsBasedOnScreen}
-              items={transformedReports || []}
+              items={data?.reports || []}
               isCompact
               removeWrapper={isMobile}
               hideHeader={isMobile}
@@ -226,6 +234,12 @@ export default function ReportsPage() {
         isOpen={isFilterModalOpen}
         onClose={closeModal}
         onApplyFilter={onApplyFilter}
+      />
+      <DetailDrawer
+        isMobile={isMobile}
+        isOpen={isReportDrawerOpen}
+        onOpenChange={onReportDrawerOpenChange}
+        selectedReport={selectedReport}
       />
     </Layout>
   );

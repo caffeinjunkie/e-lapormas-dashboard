@@ -63,13 +63,6 @@ export enum PriorityChipColor {
   LOW = "secondary",
 }
 
-export enum PriorityChipTextColor {
-  CRITICAL = "text-white",
-  HIGH = "text-white",
-  MID = "text-black",
-  LOW = "text-black",
-}
-
 export enum StatusChipColor {
   PENDING = "default",
   IN_PROGRESS = "warning",

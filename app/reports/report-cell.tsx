@@ -5,22 +5,20 @@ import { Chip } from "@heroui/chip";
 import { Link } from "@heroui/link";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
+import { redirect } from "next/navigation";
 
-import {
-  PriorityChipColor,
-  PriorityChipTextColor,
-  PriorityLabel,
-} from "./config";
+import { PriorityChipColor, PriorityLabel } from "./config";
 
 import { TooltipButton } from "@/components/tooltip-button";
-import { ReportCellType } from "@/types/report.types";
+import { Report } from "@/types/report.types";
 import { formatLocaleDate } from "@/utils/string";
 
 interface ReportCellProps {
   columnKey: string;
-  report: any;
+  report: Report;
   isMobile: boolean;
   isWideScreen: boolean;
+  onPressPeek: () => void;
 }
 
 export const ReportCell = ({
@@ -28,9 +26,10 @@ export const ReportCell = ({
   report,
   isMobile,
   isWideScreen,
+  onPressPeek,
 }: ReportCellProps) => {
   const t = useTranslations("ReportsPage");
-  const cellValue = report[columnKey as keyof ReportCellType];
+  const cellValue = report[columnKey as keyof Report];
   const village = report.address?.village || "";
   const district = report.address?.district || "";
   const location = village || district || "-";
@@ -45,7 +44,7 @@ export const ReportCell = ({
               <div className="flex flex-col w-full">
                 <div className="flex flex-row items-center gap-1 text-xs">
                   <Link
-                    onClick={() => console.log(report.id, "te")}
+                    onClick={() => redirect(`/reports/${report.tracking_id}`)}
                     className="text-xs hover:cursor-pointer"
                   >
                     #{report.tracking_id}
@@ -78,14 +77,9 @@ export const ReportCell = ({
                       report.priority as keyof typeof PriorityChipColor
                     ]
                   }
-                  variant="shadow"
                   size="sm"
-                  className={clsx(
-                    "min-w-full text-center rounded-md shadow-md",
-                    PriorityChipTextColor[
-                      report.priority as keyof typeof PriorityChipTextColor
-                    ],
-                  )}
+                  variant="flat"
+                  className={clsx("min-w-full text-center rounded-md")}
                 >
                   <p className="font-medium">
                     {t(
@@ -102,16 +96,16 @@ export const ReportCell = ({
               variant="ghost"
               color="primary"
               startContent={<EyeIcon className="size-4" />}
-              onPress={() => console.log(report.id)}
+              onPress={onPressPeek}
             >
-              {t("detail-tooltip-text")}
+              {t("peek-tooltip-text")}
             </Button>
           </CardFooter>
         </Card>
       ) : (
         <div>
           <Link
-            onClick={() => console.log(report.tracking_id)}
+            onClick={() => redirect(`/reports/${report.tracking_id}`)}
             className="text-xs hover:cursor-pointer"
           >
             #{report.tracking_id}
@@ -127,22 +121,21 @@ export const ReportCell = ({
     case "location":
       return <p className="text-sm">{location}</p>;
     case "created_at":
-      return <p className="text-sm">{formatLocaleDate(cellValue)}</p>;
+      return <p className="text-sm">{formatLocaleDate(report.created_at)}</p>;
     case "priority":
       return (
         <Chip
-          className={
-            PriorityChipTextColor[
-              report.priority as keyof typeof PriorityChipTextColor
-            ]
-          }
           color={
             PriorityChipColor[report.priority as keyof typeof PriorityChipColor]
           }
+          variant="flat"
           size="sm"
-          variant="shadow"
         >
-          {t(PriorityLabel[report.priority as keyof typeof PriorityLabel])}
+          <p className="font-medium">
+            {t(
+              PriorityLabel[report.priority as keyof typeof PriorityLabel],
+            ).toUpperCase()}
+          </p>
         </Chip>
       );
     case "actions":
@@ -150,14 +143,14 @@ export const ReportCell = ({
         <div className="flex flex-col items-center">
           <TooltipButton
             className="text-white"
-            onPress={() => console.log(report.id)}
+            onPress={onPressPeek}
             color="foreground"
-            content={t("detail-tooltip-text")}
+            content={t("peek-tooltip-text")}
             icon={<EyeIcon className="size-4" />}
           />
         </div>
       );
     default:
-      return cellValue;
+      return null;
   }
 };

@@ -78,13 +78,40 @@ function generatePassword(): string {
 
 const formatLocaleDate = (date: string) => {
   const format = useFormatter();
+  
   const dateTime = new Date(date);
 
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const oneWeekAgo = new Date(today);
+  oneWeekAgo.setDate(today.getDate() - 7);
+
+  const diffInDays = Math.floor((today.getTime() - dateTime.getTime()) / (1000 * 60 * 60 * 24)); // Difference in days
+  switch (diffInDays) {
+    case 0:
+      return "Today"; // If the date is today
+    case 1:
+      return "Yesterday"; // If the date is yesterday
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+      return `${diffInDays} days ago`;
+    case 7:
+      return "Last week";
+    
+  }
   return format.dateTime(dateTime, {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
+
+  // return "jancok"
+
 };
 
 export {
