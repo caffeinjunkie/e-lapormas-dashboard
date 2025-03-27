@@ -7,7 +7,7 @@ import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
-import { useTranslations } from "next-intl";
+import { useTimeZone, useTranslations } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
 
 import {
@@ -35,6 +35,7 @@ import { validateIsRequired } from "@/utils/string";
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
+  const currentTimeZone = useTimeZone();
   const { setShouldShowConfirmation, setIsRevalidated } = usePrivate();
   const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
@@ -48,7 +49,7 @@ export default function SettingsPage() {
   const [timezonesOptions, setTimezonesOptions] = useState<Timezone[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>("");
   const { isOpen, openModal, closeModal } = Modal.useModal();
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);  
 
   useEffect(() => {
     // workaround for Select Hydration error on Hero UI. Waiting for an update
@@ -75,9 +76,10 @@ export default function SettingsPage() {
   };
 
   const getAppConfig = async () => {
+    const cookieTimezone = getCookie("timezone");
     const timezones = await fetchTimezones();
     setTimezonesOptions(timezones);
-    const cookieTimezone = getCookie("timezone");
+
     const cookieOrgName = getCookie("org_name");
 
     if (cookieTimezone && cookieOrgName) {
@@ -85,11 +87,12 @@ export default function SettingsPage() {
       setSelectedTimezone(cookieTimezone);
       return;
     }
-    const { timezone, org_name } = await fetchAppConfig();
+    const appConfig = await fetchAppConfig();
+    const timezone = appConfig.timezone || currentTimeZone;
     document.cookie = `timezone=${timezone}; path=/`;
-    document.cookie = `org_name=${org_name}; path=/`;
-    setAppSettings({ timezone, org_name });
-    setSelectedTimezone(timezone !== null ? timezone : timezones[0].key);
+    document.cookie = `org_name=${appConfig.org_name}; path=/`;
+    setAppSettings({ timezone, org_name: appConfig.org_name });
+    setSelectedTimezone(timezone);
   };
 
   const getProfileAndAppConfig = async () => {
@@ -255,12 +258,13 @@ export default function SettingsPage() {
               label={t("app-settings-timezone-select-label")}
               selectedKeys={[selectedTimezone]}
               disabledKeys={[selectedTimezone]}
+              isDisabled
               items={timezonesOptions}
               placeholder={t("app-settings-timezone-placeholder-text")}
               onSelectionChange={onTimezoneSelect}
             >
               {(timezone) => (
-                <SelectItem key={timezone.key} className="outline-none">
+                <SelectItem key={timezone.zone} className="outline-none">
                   {t(`timezone-label-${timezone.key}-label`)}
                 </SelectItem>
               )}

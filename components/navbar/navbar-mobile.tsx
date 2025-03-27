@@ -9,10 +9,9 @@ import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { PropsWithChildren, useState } from "react";
 
-import { adminManagementItem, siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site";
 
 interface MobileNavbarProps {
-  isSuperAdmin: boolean;
   onNavigate: (href: string) => void;
   openModal: (href: string) => void;
   shouldShowConfirmation: boolean;
@@ -20,7 +19,6 @@ interface MobileNavbarProps {
 }
 
 export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
-  isSuperAdmin,
   openModal,
   onNavigate,
   shouldShowConfirmation,
@@ -31,11 +29,7 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const mobileMenu = [
-    ...siteConfig.menuItems,
-    ...(isSuperAdmin ? [adminManagementItem] : []),
-    ...siteConfig.settingsItems,
-  ];
+  const mobileMenu = [...siteConfig.menuItems, ...siteConfig.settingsItems];
 
   return (
     <HeroUINavbar

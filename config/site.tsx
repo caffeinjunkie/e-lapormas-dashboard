@@ -18,14 +18,6 @@ const sidebarTheme = {
   text: "#ffffff",
 };
 
-export const adminManagementItem = {
-  label: "navbar-admin-management-label",
-  href: "/admin-management",
-  Icon: (props: IconSvgProps) => (
-    <UsersIcon className={iconClassname} {...props} />
-  ),
-};
-
 const sidebarMenuItems = [
   {
     label: "navbar-dashboard-label",
@@ -55,6 +47,13 @@ const sidebarMenuItems = [
       <MegaphoneIcon className={iconClassname} {...props} />
     ),
   },
+  {
+    label: "navbar-admin-management-label",
+    href: "/admin-management",
+    Icon: (props: IconSvgProps) => (
+      <UsersIcon className={iconClassname} {...props} />
+    ),
+  },
 ];
 
 const additionalMenuItems = [
@@ -68,11 +67,9 @@ const additionalMenuItems = [
   },
 ];
 
-export const privatePaths = [
-  ...sidebarMenuItems,
-  additionalMenuItems[0],
-  adminManagementItem,
-].map((item) => item.href);
+export const privatePaths = [...sidebarMenuItems, additionalMenuItems[0]].map(
+  (item) => item.href,
+);
 
 export const siteConfig = {
   name: "E-Lapor Dashboard",

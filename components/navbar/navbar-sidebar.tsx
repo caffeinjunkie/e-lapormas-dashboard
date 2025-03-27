@@ -3,17 +3,17 @@ import { Button } from "@heroui/button";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { Skeleton } from "@heroui/skeleton";
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { PropsWithChildren, useState } from "react";
 
 import { UserAva } from "../user-ava";
 
-import { adminManagementItem, siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site";
 import { ProfileData } from "@/types/user.types";
 
 interface SidebarProps {
-  isSuperAdmin: boolean;
   openModal: (href: string) => void;
   onNavigate: (href: string) => void;
   shouldShowConfirmation: boolean;
@@ -25,17 +25,16 @@ interface SidebarProps {
 const ProfileSkeleton = () => (
   <div className="max-w-[300px] w-full flex items-center gap-3">
     <div>
-      <Skeleton className="flex rounded-full w-11 h-11" />
+      <Skeleton className="flex rounded-full w-11 h-11 animate-pulse" />
     </div>
     <div className="w-full flex flex-col gap-2">
-      <Skeleton className="h-3 w-3/5 rounded-lg" />
-      <Skeleton className="h-2 w-4/5 rounded-lg" />
+      <Skeleton className="h-3 w-3/5 rounded-lg animate-pulse" />
+      <Skeleton className="h-2 w-4/5 rounded-lg animate-pulse" />
     </div>
   </div>
 );
 
 export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
-  isSuperAdmin,
   pathname,
   user,
   onNavigate,
@@ -45,15 +44,18 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
   children,
 }) => {
   const t = useTranslations("Navbar");
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return pathname === path;
+    }
+    return pathname.includes(path);
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const { sidebarTheme, menuItems, settingsItems } = siteConfig;
-  const sidebarItems = [
-    ...menuItems,
-    ...(isSuperAdmin ? [adminManagementItem] : []),
-  ];
+  const sidebarItems = [...menuItems];
 
-  const activeIndex = sidebarItems.findIndex((item) => item.href === pathname);
+  const activeIndex = sidebarItems.findIndex((item) => isActive(item.href));
 
   return (
     <div
@@ -75,7 +77,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
               }}
             >
               <div
-                className="w-1 py-4 rounded-r-lg"
+                className="w-1 py-4 rounded-r-lg animate-appear"
                 style={{
                   backgroundColor: sidebarTheme.secondary,
                 }}
@@ -85,7 +87,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
               {sidebarItems.map(({ href, label, Icon }) => (
                 <NextLink
                   key={href}
-                  className="flex w-full space-x-2 text-sm py-3 font-semibold"
+                  className="flex w-full space-x-2 text-sm py-3 font-semibold group"
                   color="foreground"
                   href={href}
                   onClick={(e) => {
@@ -101,16 +103,23 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     style={{
                       color: sidebarTheme.text,
                     }}
-                    className={`flex items-center gap-2 py-1 pl-10 transition-colors duration-300 ease-in-out ${isActive(href) ? "opacity-100" : "opacity-50 hover:opacity-70"}`}
+                    className={clsx(
+                      "flex items-center gap-2 py-1 pl-10 transition-colors duration-300 ease-in-out",
+                      isActive(href)
+                        ? "opacity-100"
+                        : "opacity-50 group-hover:opacity-70",
+                    )}
                   >
-                    <Icon
-                      color={
-                        isActive(href)
-                          ? sidebarTheme.secondary
-                          : sidebarTheme.text
-                      }
-                    />
-                    {t(label)}
+                    <div className="">
+                      <Icon
+                        color={
+                          isActive(href)
+                            ? sidebarTheme.secondary
+                            : sidebarTheme.text
+                        }
+                      />
+                    </div>
+                    <p>{t(label)}</p>
                   </div>
                 </NextLink>
               ))}
@@ -119,9 +128,11 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
         </div>
         <div className="py-6 px-6">
           <div
-            className="py-2 px-2 rounded-full flex flex-row items-center justify-between gap-2"
+            className="py-2 px-2 rounded-full flex flex-row items-center justify-between gap-2 transition-all duration-500 ease-in-out"
             style={{
               backgroundColor: `${sidebarTheme.text}10`,
+              outline: pathname === "/settings" ? `1px solid ${sidebarTheme.secondary}bb` : "1px solid transparent",
+              boxShadow: pathname === "/settings" ? `0 0 8px 1px ${sidebarTheme.secondary}cc` : "0 0 0 1px transparent",
             }}
           >
             {isLoaded && user ? (
