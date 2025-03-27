@@ -1,4 +1,4 @@
-import { UserPlusIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
@@ -52,7 +52,9 @@ export const TopContent = ({
     .toUpperCase();
 
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-between gap-3 items-end">
+    <div
+      className={`flex flex-col bg-white ${isMobile ? "absolute top-16 pb-2 px-6 left-0 right-0 shadow-sm sm:shadow-none sm:sticky sm:top-0" : ""} lg:flex-row lg:justify-between gap-3 items-end`}
+    >
       <SearchBar
         className="w-full lg:max-w-[44%]"
         placeholder={t("search-placeholder")}
@@ -66,6 +68,9 @@ export const TopContent = ({
           items={transformedStatusOptions}
           triggerClassname="w-full lg:w-fit"
           closeOnSelect
+          buttonEndContent={
+            <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
+          }
           selectedKeys={selectedStatusFilterKeys}
           onSelectionChange={onStatusFilterChange}
         >

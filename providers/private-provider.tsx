@@ -12,6 +12,7 @@ import { createClient } from "@/utils/supabase-auth/client";
 
 interface PrivateLayoutProps {
   children: React.ReactNode;
+  locale: string;
 }
 
 const publicPaths = ["/login", "/create-password"];
@@ -23,6 +24,7 @@ const PrivateContext = createContext<
       setIsRevalidated: (value: boolean) => void;
       shouldShowConfirmation: boolean;
       setShouldShowConfirmation: (value: boolean) => void;
+      locale: string;
     }
   | undefined
 >(undefined);
@@ -35,7 +37,7 @@ export const usePrivate = () => {
   return context;
 };
 
-export function PrivateProvider({ children }: PrivateLayoutProps) {
+export function PrivateProvider({ children, locale }: PrivateLayoutProps) {
   const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
@@ -128,6 +130,7 @@ export function PrivateProvider({ children }: PrivateLayoutProps) {
         setIsRevalidated,
         shouldShowConfirmation,
         setShouldShowConfirmation,
+        locale,
       }}
     >
       {isPrivatePath && !isErrorPath && (

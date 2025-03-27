@@ -4,14 +4,18 @@ export const columns = [
   { name: "LOCATION", uid: "location", width: 100, align: "start" },
   { name: "CREATED DATE", uid: "created_at", width: 70, align: "start" },
   { name: "PRIORITY", uid: "priority", width: 65, align: "center" },
-  { name: "STATUS", uid: "status", width: 75, align: "center" },
   { name: "ACTIONS", uid: "actions", width: 50, align: "center" },
 ];
 
-export const statusOptions = [
-  { labelKey: "status-pending", id: "pending" },
-  { labelKey: "status-in-progress", id: "in_progress" },
-  { labelKey: "status-completed", id: "completed" },
+export const categoryOptions = [
+  { labelKey: "category-kebijakan-publik", id: "kebijakan-publik" },
+  { labelKey: "category-kondisi-jalan", id: "kondisi-jalan" },
+  { labelKey: "category-fasilitas-umum", id: "fasilitas-umum" },
+  { labelKey: "category-makanan-bergizi", id: "makanan-bergizi" },
+  { labelKey: "category-program-pemerintah", id: "program-pemerintah" },
+  { labelKey: "category-keamanan", id: "keamanan" },
+  { labelKey: "category-pungli", id: "pungli" },
+  { labelKey: "category-lainnya", id: "lainnya" },
 ];
 
 export const priorityOptions = [
@@ -20,6 +24,24 @@ export const priorityOptions = [
   { labelKey: "priority-mid", id: "mid" },
   { labelKey: "priority-low", id: "low" },
 ];
+
+export const sortOptions = [
+  { labelKey: "sort-newest", id: "newest" },
+  { labelKey: "sort-oldest", id: "oldest" },
+  { labelKey: "sort-higher-priority", id: "higher-priority" },
+  { labelKey: "sort-lower-priority", id: "lower-priority" },
+  { labelKey: "sort-z-to-a", id: "z-to-a" },
+  { labelKey: "sort-a-to-z", id: "a-to-z" },
+];
+
+export enum SortLabel {
+  A_TO_Z = "sort-a-to-z",
+  Z_TO_A = "sort-z-to-a",
+  NEWEST = "sort-newest",
+  OLDEST = "sort-oldest",
+  HIGHER_PRIORITY = "sort-higher-priority",
+  LOWER_PRIORITY = "sort-lower-priority",
+}
 
 export enum PriorityLabel {
   CRITICAL = "priority-critical",
@@ -34,15 +56,28 @@ export enum StatusLabel {
   COMPLETED = "status-completed",
 }
 
-export enum PriorityColor {
+export enum PriorityChipColor {
   CRITICAL = "danger",
   HIGH = "warning",
-  MID = "primary",
-  LOW = "default",
+  MID = "default",
+  LOW = "secondary",
 }
 
-export enum StatusColor {
+export enum PriorityChipTextColor {
+  CRITICAL = "text-white",
+  HIGH = "text-white",
+  MID = "text-black",
+  LOW = "text-black",
+}
+
+export enum StatusChipColor {
   PENDING = "default",
   IN_PROGRESS = "warning",
   COMPLETED = "success",
 }
+
+export const swrConfig = {
+  dedupingInterval: 60000,
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+};

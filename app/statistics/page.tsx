@@ -1,12 +1,11 @@
+import { useTranslations } from "next-intl";
+
 import { Layout } from "@/components/layout";
 import { title } from "@/components/primitives";
 
 export default function StatisticsPage() {
-  return (
-    <Layout>
-      <h1 className={title()}>Statistics</h1>
-    </Layout>
-  );
+  const t = useTranslations("StatisticsPage");
+  return <Layout title={t("title")}></Layout>;
 }
 
 StatisticsPage.displayName = "StatisticsPage";

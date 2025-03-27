@@ -3,13 +3,13 @@ import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Link } from "@heroui/link";
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
 import {
-  PriorityColor,
+  PriorityChipColor,
+  PriorityChipTextColor,
   PriorityLabel,
-  StatusColor,
-  StatusLabel,
 } from "./config";
 
 import { TooltipButton } from "@/components/tooltip-button";
@@ -31,8 +31,8 @@ export const ReportCell = ({
 }: ReportCellProps) => {
   const t = useTranslations("ReportsPage");
   const cellValue = report[columnKey as keyof ReportCellType];
-  const village = report.address.village;
-  const district = report.address.district;
+  const village = report.address?.village || "";
+  const district = report.address?.district || "";
   const location = village || district || "-";
 
   switch (columnKey) {
@@ -66,42 +66,33 @@ export const ReportCell = ({
                   <p>{formattedDate}</p>
                 </div>
               </div>
-              <div className="flex flex-row items-start gap-4  w-fit px-2 justify-end">
-                <div className="flex flex-col gap-2 items-center">
-                  <p className="text-xs">
-                    {t("table-priority-column-label").toUpperCase()}
-                  </p>
-                  <Chip
-                    color={
-                      PriorityColor[
-                        report.priority as keyof typeof PriorityColor
-                      ]
-                    }
-                    radius="sm"
-                    variant="solid"
-                    className={report.priority !== "LOW" ? "text-white" : ""}
-                  >
+              <div
+                className={`flex flex-col items-center gap-1 w-24 p-1 rounded-lg justify-end bg-default-50`}
+              >
+                <p className="text-[10px]">
+                  {t("table-priority-column-label")}
+                </p>
+                <Chip
+                  color={
+                    PriorityChipColor[
+                      report.priority as keyof typeof PriorityChipColor
+                    ]
+                  }
+                  variant="shadow"
+                  size="sm"
+                  className={clsx(
+                    "min-w-full text-center rounded-md shadow-md",
+                    PriorityChipTextColor[
+                      report.priority as keyof typeof PriorityChipTextColor
+                    ],
+                  )}
+                >
+                  <p className="font-medium">
                     {t(
-                      `${PriorityLabel[report.priority as keyof typeof PriorityLabel]}-short`,
-                    )}
-                  </Chip>
-                </div>
-                <div className="flex flex-col gap-2 items-center">
-                  <p className="text-xs">
-                    {t("table-status-column-label").toUpperCase()}
+                      `${PriorityLabel[report.priority as keyof typeof PriorityLabel]}`,
+                    ).toUpperCase()}
                   </p>
-                  <Chip
-                    color={
-                      StatusColor[report.status as keyof typeof StatusColor]
-                    }
-                    radius="sm"
-                    variant="flat"
-                  >
-                    {t(
-                      `${StatusLabel[report.status as keyof typeof StatusLabel]}-short`,
-                    )}
-                  </Chip>
-                </div>
+                </Chip>
               </div>
             </div>
           </CardBody>
@@ -140,23 +131,18 @@ export const ReportCell = ({
     case "priority":
       return (
         <Chip
-          className={report.priority !== "LOW" ? "text-white" : ""}
-          color={PriorityColor[report.priority as keyof typeof PriorityColor]}
+          className={
+            PriorityChipTextColor[
+              report.priority as keyof typeof PriorityChipTextColor
+            ]
+          }
+          color={
+            PriorityChipColor[report.priority as keyof typeof PriorityChipColor]
+          }
           size="sm"
-          variant="solid"
+          variant="shadow"
         >
           {t(PriorityLabel[report.priority as keyof typeof PriorityLabel])}
-        </Chip>
-      );
-    case "status":
-      return (
-        <Chip
-          className="border-none"
-          color={StatusColor[report.status as keyof typeof StatusColor]}
-          size="sm"
-          variant="dot"
-        >
-          {t(StatusLabel[report.status as keyof typeof StatusLabel])}
         </Chip>
       );
     case "actions":
