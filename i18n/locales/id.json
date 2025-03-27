@@ -59,7 +59,7 @@
     "table-status-column-label": "Status",
     "table-actions-column-label": "Aksi",
     "table-category-column-label": "Kategori",
-    "detail-tooltip-text": "Lihat Detail",
+    "peek-tooltip-text": "Intip",
     "status-pending": "Menunggu",
     "status-in-progress": "Dalam Proses",
     "status-completed": "Selesai",
@@ -98,7 +98,13 @@
     "reports-modal-priority-placeholder-text": "Pilih Prioritas",
     "clear-button-text": "Hapus Filter",
     "apply-button-text": "Terapkan",
-    "reports-modal-date-range-label": "Tanggal"
+    "reports-modal-date-range-label": "Tanggal",
+    "close-button-text": "Tutup",
+    "detail-button-text": "Lihat Detail"
+  },
+  "ReportDetailPage": {
+    "breadcrumb-item-report-text": "Laporan",
+    "description-text": "Deskripsi"
   },
   "StatisticsPage": {
     "title": "Statistik (Planning Stage)"
