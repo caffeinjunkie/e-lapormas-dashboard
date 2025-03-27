@@ -150,6 +150,7 @@ export default function ReportsPage() {
         searchValue={searchValue}
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
+        filterCount={filters.filter((f) => f.operator !== "lte").length}
         onPressFilterButton={openModal}
         selectedTab={tab}
         onSelectTab={onSelectTab}

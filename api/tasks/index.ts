@@ -62,7 +62,6 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
   query = query.order(sort.field, { ascending: sort.order === "asc" });
 
   const { data, count, error } = await query;
-  console.log(data, "tes");
 
   return { data, count, error };
 };

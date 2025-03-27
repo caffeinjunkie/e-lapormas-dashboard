@@ -19,6 +19,7 @@ interface TopContentProps {
   onSearchClear: () => void;
   onPressFilterButton: () => void;
   selectedTab: string;
+  filterCount: number;
   onSelectTab: (key: string) => void;
   selectedSortValue: string;
   selectedSortKeys: Set<string>;
@@ -31,6 +32,7 @@ export const TopContent = ({
   onSearchChange,
   onSearchClear,
   selectedTab,
+  filterCount,
   onSelectTab,
   onPressFilterButton,
   selectedSortValue,
@@ -72,6 +74,13 @@ export const TopContent = ({
             className="text-white w-full lg:w-fit"
             startContent={<FunnelIcon className="size-5" />}
             onPress={onPressFilterButton}
+            endContent={
+              filterCount > 0 && (
+                <div className="flex justify-center items-center rounded-full bg-white h-5 w-5 text-xs text-warning font-semibold">
+                  {filterCount}
+                </div>
+              )
+            }
           >
             {t("filter-button-text")}
           </Button>
