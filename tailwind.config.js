@@ -14,15 +14,73 @@ module.exports = {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],
       },
-      colors: {
-        secondary: "#c7ebeb",
+      keyframes: {
+        drop: {
+          "0%": {
+            transform: "translateY(-100%)",
+          },
+          "100%": {
+            transform: "translateY(0)",
+          },
+        },
+        "slide-right": {
+          "0%": {
+            transform: "translateX(-100%)",
+          },
+          "100%": {
+            transform: "translateX(0)",
+          },
+        },
+        "slide-up": {
+          "0%": {
+            transform: "translateY(1000%)",
+          },
+          "100%": {
+            transform: "translateY(0)",
+          },
+        },
+        "slide-down": {
+          "0%": {
+            transform: "translateY(0)",
+          },
+          "100%": {
+            transform: "translateY(1000%)",
+          },
+        },
+        appear: {
+          "0%": {
+            opacity: "0",
+          },
+          "50%": {
+            opacity: "0",
+          },
+          "100%": {
+            opacity: "1",
+          },
+        },
+        wiggle: {
+          "0%": {
+            transform: "scale(90%)",
+          },
+          "100%": {
+            transform: "scale(100%)",
+          },
+        },
+      },
+      animation: {
+        drop: "drop 0.2s ease-in-out",
+        "slide-right": "slide-right 0.2s ease-in-out",
+        "slide-up-1": "slide-up 0.3s ease-in-out",
+        "slide-up-2": "slide-up 0.4s ease-in-out",
+        "slide-down": "slide-down 0.3s ease-in-out",
+        appear: "appear 0.6s ease-in-out",
+        wiggle: "wiggle 0.5s ease-out",
       },
     },
   },
   darkMode: "class",
   plugins: [
     heroui(),
-    require("@tailwindcss/line-clamp"),
     function ({ addUtilities }) {
       addUtilities(
         {
