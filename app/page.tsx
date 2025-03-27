@@ -1,7 +1,10 @@
-export default function HomePage() {
-  return (
-    <section className="flex flex-col sm:ml-72 items-center justify-center gap-4 py-8 md:py-10"></section>
-  );
+import { useTranslations } from "next-intl";
+
+import { Layout } from "@/components/layout";
+
+export default function DashboardPage() {
+  const t = useTranslations("DashboardPage");
+  return <Layout title={t("title")}></Layout>;
 }
 
-HomePage.displayName = "HomePage";
+DashboardPage.displayName = "DashboardPage";
