@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { useDisclosure } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
