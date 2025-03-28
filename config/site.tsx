@@ -28,7 +28,7 @@ const sidebarMenuItems = [
   },
   {
     label: "navbar-reports-label",
-    href: "/reports",
+    href: "/reports?status=PENDING&page=1",
     Icon: (props: IconSvgProps) => (
       <DocumentTextIcon className={iconClassname} {...props} />
     ),

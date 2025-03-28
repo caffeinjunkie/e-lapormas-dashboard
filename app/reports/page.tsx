@@ -1,13 +1,14 @@
-'use client'
+"use client";
 
 import { useDisclosure } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
 import { Key } from "@react-types/shared";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
-import { useDebounce } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 import { DetailDrawer } from "./detail-drawer";
 import { FilterModal } from "./filter-modal";
@@ -15,30 +16,40 @@ import { TopContent } from "./top-content";
 
 import { FilterType } from "@/api/tasks";
 import { columns, swrConfig } from "@/app/reports/config";
-import { fetchReports } from "@/app/reports/handlers";
+import { appendParam, fetchReports } from "@/app/reports/handlers";
 import { ReportCell } from "@/app/reports/report-cell";
 import Error from "@/components/error";
 import { Layout } from "@/components/layout";
 import { Modal } from "@/components/modal";
-import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { Table } from "@/components/table";
 import { Report } from "@/types/report.types";
 import { calculateReportRow } from "@/utils/screen";
 
 export default function ReportsPage() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchQuery = searchParams.get("q");
+  const tab = searchParams.get("status") || "PENDING";
+  const page = Number(searchParams.get("page")) || 1;
+  const sortBy = searchParams.get("sortBy") || "newest";
+  const queryParams = {
+    q: searchQuery || "",
+    status: tab as "PENDING" | "IN_PROGRESS" | "COMPLETED",
+    page: page.toString(),
+    sortBy
+  };
   const t = useTranslations("ReportsPage");
   const layoutRef = useRef<HTMLDivElement>(null);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [isMobile, setIsMobile] = useState(false);
   const [isWideScreen, setIsWideScreen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [searchValue, setSearchValue] = useState("");
   const { isOpen: isFilterModalOpen, openModal, closeModal } = Modal.useModal();
-  const [tab, setTab] = useState<string>("PENDING");
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    const param = appendParam({ ...queryParams, q: value, page: "1" });
+    router.replace(`${pathname}?${param}`);
+  }, 500);
   const [filters, setFilters] = useState<FilterType[]>([]);
-  const { selected: selectedSortKeys, setSelected: setSelectedSortKeys } =
-    SingleSelectDropdown.useDropdown(new Set(["newest"]));
-  const [debouncedSearchQuery] = useDebounce(searchValue, 500);
   const {
     isOpen: isReportDrawerOpen,
     onOpenChange: onReportDrawerOpenChange,
@@ -46,34 +57,27 @@ export default function ReportsPage() {
   } = useDisclosure();
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
-  const selectedSortValue = useMemo(
-    () => Array.from(selectedSortKeys).join(", ").replace(/_/g, ""),
-    [selectedSortKeys],
-  );
-  let pages = 0;
   const { data, error, isLoading, mutate } = useSWR(
     [
       "reports",
       tab,
       page,
       rowsPerPage,
-      selectedSortValue,
+      sortBy,
       filters,
-      debouncedSearchQuery,
+      searchQuery,
     ],
     () =>
       fetchReports({
         offset: (page - 1) * rowsPerPage,
         limit: rowsPerPage,
-        status: tab,
-        searchValue: debouncedSearchQuery,
-        sortBy: selectedSortValue,
+        status: tab as string,
+        searchValue: searchQuery || "",
+        sortBy,
         filters,
       }),
     swrConfig,
   );
-
-  if (data?.count) pages = Math.ceil(data.count / rowsPerPage);
 
   const columnsBasedOnScreen = useMemo(() => {
     return isMobile
@@ -102,28 +106,36 @@ export default function ReportsPage() {
   }, []);
 
   const onSortChange = (keys: Set<string>) => {
-    setSelectedSortKeys(keys);
-    setPage(1);
+    const sortValue = Array.from(keys).join(", ").replace(/_/g, "");
+    const param = appendParam({ ...queryParams, sortBy: sortValue });
+    router.replace(`${pathname}?${param}`);
   };
 
   const onSearchChange = (value: string) => {
-    setSearchValue(value);
+    debouncedSearch(value);
   };
 
   const onClear = () => {
-    setSearchValue("");
-    setPage(1);
+    const param = appendParam({ ...queryParams, q: "" });
+    router.replace(`${pathname}?${param}`);
   };
 
   const onApplyFilter = (constructedFilters: FilterType[]) => {
     setFilters(constructedFilters);
-    setSearchValue("");
-    setPage(1);
   };
 
   const onSelectTab = (key: Key) => {
-    setTab(key as string);
-    setPage(1);
+    const param = appendParam({
+      ...queryParams,
+      status: key as string,
+      page: "1",
+    });
+    router.replace(`${pathname}?${param}`);
+  };
+
+  const onPageChange = (page: number) => {
+    const param = appendParam({ ...queryParams, page: page.toString() });
+    router.replace(`${pathname}?${param}`);
   };
 
   const handleaPressPeek = (report: Report) => {
@@ -147,25 +159,22 @@ export default function ReportsPage() {
   const topContent = useMemo(() => {
     return (
       <TopContent
-        searchValue={searchValue}
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
         filterCount={filters.filter((f) => f.operator !== "lte").length}
         onPressFilterButton={openModal}
-        selectedTab={tab}
+        selectedTab={tab as string}
         onSelectTab={onSelectTab}
-        selectedSortValue={selectedSortValue}
-        selectedSortKeys={selectedSortKeys}
+        selectedSortValue={sortBy}
+        selectedSortKeys={new Set([sortBy])}
         onSortChange={onSortChange}
         isMobile={isMobile}
       />
     );
   }, [
-    searchValue,
     onSearchChange,
     onClear,
-    selectedSortValue,
-    selectedSortKeys,
+    sortBy,
     onSortChange,
     isMobile,
   ]);
@@ -201,7 +210,7 @@ export default function ReportsPage() {
               translationKey="ReportsPage"
             />
           </div>
-          {pages > 0 && (
+          {data?.count! > 0 && (
             <div
               className={clsx(
                 "flex w-full justify-center pt-4 md:pt-2 pb-4 bg-white",
@@ -215,8 +224,8 @@ export default function ReportsPage() {
                 showShadow
                 color="primary"
                 page={page}
-                total={pages}
-                onChange={setPage}
+                total={Math.ceil(data?.count! / rowsPerPage)}
+                onChange={onPageChange}
               />
             </div>
           )}

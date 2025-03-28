@@ -48,6 +48,9 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
     if (path === "/") {
       return pathname === path;
     }
+    if (path.includes("/reports")) {
+      return pathname.includes("/reports");
+    }
     return pathname.includes(path);
   };
 

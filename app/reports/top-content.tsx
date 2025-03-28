@@ -14,7 +14,6 @@ import { SearchBar } from "@/components/search-bar";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 
 interface TopContentProps {
-  searchValue: string;
   onSearchChange: (value: string) => void;
   onSearchClear: () => void;
   onPressFilterButton: () => void;
@@ -28,7 +27,6 @@ interface TopContentProps {
 }
 
 export const TopContent = ({
-  searchValue,
   onSearchChange,
   onSearchClear,
   selectedTab,
@@ -62,7 +60,6 @@ export const TopContent = ({
         <SearchBar
           className="w-full lg:max-w-[50%]"
           placeholder={t("search-placeholder")}
-          value={searchValue}
           onClear={onSearchClear}
           onValueChange={onSearchChange}
         />

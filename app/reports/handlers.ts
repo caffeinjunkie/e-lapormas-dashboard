@@ -49,3 +49,15 @@ export const fetchReports = async ({
   });
   return { reports: data, count, error };
 };
+
+export const appendParam = (params: Record<string, string>) => {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      searchParams.append(key, value);
+    } else {
+      searchParams.delete(key);
+    }
+  });
+  return searchParams.toString();
+};
