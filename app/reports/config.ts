@@ -43,6 +43,12 @@ export enum SortLabel {
   LOWER_PRIORITY = "sort-lower-priority",
 }
 
+export enum StatusEnum {
+  PENDING = "PENDING",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+}
+
 export enum PriorityLabel {
   CRITICAL = "priority-critical",
   HIGH = "priority-high",

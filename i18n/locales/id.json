@@ -59,7 +59,7 @@
     "table-status-column-label": "Status",
     "table-actions-column-label": "Aksi",
     "table-category-column-label": "Kategori",
-    "peek-tooltip-text": "Intip",
+    "peek-tooltip-text": "Tinjau Laporan",
     "status-pending": "Menunggu",
     "status-in-progress": "Dalam Proses",
     "status-completed": "Selesai",
@@ -84,8 +84,8 @@
     "category-lainnya": "Lainnya",
     "search-placeholder": "Cari laporan...",
     "sort-label": "Urutkan",
-    "sort-newest": "Terbaru",
-    "sort-oldest": "Terlama",
+    "sort-newest": "Paling Baru",
+    "sort-oldest": "Paling Lama",
     "sort-a-to-z": "A-Z",
     "sort-z-to-a": "Z-A",
     "sort-higher-priority": "Prioritas Tinggi",
@@ -100,11 +100,13 @@
     "apply-button-text": "Terapkan",
     "reports-modal-date-range-label": "Tanggal",
     "close-button-text": "Tutup",
-    "detail-button-text": "Lihat Detail"
-  },
-  "ReportDetailPage": {
-    "breadcrumb-item-report-text": "Laporan",
-    "description-text": "Deskripsi"
+    "detail-button-text": "Lihat Detail",
+    "description-text": "Deskripsi",
+    "follow-up-questions-text": "Pertanyaan Lanjutan",
+    "follow-up-questions-q-text": "Tanya:",
+    "follow-up-questions-a-text": "Jawab:",
+    "accept-button-text": "Terima Laporan",
+    "more-button-text": "Selengkapnya"
   },
   "StatisticsPage": {
     "title": "Statistik (Planning Stage)"
@@ -241,5 +243,11 @@
   },
   "ErrorComponent": {
     "try-again-button-text": "Coba lagi"
+  },
+  "Date": {
+    "today": "Hari Ini",
+    "yesterday": "Kemarin",
+    "last-week": "Minggu Lalu",
+    "days-ago": "{days} hari yang lalu"
   }
 }

@@ -49,10 +49,9 @@ export default function SettingsPage() {
   const [timezonesOptions, setTimezonesOptions] = useState<Timezone[]>([]);
   const [selectedTimezone, setSelectedTimezone] = useState<string>("");
   const { isOpen, openModal, closeModal } = Modal.useModal();
-  const [files, setFiles] = useState<File[]>([]);  
+  const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
-    // workaround for Select Hydration error on Hero UI. Waiting for an update
     setIsMounted(true);
   }, []);
 

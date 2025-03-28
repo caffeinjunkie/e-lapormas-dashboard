@@ -1,4 +1,4 @@
-import { useFormatter } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 
 const validateIsRequired = (
   t: (key: string) => string,
@@ -76,11 +76,20 @@ function generatePassword(): string {
   return password;
 }
 
-const formatLocaleDate = (date: string) => {
-  const format = useFormatter();
-  
+const formatLocaleDate = (date: string, format: "short" | "long" = "short") => {
+  const t = useTranslations("Date");
+  const formatter = useFormatter();
   const dateTime = new Date(date);
 
+  if (format === "long") {
+    return formatter.dateTime(dateTime, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    });
+  }
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
@@ -88,30 +97,29 @@ const formatLocaleDate = (date: string) => {
   const oneWeekAgo = new Date(today);
   oneWeekAgo.setDate(today.getDate() - 7);
 
-  const diffInDays = Math.floor((today.getTime() - dateTime.getTime()) / (1000 * 60 * 60 * 24)); // Difference in days
+  const diffInDays = Math.floor(
+    (today.getTime() - dateTime.getTime()) / (1000 * 60 * 60 * 24),
+  );
   switch (diffInDays) {
     case 0:
-      return "Today"; // If the date is today
+      return t("today");
     case 1:
-      return "Yesterday"; // If the date is yesterday
+      return t("yesterday");
     case 2:
     case 3:
     case 4:
     case 5:
     case 6:
-      return `${diffInDays} days ago`;
+      return t("days-ago", { days: diffInDays });
     case 7:
-      return "Last week";
-    
+      return t("last-week");
+    default:
+      return formatter.dateTime(dateTime, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
   }
-  return format.dateTime(dateTime, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
-  // return "jancok"
-
 };
 
 export {

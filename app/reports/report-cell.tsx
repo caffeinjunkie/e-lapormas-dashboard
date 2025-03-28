@@ -5,7 +5,6 @@ import { Chip } from "@heroui/chip";
 import { Link } from "@heroui/link";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { redirect } from "next/navigation";
 
 import { PriorityChipColor, PriorityLabel } from "./config";
 
@@ -44,7 +43,7 @@ export const ReportCell = ({
               <div className="flex flex-col w-full">
                 <div className="flex flex-row items-center gap-1 text-xs">
                   <Link
-                    onClick={() => redirect(`/reports/${report.tracking_id}`)}
+                    href={`/reports/${report.tracking_id}`}
                     className="text-xs hover:cursor-pointer"
                   >
                     #{report.tracking_id}
@@ -105,7 +104,7 @@ export const ReportCell = ({
       ) : (
         <div>
           <Link
-            onClick={() => redirect(`/reports/${report.tracking_id}`)}
+            href={`/reports/${report.tracking_id}`}
             className="text-xs hover:cursor-pointer"
           >
             #{report.tracking_id}

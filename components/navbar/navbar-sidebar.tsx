@@ -131,8 +131,14 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
             className="py-2 px-2 rounded-full flex flex-row items-center justify-between gap-2 transition-all duration-500 ease-in-out"
             style={{
               backgroundColor: `${sidebarTheme.text}10`,
-              outline: pathname === "/settings" ? `1px solid ${sidebarTheme.secondary}bb` : "1px solid transparent",
-              boxShadow: pathname === "/settings" ? `0 0 8px 1px ${sidebarTheme.secondary}cc` : "0 0 0 1px transparent",
+              outline:
+                pathname === "/settings"
+                  ? `1px solid ${sidebarTheme.secondary}bb`
+                  : "1px solid transparent",
+              boxShadow:
+                pathname === "/settings"
+                  ? `0 0 8px 1px ${sidebarTheme.secondary}cc`
+                  : "0 0 0 1px transparent",
             }}
           >
             {isLoaded && user ? (

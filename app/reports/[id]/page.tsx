@@ -6,11 +6,12 @@ import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
 import { Layout } from "@/components/layout";
-import { subtitle, title } from "@/components/primitives";
+import { title } from "@/components/primitives";
 
 export default function ReportDetailPage() {
-  const t = useTranslations("ReportDetailPage");
+  const t = useTranslations("ReportsPage");
   const { id } = useParams();
+  const isOnLargeDevice = window.matchMedia("(min-width: 640px)").matches;
 
   const mockData = {
     id: "76a4293e-e926-434c-b788-ee0ba7fd7f87",
@@ -45,18 +46,16 @@ export default function ReportDetailPage() {
           size="md"
           className="animate-slide-up-1"
           color="primary"
-          variant="solid"
+          variant={isOnLargeDevice ? "solid" : "light"}
         >
-          <BreadcrumbItem href="/reports">
-            {t("breadcrumb-item-report-text")}
-          </BreadcrumbItem>
+          <BreadcrumbItem href="/reports">{t("title")}</BreadcrumbItem>
           <BreadcrumbItem>{id}</BreadcrumbItem>
         </Breadcrumbs>
       }
     >
       <div className="flex flex-col gap-4">
         <h1 className={clsx(title({ size: "xs" }))}>{mockData.title}</h1>
-        <div>
+        <div className="flex flex-col gap-1 w-full bg-default-500">
           <p className="text-xs font-bold text-default-500">
             {t("description-text")}
           </p>

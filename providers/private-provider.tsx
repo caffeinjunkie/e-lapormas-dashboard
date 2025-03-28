@@ -49,7 +49,7 @@ export function PrivateProvider({ children, locale }: PrivateLayoutProps) {
 
   const isPrivatePath =
     [...privatePaths, "/admin-management/unauthorized"].includes(pathname) ||
-    pathname.includes("/reports/");
+    pathname.includes("/reports");
   const isPublicPath = publicPaths.includes(pathname);
   const isErrorPath = pathname.includes("/error");
 
