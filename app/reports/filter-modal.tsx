@@ -4,22 +4,27 @@ import { DateRangePicker } from "@heroui/date-picker";
 import { Form } from "@heroui/form";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Select, SelectItem } from "@heroui/select";
-import { CalendarDateTime, ZonedDateTime } from "@internationalized/date";
+import {
+  CalendarDateTime,
+  ZonedDateTime,
+  parseDate,
+} from "@internationalized/date";
 import { I18nProvider } from "@react-aria/i18n";
 import { RangeValue } from "@react-types/shared";
 import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
 
 import { categoryOptions, priorityOptions } from "./config";
+import { appendParam } from "./handlers";
 
-import { FilterType } from "@/api/tasks";
 import { Modal, ModalButtonProps } from "@/components/modal";
 import { usePrivate } from "@/providers/private-provider";
 
 interface FilterModalProps {
   onClose: () => void;
   isOpen: boolean;
-  onApplyFilter: (filters: FilterType[]) => void;
+  onApplyFilter: (filterPrams: string) => void;
+  queryParams: Record<string, string | number | string[] | undefined>;
 }
 
 interface SelectItem {
@@ -30,17 +35,27 @@ interface SelectItem {
 export const FilterModal = ({
   isOpen,
   onClose,
+  queryParams,
   onApplyFilter,
 }: FilterModalProps) => {
   const [selectedCategory, setSelectedCategory] = useState<Set<string>>(
-    new Set(),
+    new Set(queryParams.category?.toString().split(",") || []),
   );
   const [selectedPriority, setSelectedPriority] = useState<Set<string>>(
-    new Set(),
+    new Set(queryParams.priority?.toString().split(",") || []),
   );
+  const startDate = queryParams.startDate;
+  const endDate = queryParams.endDate;
   const [dateRange, setDateRange] = useState<RangeValue<
     CalendarDate | CalendarDateTime | ZonedDateTime
-  > | null>(null);
+  > | null>(
+    startDate && endDate
+      ? {
+          start: parseDate(startDate as string),
+          end: parseDate(endDate as string),
+        }
+      : null,
+  );
   const { locale } = usePrivate();
 
   const onClear = () => {
@@ -53,34 +68,15 @@ export const FilterModal = ({
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const filters: FilterType[] = [];
-    if (selectedCategory.size > 0) {
-      filters.push({
-        field: "category",
-        operator: "in",
-        value: Array.from(selectedCategory),
-      });
-    }
-    if (selectedPriority.size > 0) {
-      filters.push({
-        field: "priority",
-        operator: "in",
-        value: Array.from(selectedPriority).map((item) => item.toUpperCase()),
-      });
-    }
-    if (dateRange) {
-      filters.push({
-        field: "created_at",
-        operator: "gte",
-        value: dateRange["start"].toString(),
-      });
-      filters.push({
-        field: "created_at",
-        operator: "lte",
-        value: dateRange["end"].toString(),
-      });
-    }
-    onApplyFilter(filters);
+    const filterParams = appendParam({
+      ...queryParams,
+      page: "1",
+      category: Array.from(selectedCategory).join(","),
+      priority: Array.from(selectedPriority).join(","),
+      startDate: dateRange?.["start"].toString() || "",
+      endDate: dateRange?.["end"].toString() || "",
+    });
+    onApplyFilter(filterParams);
     onClose();
   };
 

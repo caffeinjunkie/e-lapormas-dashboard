@@ -6,7 +6,12 @@ interface GetReportsOptions {
   search?: string;
   status?: string;
   searchValue?: string;
-  filters?: FilterType[];
+  filters?: {
+    category?: string;
+    priority?: string;
+    startDate?: string;
+    endDate?: string;
+  };
   sortBy: string;
 }
 
@@ -35,9 +40,25 @@ export const fetchReports = async ({
   status = "PENDING",
   sortBy,
   searchValue = "",
-  filters = [],
+  filters = {},
 }: GetReportsOptions) => {
   const sort = getSortValue(sortBy);
+  const constructedFilters = Object.entries(filters)
+    .map(([field, value]) => {
+      if (value) {
+        return {
+          field,
+          value:
+            field === "startDate" || field === "endDate"
+              ? value
+              : value
+                  .split(",")
+                  .map((v) => (field === "priority" ? v.toUpperCase() : v)),
+        };
+      }
+      return null;
+    })
+    .filter(Boolean) as FilterType[];
 
   const { data, count, error } = await fetchTasks({
     offset,
@@ -45,7 +66,7 @@ export const fetchReports = async ({
     searchValue,
     status,
     sort: sort as SortType,
-    filters,
+    filters: constructedFilters as FilterType[],
   });
   return { reports: data, count, error };
 };

@@ -18,7 +18,7 @@ interface TopContentProps {
   onSearchClear: () => void;
   onPressFilterButton: () => void;
   selectedTab: string;
-  filterCount: number;
+  filters: string[];
   onSelectTab: (key: string) => void;
   selectedSortValue: string;
   selectedSortKeys: Set<string>;
@@ -30,7 +30,7 @@ export const TopContent = ({
   onSearchChange,
   onSearchClear,
   selectedTab,
-  filterCount,
+  filters,
   onSelectTab,
   onPressFilterButton,
   selectedSortValue,
@@ -39,6 +39,7 @@ export const TopContent = ({
   isMobile,
 }: TopContentProps) => {
   const t = useTranslations("ReportsPage");
+  const filterCount = filters.filter((f) => f !== "").length;
 
   const transformedSortOptions = sortOptions.map(({ id, labelKey }) => ({
     id,

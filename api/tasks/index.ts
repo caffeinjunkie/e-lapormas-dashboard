@@ -6,8 +6,7 @@ export type SortType = {
 };
 
 export type FilterType = {
-  field: "category" | "priority" | "created_at";
-  operator: "gte" | "lte" | "in";
+  field: "category" | "priority" | "startDate" | "endDate";
   value: string[] | string;
 };
 
@@ -44,17 +43,20 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
   // .or(`progress.cs.${JSON.stringify([{updated_by: 'John Doe'}])}`);
 
   filters.forEach((filter) => {
-    const { field, operator, value } = filter;
+    const { field, value } = filter;
 
-    switch (operator) {
-      case "in":
+    switch (field) {
+      case "category":
         query = query.in(field, value as string[]);
         break;
-      case "gte":
-        query = query.gte(field, value);
+      case "priority":
+        query = query.in(field, value as string[]);
         break;
-      case "lte":
-        query = query.lte(field, value);
+      case "startDate":
+        query = query.gte("created_at", value);
+        break;
+      case "endDate":
+        query = query.lte("created_at", value);
         break;
     }
   });

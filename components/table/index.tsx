@@ -20,11 +20,7 @@ interface AdminTableProps extends TableProps {
   items: any[];
   isLoading?: boolean;
   translationKey: string;
-  renderCell: (
-    item: any,
-    columnKey: string,
-    isLast: boolean,
-  ) => React.ReactNode;
+  renderCell: (item: any, columnKey: string) => React.ReactNode;
   bottomContent?: React.ReactNode;
   topContent?: React.ReactNode;
 }
@@ -73,13 +69,7 @@ export const Table = ({
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>
-                {renderCell(
-                  item,
-                  columnKey as string,
-                  item.id === items[items.length - 1].id,
-                )}
-              </TableCell>
+              <TableCell>{renderCell(item, columnKey as string)}</TableCell>
             )}
           </TableRow>
         )}

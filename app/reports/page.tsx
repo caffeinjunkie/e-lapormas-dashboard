@@ -14,7 +14,6 @@ import { DetailDrawer } from "./detail-drawer";
 import { FilterModal } from "./filter-modal";
 import { TopContent } from "./top-content";
 
-import { FilterType } from "@/api/tasks";
 import { columns, swrConfig } from "@/app/reports/config";
 import { appendParam, fetchReports } from "@/app/reports/handlers";
 import { ReportCell } from "@/app/reports/report-cell";
@@ -31,13 +30,21 @@ export default function ReportsPage() {
   const router = useRouter();
   const searchQuery = searchParams.get("q");
   const tab = searchParams.get("status") || "PENDING";
+  const category = searchParams.get("category") || "";
+  const priority = searchParams.get("priority") || "";
+  const startDate = searchParams.get("startDate") || "";
+  const endDate = searchParams.get("endDate") || "";
   const page = Number(searchParams.get("page")) || 1;
   const sortBy = searchParams.get("sortBy") || "newest";
   const queryParams = {
     q: searchQuery || "",
     status: tab as "PENDING" | "IN_PROGRESS" | "COMPLETED",
     page: page.toString(),
-    sortBy
+    category,
+    priority,
+    startDate,
+    endDate,
+    sortBy,
   };
   const t = useTranslations("ReportsPage");
   const layoutRef = useRef<HTMLDivElement>(null);
@@ -49,7 +56,6 @@ export default function ReportsPage() {
     const param = appendParam({ ...queryParams, q: value, page: "1" });
     router.replace(`${pathname}?${param}`);
   }, 500);
-  const [filters, setFilters] = useState<FilterType[]>([]);
   const {
     isOpen: isReportDrawerOpen,
     onOpenChange: onReportDrawerOpenChange,
@@ -64,7 +70,10 @@ export default function ReportsPage() {
       page,
       rowsPerPage,
       sortBy,
-      filters,
+      category,
+      priority,
+      startDate,
+      endDate,
       searchQuery,
     ],
     () =>
@@ -74,7 +83,12 @@ export default function ReportsPage() {
         status: tab as string,
         searchValue: searchQuery || "",
         sortBy,
-        filters,
+        filters: {
+          category,
+          priority,
+          startDate,
+          endDate,
+        },
       }),
     swrConfig,
   );
@@ -120,8 +134,8 @@ export default function ReportsPage() {
     router.replace(`${pathname}?${param}`);
   };
 
-  const onApplyFilter = (constructedFilters: FilterType[]) => {
-    setFilters(constructedFilters);
+  const onApplyFilter = (filterParams: string) => {
+    router.replace(`${pathname}?${filterParams}`);
   };
 
   const onSelectTab = (key: Key) => {
@@ -144,7 +158,7 @@ export default function ReportsPage() {
   };
 
   const renderCell = useCallback(
-    (report: Report, columnKey: string, isLast: boolean) => (
+    (report: Report, columnKey: string) => (
       <ReportCell
         columnKey={columnKey}
         report={report}
@@ -161,7 +175,7 @@ export default function ReportsPage() {
       <TopContent
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
-        filterCount={filters.filter((f) => f.operator !== "lte").length}
+        filters={[category, priority, startDate]}
         onPressFilterButton={openModal}
         selectedTab={tab as string}
         onSelectTab={onSelectTab}
@@ -171,13 +185,7 @@ export default function ReportsPage() {
         isMobile={isMobile}
       />
     );
-  }, [
-    onSearchChange,
-    onClear,
-    sortBy,
-    onSortChange,
-    isMobile,
-  ]);
+  }, [onSearchChange, onClear, sortBy, onSortChange, isMobile]);
 
   return (
     <Layout
@@ -234,6 +242,7 @@ export default function ReportsPage() {
       <FilterModal
         isOpen={isFilterModalOpen}
         onClose={closeModal}
+        queryParams={queryParams}
         onApplyFilter={onApplyFilter}
       />
       <DetailDrawer

@@ -3,13 +3,14 @@
 import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { Layout } from "@/components/layout";
 import { title } from "@/components/primitives";
 
 export default function ReportDetailPage() {
   const t = useTranslations("ReportsPage");
+  const router = useRouter();
   const { id } = useParams();
   const isOnLargeDevice = window.matchMedia("(min-width: 640px)").matches;
 
@@ -48,7 +49,9 @@ export default function ReportDetailPage() {
           color="primary"
           variant={isOnLargeDevice ? "solid" : "light"}
         >
-          <BreadcrumbItem href="/reports">{t("title")}</BreadcrumbItem>
+          <BreadcrumbItem onClick={() => router.back()}>
+            {t("title")}
+          </BreadcrumbItem>
           <BreadcrumbItem>{id}</BreadcrumbItem>
         </Breadcrumbs>
       }
