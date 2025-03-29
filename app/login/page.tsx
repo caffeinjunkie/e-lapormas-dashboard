@@ -11,6 +11,7 @@ import { FormEvent, useState } from "react";
 import { handleLogin, handleResetPassword } from "@/app/login/handlers";
 import { LoginForm } from "@/app/login/login-form";
 import { ResetPasswordForm } from "@/app/login/reset-password-form";
+import { Logo } from "@/components/icons";
 import { Modal } from "@/components/modal";
 import { siteConfig } from "@/config/site";
 import { buildFormData } from "@/utils/form";
@@ -35,7 +36,7 @@ export default function LoginPage() {
     message: "",
   });
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
-  const { logoSrc, backgroundImageSrcs } = siteConfig;
+  const { backgroundImageSrcs } = siteConfig;
 
   const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,20 +93,12 @@ export default function LoginPage() {
       />
       <div className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen">
         <div className="w-full flex justify-center items-center gap-1">
-          <NextImage
-            src={logoSrc}
-            alt="Logo"
-            className="object-contain"
-            width={80}
-            height={80}
-          />
-          <div className="flex flex-col text-sm text-black">
-            <p>{t("title-1")}</p>
-            <p>{t("title-2")}</p>
-            <p>{siteConfig.organizationName}</p>
-          </div>
+          <Logo fill="black" />
         </div>
-        <Card className="max-w-md w-full min-w-[320px] overflow-scroll">
+        <Card
+          isBlurred
+          className="max-w-md w-full min-w-[320px] overflow-scroll"
+        >
           <CardBody
             className="overflow-hidden transition-max-h transition-min-h duration-500 linear"
             style={{

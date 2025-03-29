@@ -8,6 +8,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
+import { Card } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import {
   Drawer,
@@ -22,9 +23,9 @@ import { useTranslations } from "next-intl";
 import NextImage from "next/image";
 import Link from "next/link";
 
-import { Description } from "./[id]/description";
-import { Info } from "./[id]/info";
 import { PriorityChipColor, StatusChipColor, StatusEnum } from "./config";
+import { Description } from "./description";
+import { Info } from "./info";
 
 import { title } from "@/components/primitives";
 import { Report } from "@/types/report.types";
@@ -73,6 +74,10 @@ export const DetailDrawer = ({
       onOpenChange={onOpenChange}
       title={selectedReport?.title}
       className="rounded-t-lg sm:top-2 sm:bottom-2 sm:right-2 sm:rounded-xl"
+      classNames={{
+        header: "p-0",
+        closeButton: "z-20 text-white hover:bg-white/20 active:bg-white/30",
+      }}
       radius="none"
       size={isOnLargeDevice ? "md" : "3xl"}
       hideCloseButton={isOnLargeDevice}
@@ -83,7 +88,7 @@ export const DetailDrawer = ({
           <>
             <DrawerHeader
               className={clsx(
-                "flex flex-col gap-1",
+                "flex flex-col gap-1 overflow-hidden",
                 isOnLargeDevice && "pt-14",
               )}
             >
@@ -102,7 +107,25 @@ export const DetailDrawer = ({
                   />
                 </div>
               )}
-              <h1 className={title({ size: "xs" })}>{selectedReport?.title}</h1>
+              <Card
+                className="block sm:hidden data-[pressed=true]:scale-[1.05]"
+                isPressable
+                radius="none"
+              >
+                <Image
+                  src="https://fastly.picsum.photos/id/1039/200/200.jpg?hmac=VpGJWDIq64ZdzDD5NAREaY7l5gX14vU5NBH84b5Fj-o"
+                  alt={selectedReport?.title || ""}
+                  as={NextImage}
+                  fallbackSrc="https://app.requestly.io/delay"
+                  width={800}
+                  height={200}
+                  radius="none"
+                  className="w-full h-48 object-cover"
+                />
+              </Card>
+              <h1 className={clsx(title({ size: "xs" }), "px-6 pt-4 sm:pt-0")}>
+                {selectedReport?.title}
+              </h1>
             </DrawerHeader>
             <DrawerBody className="gap-3">
               <div className="flex flex-wrap space-x-0 gap-x-4 gap-y-2 sm:flex-col sm:gap-y-5 pb-3 pt-1 sm:pt-2">
@@ -167,7 +190,7 @@ export const DetailDrawer = ({
                   <Info
                     Icon={MapPinIcon}
                     label="address"
-                    className="items-start"
+                    className="items-center sm:items-start"
                   >
                     <span className="text-xs flex flex-wrap gap-x-1 text-default-700">
                       <p>{fullAddress}</p>
@@ -188,8 +211,11 @@ export const DetailDrawer = ({
                 followUpQuestions={followUpQuestions}
               />
               {/* place holder image for now */}
-              <div className="flex flex-row justify-between w-full border-1 border-default-200 p-2 rounded-xl">
-                <div className="flex flex-row items-center gap-3">
+              <Card
+                isPressable
+                className="hidden sm:flex flex-row justify-between w-full p-2 shadow-none border-1 border-default-200 rounded-xl"
+              >
+                <div className="flex flex-row items-center justify-start gap-3">
                   <Image
                     src="https://fastly.picsum.photos/id/1039/200/200.jpg?hmac=VpGJWDIq64ZdzDD5NAREaY7l5gX14vU5NBH84b5Fj-o"
                     alt={selectedReport?.title || ""}
@@ -200,14 +226,14 @@ export const DetailDrawer = ({
                     className="w-24 h-16 sm:h-12 rounded-md object-cover"
                   />
                   <div className="flex flex-col gap-1 text-xs">
-                    <p className="font-semibold line-clamp-1">
+                    <p className="font-semibold text-start line-clamp-1">
                       Sometiinsf faoijm asfoijsakf ,talj jnaodk casuu bgsa.jpg
                     </p>
-                    <p>1.4MB</p>
+                    <p className="text-start">1.4MB</p>
                   </div>
                 </div>
                 <PaperClipIcon className="w-4 h-4 stroke-2 text-default-500" />
-              </div>
+              </Card>
             </DrawerBody>
             <DrawerFooter>
               <Button
