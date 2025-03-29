@@ -68,7 +68,7 @@ export const ReportCell = ({
                 className={`flex flex-col items-center gap-1 w-24 p-1 rounded-lg justify-end bg-default-50`}
               >
                 <p className="text-[10px]">
-                  {t("table-priority-column-label")}
+                  {t("table-priority-column-label").toUpperCase()}
                 </p>
                 <Chip
                   color={
@@ -77,14 +77,17 @@ export const ReportCell = ({
                     ]
                   }
                   size="sm"
+                  classNames={{
+                    content: "font-semibold",
+                  }}
                   variant="flat"
                   className={clsx("min-w-full text-center rounded-md")}
                 >
-                  <p className="font-medium">
-                    {t(
-                      `${PriorityLabel[report.priority as keyof typeof PriorityLabel]}`,
-                    ).toUpperCase()}
-                  </p>
+                  {t(
+                    PriorityLabel[
+                      report.priority as keyof typeof PriorityLabel
+                    ],
+                  )}
                 </Chip>
               </div>
             </div>
@@ -129,12 +132,11 @@ export const ReportCell = ({
           }
           variant="flat"
           size="sm"
+          classNames={{
+            content: "font-semibold",
+          }}
         >
-          <p className="font-medium">
-            {t(
-              PriorityLabel[report.priority as keyof typeof PriorityLabel],
-            ).toUpperCase()}
-          </p>
+          {t(PriorityLabel[report.priority as keyof typeof PriorityLabel])}
         </Chip>
       );
     case "actions":

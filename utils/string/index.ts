@@ -1,4 +1,4 @@
-import { useFormatter, useTranslations } from "next-intl";
+import { useFormatter } from "next-intl";
 
 const validateIsRequired = (
   t: (key: string) => string,
@@ -77,17 +77,13 @@ function generatePassword(): string {
 }
 
 const formatLocaleDate = (date: string, format: "short" | "long" = "short") => {
-  const t = useTranslations("Date");
   const formatter = useFormatter();
   const dateTime = new Date(date);
 
   if (format === "long") {
     return formatter.dateTime(dateTime, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
+      dateStyle: "long",
+      timeStyle: "short",
     });
   }
   const today = new Date();
@@ -100,26 +96,14 @@ const formatLocaleDate = (date: string, format: "short" | "long" = "short") => {
   const diffInDays = Math.floor(
     (today.getTime() - dateTime.getTime()) / (1000 * 60 * 60 * 24),
   );
-  switch (diffInDays) {
-    case 0:
-      return t("today");
-    case 1:
-      return t("yesterday");
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-      return t("days-ago", { days: diffInDays });
-    case 7:
-      return t("last-week");
-    default:
-      return formatter.dateTime(dateTime, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
+  if (diffInDays < 8) {
+    return formatter.relativeTime(dateTime, today);
   }
+  return formatter.dateTime(dateTime, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 };
 
 export {

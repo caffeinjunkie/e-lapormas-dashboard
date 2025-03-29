@@ -245,12 +245,14 @@ export default function ReportsPage() {
         queryParams={queryParams}
         onApplyFilter={onApplyFilter}
       />
-      <DetailDrawer
-        isMobile={isMobile}
-        isOpen={isReportDrawerOpen}
-        onOpenChange={onReportDrawerOpenChange}
-        selectedReport={selectedReport}
-      />
+      {selectedReport && (
+        <DetailDrawer
+          isMobile={isMobile}
+          isOpen={isReportDrawerOpen}
+          onOpenChange={onReportDrawerOpenChange}
+          selectedReport={selectedReport}
+        />
+      )}
     </Layout>
   );
 }

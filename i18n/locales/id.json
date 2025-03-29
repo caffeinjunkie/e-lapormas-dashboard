@@ -55,6 +55,7 @@
     "table-report-column-label": "Laporan",
     "table-created-at-column-label": "Tanggal",
     "table-location-column-label": "Lokasi",
+    "table-address-column-label": "Alamat",
     "table-priority-column-label": "Prioritas",
     "table-status-column-label": "Status",
     "table-actions-column-label": "Aksi",
@@ -103,8 +104,8 @@
     "detail-button-text": "Lihat Detail",
     "description-text": "Deskripsi",
     "follow-up-questions-text": "Pertanyaan Lanjutan",
-    "follow-up-questions-q-text": "Tanya:",
-    "follow-up-questions-a-text": "Jawab:",
+    "follow-up-questions-q-text": "Tanya",
+    "follow-up-questions-a-text": "Jawab",
     "accept-button-text": "Terima Laporan",
     "more-button-text": "Selengkapnya"
   },
@@ -243,11 +244,5 @@
   },
   "ErrorComponent": {
     "try-again-button-text": "Coba lagi"
-  },
-  "Date": {
-    "today": "Hari Ini",
-    "yesterday": "Kemarin",
-    "last-week": "Minggu Lalu",
-    "days-ago": "{days} hari yang lalu"
   }
 }

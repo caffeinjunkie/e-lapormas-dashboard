@@ -19,7 +19,26 @@ interface Address {
   lng: string;
 }
 
-export interface ReportCellType {
+// export interface ReportCellType {
+//   id: string;
+//   tracking_id: string;
+//   title: string;
+//   address: Address;
+//   created_at: string;
+//   category:
+//     | "kebijakan-publik"
+//     | "kondisi-jalan"
+//     | "fasilitas-umum"
+//     | "makanan-bergizi"
+//     | "program-pemerintah"
+//     | "keamanan"
+//     | "pungli"
+//     | "lainnya";
+//   status: "COMPLETED" | "IN_PROGRESS" | "PENDING";
+//   priority: "LOW" | "MID" | "HIGH" | "CRITICAL";
+// }
+
+export interface Report {
   id: string;
   tracking_id: string;
   title: string;
@@ -36,9 +55,6 @@ export interface ReportCellType {
     | "lainnya";
   status: "COMPLETED" | "IN_PROGRESS" | "PENDING";
   priority: "LOW" | "MID" | "HIGH" | "CRITICAL";
-}
-
-export interface Report extends ReportCellType {
   description: string;
   images: string[];
   data?: {
