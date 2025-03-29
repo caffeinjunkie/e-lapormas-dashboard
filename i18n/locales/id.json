@@ -107,7 +107,8 @@
     "follow-up-questions-q-text": "Tanya",
     "follow-up-questions-a-text": "Jawab",
     "accept-button-text": "Terima Laporan",
-    "more-button-text": "Selengkapnya"
+    "more-button-text": "Selengkapnya",
+    "attachment-text": "Lampiran"
   },
   "StatisticsPage": {
     "title": "Statistik (Planning Stage)"

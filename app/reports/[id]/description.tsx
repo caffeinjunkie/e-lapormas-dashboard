@@ -18,8 +18,8 @@ export const Description = ({
         <p className="text-xs font-bold text-default-500">
           {t("description-text")}
         </p>
-        <div className="flex w-full bg-default-100 p-2 rounded-md">
-          <p className="text-sm text-default-700">{description}</p>
+        <div className="flex w-full bg-default-100 p-2 rounded-xl">
+          <p className="text-xs text-default-700">{description}</p>
         </div>
       </div>
       {followUpQuestions.length > 0 && (
@@ -27,7 +27,7 @@ export const Description = ({
           <p className="text-xs font-bold text-default-500">
             {t("follow-up-questions-text")}
           </p>
-          <div className="flex w-full flex-col gap-2 bg-default-100 p-2 rounded-md">
+          <div className="flex w-full flex-col gap-2 bg-default-100 p-2 rounded-xl">
             {followUpQuestions.map((item, index) => (
               <div key={index} className="flex flex-col gap-1">
                 <div className="flex flex-wrap space-x-1 items-center">

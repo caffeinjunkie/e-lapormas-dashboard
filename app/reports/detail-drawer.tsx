@@ -3,6 +3,7 @@ import {
   CheckBadgeIcon,
   FolderOpenIcon,
   MapPinIcon,
+  PaperClipIcon,
   PresentationChartLineIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -15,8 +16,10 @@ import {
   DrawerFooter,
   DrawerHeader,
 } from "@heroui/drawer";
+import { Image } from "@heroui/image";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
+import NextImage from "next/image";
 import Link from "next/link";
 
 import { Description } from "./[id]/description";
@@ -102,7 +105,7 @@ export const DetailDrawer = ({
               <h1 className={title({ size: "xs" })}>{selectedReport?.title}</h1>
             </DrawerHeader>
             <DrawerBody className="gap-3">
-              <div className="flex flex-wrap space-x-0 gap-x-4 gap-y-2 sm:flex-col sm:gap-y-5 pb-1 sm:pb-4 pt-0 sm:pt-2">
+              <div className="flex flex-wrap space-x-0 gap-x-4 gap-y-2 sm:flex-col sm:gap-y-5 pb-3 pt-1 sm:pt-2">
                 <Info
                   className="items-center"
                   Icon={CalendarDaysIcon}
@@ -184,6 +187,27 @@ export const DetailDrawer = ({
                 description={selectedReport?.description as string}
                 followUpQuestions={followUpQuestions}
               />
+              {/* place holder image for now */}
+              <div className="flex flex-row justify-between w-full border-1 border-default-200 p-2 rounded-xl">
+                <div className="flex flex-row items-center gap-3">
+                  <Image
+                    src="https://fastly.picsum.photos/id/1039/200/200.jpg?hmac=VpGJWDIq64ZdzDD5NAREaY7l5gX14vU5NBH84b5Fj-o"
+                    alt={selectedReport?.title || ""}
+                    as={NextImage}
+                    fallbackSrc="https://app.requestly.io/delay"
+                    width={80}
+                    height={80}
+                    className="w-24 h-16 sm:h-12 rounded-md object-cover"
+                  />
+                  <div className="flex flex-col gap-1 text-xs">
+                    <p className="font-semibold line-clamp-1">
+                      Sometiinsf faoijm asfoijsakf ,talj jnaodk casuu bgsa.jpg
+                    </p>
+                    <p>1.4MB</p>
+                  </div>
+                </div>
+                <PaperClipIcon className="w-4 h-4 stroke-2 text-default-500" />
+              </div>
             </DrawerBody>
             <DrawerFooter>
               <Button
