@@ -22,6 +22,8 @@ import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { PhotoProvider, PhotoSlider, PhotoView } from "react-photo-view";
 
 import { PriorityChipColor, StatusChipColor, StatusEnum } from "./config";
 import { Description } from "./description";
@@ -57,9 +59,11 @@ export const DetailDrawer = ({
   const lat = address?.lat;
   const lng = address?.lng;
   const latLng = `${lat},${lng}`;
+  const images = selectedReport?.images || [];
   const mapQuery = lat && lng ? latLng : address?.full_address || "";
   const hasNoAddress = !lat || !lng || !fullAddress || !mapQuery;
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+  const [isPhotoSliderOpen, setPhotoSliderOpen] = useState(false);
 
   //TODO: check on server side if it works
   const isOnLargeDevice = window.matchMedia("(min-width: 640px)").matches;
@@ -72,6 +76,7 @@ export const DetailDrawer = ({
     <Drawer
       isOpen={isOpen}
       onOpenChange={onOpenChange}
+      isDismissable={!isPhotoSliderOpen}
       title={selectedReport?.title}
       className="rounded-t-lg sm:top-2 sm:bottom-2 sm:right-2 sm:rounded-xl"
       classNames={{
@@ -109,18 +114,23 @@ export const DetailDrawer = ({
               )}
               <Card
                 className="block sm:hidden data-[pressed=true]:scale-[1.05]"
-                isPressable
+                isPressable={images.length > 0}
+                onPress={() => setPhotoSliderOpen(true)}
                 radius="none"
               >
                 <Image
-                  src="https://fastly.picsum.photos/id/1039/200/200.jpg?hmac=VpGJWDIq64ZdzDD5NAREaY7l5gX14vU5NBH84b5Fj-o"
+                  src={
+                    images.length > 0
+                      ? images[0]
+                      : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/broken-image.png`
+                  }
                   alt={selectedReport?.title || ""}
                   as={NextImage}
-                  fallbackSrc="https://app.requestly.io/delay"
+                  fallbackSrc={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/broken-image.png`}
                   width={800}
                   height={200}
                   radius="none"
-                  className="w-full h-48 object-cover"
+                  className={`w-full h-48 object-cover ${images.length > 0 ? "" : "object-contain p-6 bg-default-200"}`}
                 />
               </Card>
               <h1 className={clsx(title({ size: "xs" }), "px-6 pt-4 sm:pt-0")}>
@@ -211,29 +221,46 @@ export const DetailDrawer = ({
                 followUpQuestions={followUpQuestions}
               />
               {/* place holder image for now */}
-              <Card
-                isPressable
-                className="hidden sm:flex flex-row justify-between w-full p-2 shadow-none border-1 border-default-200 rounded-xl"
-              >
-                <div className="flex flex-row items-center justify-start gap-3">
-                  <Image
-                    src="https://fastly.picsum.photos/id/1039/200/200.jpg?hmac=VpGJWDIq64ZdzDD5NAREaY7l5gX14vU5NBH84b5Fj-o"
-                    alt={selectedReport?.title || ""}
-                    as={NextImage}
-                    fallbackSrc="https://app.requestly.io/delay"
-                    width={80}
-                    height={80}
-                    className="w-24 h-16 sm:h-12 rounded-md object-cover"
-                  />
-                  <div className="flex flex-col gap-1 text-xs">
-                    <p className="font-semibold text-start line-clamp-1">
-                      Sometiinsf faoijm asfoijsakf ,talj jnaodk casuu bgsa.jpg
-                    </p>
-                    <p className="text-start">1.4MB</p>
+              {images.length > 0 && (
+                <Card
+                  isPressable
+                  onPress={() => setPhotoSliderOpen(true)}
+                  className="hidden sm:flex flex-row justify-between w-full p-2 shadow-none border-1 border-default-200 hover:bg-default-100 rounded-xl"
+                >
+                  <div className="flex flex-row items-center justify-start gap-3">
+                    <Image
+                      src={
+                        images.length > 0
+                          ? images[0]
+                          : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/broken-image.png`
+                      }
+                      alt={selectedReport?.title || ""}
+                      as={NextImage}
+                      fallbackSrc={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/broken-image.png`}
+                      width={80}
+                      height={80}
+                      className="w-24 h-16 sm:h-12 rounded-md object-cover"
+                    />
+                    <div className="flex flex-col gap-1 text-xs">
+                      <p className="font-semibold text-start line-clamp-1">
+                        Sometiinsf faoijm asfoijsakf ,talj jnaodk casuu bgsa.jpg
+                      </p>
+                      <p className="text-start">1.4MB</p>
+                    </div>
                   </div>
-                </div>
-                <PaperClipIcon className="w-4 h-4 stroke-2 text-default-500" />
-              </Card>
+                  <PaperClipIcon className="w-4 h-4 stroke-2 text-default-500" />
+                </Card>
+              )}
+              <PhotoSlider
+                images={
+                  selectedReport?.images?.map((image) => ({
+                    src: image,
+                    key: image,
+                  })) || []
+                }
+                visible={isPhotoSliderOpen}
+                onClose={() => setPhotoSliderOpen(false)}
+              />
             </DrawerBody>
             <DrawerFooter>
               <Button
