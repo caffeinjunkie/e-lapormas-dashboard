@@ -1,53 +1,91 @@
 "use client";
 
 import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
+import { Button } from "@heroui/button";
+import { Spinner } from "@heroui/spinner";
+import { Tab, Tabs } from "@heroui/tabs";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import useSWR from "swr";
 
+import { swrConfig } from "../config";
+import { ReportDetail } from "../report-detail";
+
+import { fetchTaskByTrackingId } from "@/api/tasks";
+import Error from "@/components/error";
 import { Layout } from "@/components/layout";
 import { title } from "@/components/primitives";
 
 export default function ReportDetailPage() {
   const t = useTranslations("ReportsPage");
   const router = useRouter();
+  const bodyRef = useRef<HTMLHeadingElement>(null);
   const { id } = useParams();
-  const isOnLargeDevice = window.matchMedia("(min-width: 640px)").matches;
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const {
+    data: report,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR(
+    ["report-detail", id],
+    () => fetchTaskByTrackingId(id as string),
+    swrConfig,
+  );
 
-  const mockData = {
-    id: "76a4293e-e926-434c-b788-ee0ba7fd7f87",
-    tracking_id: "XOXO5212",
-    title: "Kebijakan Pendidikan Baru",
-    description: "Implementasi kebijakan baru dalam dunia pendidikan.",
-    address: {
-      lat: "10.1234",
-      lng: "50.6789",
-      village: "Tamsis",
-      district: "Jogja",
-      full_address: "Jl. Pendidikan No. 12, Jogja",
-    },
-    created_at: "2025-03-13T10:05:00+00:00",
-    category: "kebijakan-publik",
-    images: ["cdn.example.com/images/jalan1.jpg"],
-    data: null,
-    rating: 0,
-    status: "PENDING",
-    priority: "HIGH",
-    progress: null,
-  };
-
-  return (
+  if (error) {
     <Layout
       classNames={{
         header: "gap-4",
         body: "px-6",
+      }}
+    >
+      <Error message={t("page-error-message")} onReset={mutate} />
+      <Button onPress={() => router.back()}>
+        {t("back-to-previous-page-button-text")}
+      </Button>
+    </Layout>;
+  }
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.intersectionRatio > 0.9) {
+            setIsIntersecting(true);
+          } else {
+            setIsIntersecting(false);
+          }
+          console.log(entry);
+        });
+      },
+      { threshold: 0.9 },
+    );
+
+    if (bodyRef.current) {
+      observer.observe(bodyRef.current);
+    }
+
+    return () => {
+      if (bodyRef.current) {
+        observer.unobserve(bodyRef.current);
+      }
+    };
+  }, [report]);
+
+  return (
+    <Layout
+      classNames={{
+        header: "gap-4 sticky top-[-14px]",
       }}
       headerComponent={
         <Breadcrumbs
           size="md"
           className="animate-appear"
           color="primary"
-          variant={isOnLargeDevice ? "solid" : "light"}
+          variant="light"
         >
           <BreadcrumbItem onClick={() => router.back()}>
             {t("title")}
@@ -56,15 +94,51 @@ export default function ReportDetailPage() {
         </Breadcrumbs>
       }
     >
-      <div className="flex flex-col gap-4">
-        <h1 className={clsx(title({ size: "xs" }))}>{mockData.title}</h1>
-        <div className="flex flex-col gap-1 w-full bg-default-500">
-          <p className="text-xs font-bold text-default-500">
-            {t("description-text")}
-          </p>
-          <p className="text-sm text-default-700">{mockData.description}</p>
+      {isLoading && <Spinner />}
+      {!isLoading && (
+        <div className="flex flex-col lg:flex-row w-full">
+          <div className="flex flex-col w-full lg:pr-6">
+            <div
+              className={clsx(
+                "flex flex-col gap-1 sticky top-9 z-50 w-full bg-white",
+              )}
+            >
+              <h1
+                className={clsx(
+                  title({ size: "xs" }),
+                  "transition-all px-6 duration-200 ease-in-out",
+                  !isIntersecting ? "sm:text-sm" : "",
+                )}
+              >
+                {report?.title}
+              </h1>
+              <div
+                className={clsx(
+                  "w-1 sm:h-2 transition-all duration-1000 ease-in-out bg-white",
+                  !isIntersecting
+                    ? "sm:w-full border-b-1 border-white sm:shadow-md"
+                    : "w-1",
+                )}
+              ></div>
+            </div>
+            <div ref={bodyRef} className="flex flex-col gap-1 w-full px-6">
+              <ReportDetail report={report} className="pb-5" />
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 lg:border-l-1 border-default-300 w-full py-4 lg:py-0 px-6 lg:px-4 lg:w-[50vw] h-[85vh]">
+            <Tabs
+              size="md"
+              aria-label="Report detail tabs"
+              color="default"
+              variant="underlined"
+              className="font-semibold"
+            >
+              <Tab value="activities">{t("activities-tab-text")}</Tab>
+              <Tab value="curated-tasks">{t("curated-tasks-tab-text")}</Tab>
+            </Tabs>
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 }

@@ -247,7 +247,6 @@ export default function ReportsPage() {
       />
       {selectedReport && (
         <DetailDrawer
-          isMobile={isMobile}
           isOpen={isReportDrawerOpen}
           onOpenChange={onReportDrawerOpenChange}
           selectedReport={selectedReport}

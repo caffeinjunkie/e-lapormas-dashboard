@@ -23,11 +23,12 @@ import { useTranslations } from "next-intl";
 import NextImage from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { PhotoProvider, PhotoSlider, PhotoView } from "react-photo-view";
+import { PhotoSlider } from "react-photo-view";
 
 import { PriorityChipColor, StatusChipColor, StatusEnum } from "./config";
 import { Description } from "./description";
 import { Info } from "./info";
+import { ReportDetail } from "./report-detail";
 
 import { title } from "@/components/primitives";
 import { Report } from "@/types/report.types";
@@ -35,34 +36,18 @@ import { formatLocaleDate } from "@/utils/string";
 
 interface DetailDrawerProps {
   isOpen: boolean;
-  isMobile: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  selectedReport: Report | null;
+  selectedReport: Report;
 }
 
 export const DetailDrawer = ({
   isOpen,
-  isMobile,
   onOpenChange,
   selectedReport,
 }: DetailDrawerProps) => {
   const t = useTranslations("ReportsPage");
   const isPending = selectedReport?.status === StatusEnum.PENDING;
-  const followUpQuestions = selectedReport?.data?.follow_up_questions || [];
-  const fullDate = formatLocaleDate(selectedReport?.created_at || "", "long");
-  const { category, priority, status, address } = selectedReport || {};
-  const fullAddress =
-    address?.full_address || address?.village || address?.district || "";
-  const categoryLabel = t(`category-${category}`);
-  const priorityLabel = t(`priority-${priority?.toLowerCase()}`);
-  const statusLabel = t(`status-${status?.replaceAll("_", "-").toLowerCase()}`);
-  const lat = address?.lat;
-  const lng = address?.lng;
-  const latLng = `${lat},${lng}`;
   const images = selectedReport?.images || [];
-  const mapQuery = lat && lng ? latLng : address?.full_address || "";
-  const hasNoAddress = !lat || !lng || !fullAddress || !mapQuery;
-  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   const [isPhotoSliderOpen, setPhotoSliderOpen] = useState(false);
 
   //TODO: check on server side if it works
@@ -137,88 +122,7 @@ export const DetailDrawer = ({
               </h1>
             </DrawerHeader>
             <DrawerBody className="gap-3">
-              <div className="flex flex-wrap space-x-0 gap-x-4 gap-y-2 sm:flex-col sm:gap-y-5 pb-3 pt-1 sm:pt-2">
-                <Info
-                  className="items-center"
-                  Icon={CalendarDaysIcon}
-                  label="created-at"
-                >
-                  <p className="text-xs text-default-700 font-semibold">
-                    {fullDate}
-                  </p>
-                </Info>
-                <Info
-                  className="items-center"
-                  Icon={CheckBadgeIcon}
-                  label="status"
-                >
-                  <Chip
-                    size="sm"
-                    variant="dot"
-                    className="border-none -ml-2"
-                    classNames={{
-                      content: "text-default-700 font-semibold",
-                    }}
-                    color={
-                      StatusChipColor[status as keyof typeof StatusChipColor]
-                    }
-                  >
-                    {statusLabel}
-                  </Chip>
-                </Info>
-                <Info
-                  className="items-center"
-                  Icon={PresentationChartLineIcon}
-                  label="priority"
-                >
-                  <Chip
-                    size="sm"
-                    variant="flat"
-                    classNames={{
-                      content: "font-semibold",
-                    }}
-                    color={
-                      PriorityChipColor[
-                        priority as keyof typeof PriorityChipColor
-                      ]
-                    }
-                  >
-                    {priorityLabel}
-                  </Chip>
-                </Info>
-                <Info
-                  Icon={FolderOpenIcon}
-                  className="items-center"
-                  label="category"
-                >
-                  <Chip variant="bordered" size="sm">
-                    {categoryLabel}
-                  </Chip>
-                </Info>
-                {!hasNoAddress && (
-                  <Info
-                    Icon={MapPinIcon}
-                    label="address"
-                    className="items-center sm:items-start"
-                  >
-                    <span className="text-xs flex flex-wrap gap-x-1 text-default-700">
-                      <p>{fullAddress}</p>
-                      <Link
-                        href={mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary-500 font-semibold hover:underline"
-                      >
-                        (Lihat di peta)
-                      </Link>
-                    </span>
-                  </Info>
-                )}
-              </div>
-              <Description
-                description={selectedReport?.description as string}
-                followUpQuestions={followUpQuestions}
-              />
+              <ReportDetail report={selectedReport} className="pb-3" />
               {images.length > 0 && (
                 <Card
                   isPressable
