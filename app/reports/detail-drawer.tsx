@@ -126,7 +126,6 @@ export const DetailDrawer = ({
                   }
                   alt={selectedReport?.title || ""}
                   as={NextImage}
-                  fallbackSrc={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/broken-image.png`}
                   width={800}
                   height={200}
                   radius="none"
@@ -220,7 +219,6 @@ export const DetailDrawer = ({
                 description={selectedReport?.description as string}
                 followUpQuestions={followUpQuestions}
               />
-              {/* place holder image for now */}
               {images.length > 0 && (
                 <Card
                   isPressable
@@ -229,11 +227,7 @@ export const DetailDrawer = ({
                 >
                   <div className="flex flex-row items-center justify-start gap-3">
                     <Image
-                      src={
-                        images.length > 0
-                          ? images[0]
-                          : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/broken-image.png`
-                      }
+                      src={images[0]}
                       alt={selectedReport?.title || ""}
                       as={NextImage}
                       fallbackSrc={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/broken-image.png`}
