@@ -45,7 +45,7 @@ export default function ReportDetailPage() {
       headerComponent={
         <Breadcrumbs
           size="md"
-          className="animate-slide-up-1"
+          className="animate-appear"
           color="primary"
           variant={isOnLargeDevice ? "solid" : "light"}
         >

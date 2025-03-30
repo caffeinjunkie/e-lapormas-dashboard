@@ -201,103 +201,107 @@ export default function SettingsPage() {
         />
       )}
       {!isPageLoading && !isPageError && (
-        <Form
-          id="profile"
-          onSubmit={onSubmit}
-          className="gap-3 md:gap-5 px-0 sm:px-12 md:px-0 lg:px-[14%] xl:px-[20%] md:pt-4"
-        >
+        <div className="flex flex-col w-full h-[87vh] md:h-[86vh] gap-6 justify-between">
           <ProfilePicture
             image={profile?.imageSrc as string}
             isUploading={isUploading}
             onCameraPress={onCameraPress}
           />
-          <div className="flex flex-col w-full gap-5">
-            <div className="flex flex-col sm:flex-row justify-center gap-3">
-              <Input
-                aria-label="name"
-                label={t("profile-name-input-label")}
-                type="text"
-                radius="md"
-                isRequired
-                onChange={() => handleUnsavedChanges(true)}
-                defaultValue={profile?.fullName}
-                name="name"
-                placeholder={t("profile-name-placeholder-text")}
-                validate={(value) => validateIsRequired(t, value, "name")}
-              />
-              <Input
-                aria-label="org-name"
-                label={t("app-settings-org-input-label")}
-                type="text"
-                radius="md"
-                isRequired
-                onChange={() => handleUnsavedChanges(true)}
-                defaultValue={appSettings?.org_name}
-                className="w-[100%] lg:w-[80%]"
-                name="org-name"
-                validate={(value) => validateIsRequired(t, value, "org-name")}
-                placeholder={t("app-settings-org-placeholder-text")}
-              />
+          <Form
+            id="profile"
+            onSubmit={onSubmit}
+            className="gap-3 h-full justify-between md:justify-start md:gap-5 px-0 sm:px-12 md:px-0 lg:px-[14%] xl:px-[20%] md:pt-4"
+          >
+            <div className="flex w-full flex-col gap-3">
+              <div className="flex flex-col sm:flex-row justify-center w-full gap-3">
+                <Input
+                  aria-label="name"
+                  label={t("profile-name-input-label")}
+                  type="text"
+                  radius="md"
+                  isRequired
+                  onChange={() => handleUnsavedChanges(true)}
+                  defaultValue={profile?.fullName}
+                  name="name"
+                  placeholder={t("profile-name-placeholder-text")}
+                  validate={(value) => validateIsRequired(t, value, "name")}
+                />
+                <Input
+                  aria-label="org-name"
+                  label={t("app-settings-org-input-label")}
+                  type="text"
+                  radius="md"
+                  isRequired
+                  onChange={() => handleUnsavedChanges(true)}
+                  defaultValue={appSettings?.org_name}
+                  className="w-[100%] lg:w-[80%]"
+                  name="org-name"
+                  validate={(value) => validateIsRequired(t, value, "org-name")}
+                  placeholder={t("app-settings-org-placeholder-text")}
+                />
+              </div>
+              <div className="flex flex-row w-full md:flex-row gap-3">
+                <Input
+                  aria-label="email"
+                  label={t("profile-email-input-label")}
+                  type="text"
+                  radius="md"
+                  isDisabled
+                  defaultValue={profile?.email}
+                  name="email"
+                />
+                <Select
+                  className="w-64 lg:w-[80%]"
+                  radius="md"
+                  name="timezone"
+                  label={t("app-settings-timezone-select-label")}
+                  selectedKeys={[selectedTimezone]}
+                  disabledKeys={[selectedTimezone]}
+                  isDisabled
+                  items={timezonesOptions}
+                  placeholder={t("app-settings-timezone-placeholder-text")}
+                  onSelectionChange={onTimezoneSelect}
+                >
+                  {(timezone) => (
+                    <SelectItem key={timezone.zone} className="outline-none">
+                      {t(`timezone-label-${timezone.key}-label`)}
+                    </SelectItem>
+                  )}
+                </Select>
+              </div>
+              <div className="flex w-full h-24 items-center justify-center rounded-xl bg-default-50">
+                <Button
+                  radius="md"
+                  type="submit"
+                  color="warning"
+                  variant="ghost"
+                  isLoading={isResetLoading}
+                  onPress={onResetPasswordPress}
+                  startContent={
+                    !isResetLoading && <KeyIcon className="size-5" />
+                  }
+                >
+                  {t("reset-password-button-text")}
+                </Button>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-row w-full md:flex-row gap-3">
-            <Input
-              aria-label="email"
-              label={t("profile-email-input-label")}
-              type="text"
-              radius="md"
-              isDisabled
-              defaultValue={profile?.email}
-              name="email"
-            />
-            <Select
-              className="w-64 lg:w-[80%]"
-              radius="md"
-              name="timezone"
-              label={t("app-settings-timezone-select-label")}
-              selectedKeys={[selectedTimezone]}
-              disabledKeys={[selectedTimezone]}
-              isDisabled
-              items={timezonesOptions}
-              placeholder={t("app-settings-timezone-placeholder-text")}
-              onSelectionChange={onTimezoneSelect}
-            >
-              {(timezone) => (
-                <SelectItem key={timezone.zone} className="outline-none">
-                  {t(`timezone-label-${timezone.key}-label`)}
-                </SelectItem>
-              )}
-            </Select>
-          </div>
-          <div className="flex w-full h-24 items-center justify-center rounded-xl bg-default-50">
-            <Button
-              radius="md"
-              type="submit"
-              color="warning"
-              variant="ghost"
-              isLoading={isResetLoading}
-              onPress={onResetPasswordPress}
-              startContent={!isResetLoading && <KeyIcon className="size-5" />}
-            >
-              {t("reset-password-button-text")}
-            </Button>
-          </div>
-          <div className="flex w-full justify-center md:justify-end">
-            <Button
-              color="primary"
-              radius="md"
-              isLoading={isSaveLoading}
-              isDisabled={!unsavedChanges}
-              type="submit"
-              startContent={
-                !isSaveLoading && <FloppyIcon color="white" size={21} />
-              }
-              className="fixed bottom-6 right-6 left-6 sm:right-20 sm:left-20 md:sticky md:right-0"
-            >
-              {t("form-save-button-text")}
-            </Button>
-          </div>
-        </Form>
+            <div className="flex w-full justify-center md:justify-end">
+              <Button
+                color="primary"
+                radius="md"
+                isLoading={isSaveLoading}
+                isDisabled={!unsavedChanges}
+                type="submit"
+                startContent={
+                  !isSaveLoading && <FloppyIcon color="white" size={21} />
+                }
+                className="w-full md:w-fit"
+              >
+                {t("form-save-button-text")}
+              </Button>
+            </div>
+          </Form>
+        </div>
       )}
       <Modal
         isOpen={isOpen}
