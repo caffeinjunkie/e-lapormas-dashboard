@@ -3,9 +3,12 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
 import { Button } from "@heroui/button";
+import { Card, CardFooter } from "@heroui/card";
+import { Image } from "@heroui/image";
 import { Spinner } from "@heroui/spinner";
 import { Tab, Tabs } from "@heroui/tabs";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -41,6 +44,12 @@ export default function ReportDetailPage() {
     ["report-detail", id],
     () => fetchReportAndAdmins(id as string),
     swrConfig,
+  );
+  const reportImages: { src: string; key: string }[] = data?.report.images.map(
+    (src: string, index: number) => ({
+      src,
+      key: `image-${index + 1}`,
+    }),
   );
 
   useEffect(() => {
@@ -191,6 +200,41 @@ export default function ReportDetailPage() {
                   users={data?.admins || []}
                 />
               </Tab>
+              <Tab value="attachments" title={t("attachments-tab-text")}>
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-3 gap-2">
+                  {reportImages.map(({ src }, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.2,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <Card
+                        isPressable
+                        onPress={() => onImagePress(reportImages, index)}
+                        isFooterBlurred
+                        className="border-none w-full"
+                      >
+                        <Image
+                          removeWrapper
+                          width={120}
+                          height={120}
+                          className="object-cover w-full"
+                          src={src}
+                          alt={src + index}
+                        />
+                        <CardFooter className="absolute h-6 bg-white/30 bottom-0 z-10 justify-between">
+                          <p className="w-full text-xs text-center line-clamp-1">{`attachment ${index + 1}`}</p>
+                        </CardFooter>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              </Tab>
               <Tab value="curated-tasks" title={t("curated-tasks-tab-text")}>
                 {/* <CuratedTasks /> */}
               </Tab>
@@ -200,6 +244,7 @@ export default function ReportDetailPage() {
             images={sliderImages}
             index={imageIndex}
             visible={isPhotoSliderOpen}
+            onIndexChange={setImageIndex}
             onClose={() => setPhotoSliderOpen(false)}
           />
         </div>
