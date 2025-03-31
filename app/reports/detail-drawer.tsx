@@ -1,15 +1,6 @@
-import {
-  CalendarDaysIcon,
-  CheckBadgeIcon,
-  FolderOpenIcon,
-  MapPinIcon,
-  PaperClipIcon,
-  PresentationChartLineIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { PaperClipIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
-import { Chip } from "@heroui/chip";
 import {
   Drawer,
   DrawerBody,
@@ -25,14 +16,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { PhotoSlider } from "react-photo-view";
 
-import { PriorityChipColor, StatusChipColor, StatusEnum } from "./config";
-import { Description } from "./description";
-import { Info } from "./info";
+import { StatusEnum } from "./config";
+import { ImageAttachment } from "./image-attachment";
 import { ReportDetail } from "./report-detail";
 
 import { title } from "@/components/primitives";
 import { Report } from "@/types/report.types";
-import { formatLocaleDate } from "@/utils/string";
 
 interface DetailDrawerProps {
   isOpen: boolean;
@@ -124,30 +113,11 @@ export const DetailDrawer = ({
             <DrawerBody className="gap-3">
               <ReportDetail report={selectedReport} className="pb-3" />
               {images.length > 0 && (
-                <Card
-                  isPressable
+                <ImageAttachment
+                  src={images[0]}
+                  alt={selectedReport?.title || ""}
                   onPress={() => setPhotoSliderOpen(true)}
-                  className="hidden sm:flex flex-row justify-between w-full p-2 shadow-none border-1 border-default-200 hover:bg-default-100 rounded-xl"
-                >
-                  <div className="flex flex-row items-center justify-start gap-3">
-                    <Image
-                      src={images[0]}
-                      alt={selectedReport?.title || ""}
-                      as={NextImage}
-                      fallbackSrc={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/broken-image.png`}
-                      width={80}
-                      height={80}
-                      className="w-24 h-16 sm:h-12 rounded-md object-cover"
-                    />
-                    <div className="flex flex-col gap-1 text-xs">
-                      <p className="font-semibold text-start line-clamp-1">
-                        Sometiinsf faoijm asfoijsakf ,talj jnaodk casuu bgsa.jpg
-                      </p>
-                      <p className="text-start">1.4MB</p>
-                    </div>
-                  </div>
-                  <PaperClipIcon className="w-4 h-4 stroke-2 text-default-500" />
-                </Card>
+                />
               )}
               <PhotoSlider
                 images={

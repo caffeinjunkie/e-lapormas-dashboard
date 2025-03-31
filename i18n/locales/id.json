@@ -110,6 +110,8 @@
     "visit-map-link-text": "(Lihat di peta)",
     "back-to-previous-page-button-text": "Kembali",
     "activities-tab-text": "Aktivitas",
+    "activity-in-progress-text": "<bold>{user}</bold> memproses laporan dengan komentar <bold>{message}</bold>.",
+    "activity-completed-text": "<bold>{user}</bold> menyelesaikan laporan dengan komentar <bold>{message}</bold>.",
     "curated-tasks-tab-text": "Daftar Tugas"
   },
   "StatisticsPage": {

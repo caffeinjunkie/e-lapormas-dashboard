@@ -121,11 +121,11 @@ export default function ReportDetailPage() {
     >
       {isLoading && <Spinner />}
       {!isLoading && (
-        <div className="flex flex-col lg:flex-row w-full">
+        <div className="flex flex-col lg:flex-row">
           <div className="flex flex-col w-full lg:pr-6">
             <div
               className={clsx(
-                "flex flex-col gap-1 sticky top-0 z-50 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
+                "flex flex-col gap-1 sticky top-0 z-30 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
               )}
             >
               <h1
@@ -153,8 +153,8 @@ export default function ReportDetailPage() {
           <div
             ref={tabsRef}
             className={clsx(
-              "flex flex-col sticky top-0 z-50 lg:static gap-4 bottom-0",
-              "lg:border-l-1 border-default-300 w-full py-4 lg:py-0 px-6 lg:px-4 ",
+              "flex flex-col sticky top-0 z-30 lg:static gap-4 bottom-0",
+              "w-full py-4 lg:py-0 px-6 lg:px-4",
               "lg:w-[50vw] h-[100vh] lg:h-fit",
               "transition-all duration-300 ease-in-out",
               isIntersectingTabs ? "pt-14 md:pt-8" : "pt-4",
@@ -168,7 +168,10 @@ export default function ReportDetailPage() {
               className="font-semibold"
             >
               <Tab value="activities" title={t("activities-tab-text")}>
-                <Activities data={data?.report?.progress} />
+                <Activities
+                  data={data?.report?.progress}
+                  users={data?.admins || []}
+                />
               </Tab>
               <Tab value="curated-tasks" title={t("curated-tasks-tab-text")}>
                 {/* <CuratedTasks /> */}

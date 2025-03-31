@@ -76,7 +76,10 @@ function generatePassword(): string {
   return password;
 }
 
-const formatLocaleDate = (date: string, format: "short" | "long" = "short") => {
+const formatLocaleDate = (
+  date: string,
+  format: "short" | "long" | "long-relative" = "short",
+) => {
   const formatter = useFormatter();
   const dateTime = new Date(date);
 
@@ -86,6 +89,7 @@ const formatLocaleDate = (date: string, format: "short" | "long" = "short") => {
       timeStyle: "short",
     });
   }
+
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
@@ -99,11 +103,24 @@ const formatLocaleDate = (date: string, format: "short" | "long" = "short") => {
   if (diffInDays < 8) {
     return formatter.relativeTime(dateTime, today);
   }
-  return formatter.dateTime(dateTime, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+
+  const getDateStyle = () => {
+    if (format === "long-relative") {
+      return {
+        dateStyle: "long",
+        timeStyle: "short",
+      };
+    }
+    return {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    };
+  };
+
+  const dateFormat = getDateStyle();
+
+  return formatter.dateTime(dateTime, dateFormat as any);
 };
 
 export {
