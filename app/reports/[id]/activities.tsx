@@ -1,7 +1,7 @@
 "use client";
 
-import { CheckIcon } from "@heroicons/react/24/outline";
 import { Avatar } from "@heroui/avatar";
+import { Button } from "@heroui/button";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -15,11 +15,25 @@ import { formatLocaleDate } from "@/utils/string";
 
 interface ActivitiesProps {
   data: Progress[];
+  status: string;
+  isIntersecting: boolean;
+  actions: {
+    onAcceptReport: () => void;
+    onFinishReport: () => void;
+    onSendUpdate: () => void;
+  };
   users: AdminData[];
   onImagePress: (images: { src: string; key: string }[], index: number) => void;
 }
 
-export const Activities = ({ data, users, onImagePress }: ActivitiesProps) => {
+export const Activities = ({
+  data,
+  status,
+  isIntersecting,
+    actions,
+  users,
+  onImagePress,
+}: ActivitiesProps) => {
   const getUserById = (id: string) => {
     return users.find((user) => user.user_id === id);
   };
@@ -34,10 +48,38 @@ export const Activities = ({ data, users, onImagePress }: ActivitiesProps) => {
     onImagePress([{ src: img, key: "0" }], 0);
   };
 
+  const renderActions = () => {
+    if (status === "COMPLETED") return null;
+    if (status === "IN_PROGRESS") {
+      return <div>message</div>;
+    }
+    return (
+      <div className="flex bg-white flex-col px-4 gap-4 w-full justify-center items-center h-24 pb-12 md:pb-0 md:h-32 lg:h-96 rounded-xl">
+        <p className="text-center text-xs text-default-500">
+          {t("activity-empty-text")}
+        </p>
+        <div
+          className={clsx("bg-white flex w-full transition-all duration-1000 ease-in-out animate-slide-up sm:animate-none py-4 px-6",
+            "justify-center absolute md:static bottom-0",
+            !isIntersecting ? "shadow-[rgba(5,5,5,0.1)_0_-1px_10px_0px] md:shadow-none" : "shadow-none"
+          )}
+        >
+          <Button
+            color="primary"
+            className="w-full md:w-fit"
+            onPress={actions.onAcceptReport}
+          >
+            {t("activity-accept-button-text")}
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col px-2">
       {data?.length > 0 && (
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-grow">
           {data?.reverse().map((activity, index) => (
             <motion.div
               initial={{ y: 20, opacity: 0 }}
@@ -123,9 +165,9 @@ export const Activities = ({ data, users, onImagePress }: ActivitiesProps) => {
               </div>
             </motion.div>
           ))}
-          <div className=""></div>
         </div>
       )}
+      {renderActions()}
     </div>
   );
 };

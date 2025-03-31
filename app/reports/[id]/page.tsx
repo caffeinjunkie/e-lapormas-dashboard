@@ -105,6 +105,21 @@ export default function ReportDetailPage() {
     setImageIndex(index);
   };
 
+  const onAcceptReport = () => {
+    // TODO: Accept report
+    // mutate();
+  };
+
+  const onFinishReport = () => {
+    // TODO: Finish report
+    // mutate();
+  };
+
+  const onSendUpdate = () => {
+    // TODO: Send update
+    // mutate();
+  };
+
   if (error) {
     return (
       <Layout
@@ -125,6 +140,32 @@ export default function ReportDetailPage() {
       </Layout>
     );
   }
+
+  const renderTitle = () => (
+    <div
+      className={clsx(
+        "flex flex-col gap-1 sticky top-0 z-30 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
+      )}
+    >
+      <h1
+        className={clsx(
+          title({ size: "xs" }),
+          "transition-all px-6 duration-200 ease-in-out text-md",
+          !isIntersectingBody ? "pt-0" : "pt-3",
+        )}
+      >
+        {data?.report?.title}
+      </h1>
+      <div
+        className={clsx(
+          "w-1 sm:h-2 transition-all duration-1000 ease-in-out bg-white",
+          isIntersectingBody
+            ? "w-full border-b-1 border-white shadow-md sm:border-none sm:shadow-none"
+            : "md:w-full lg:w-0 border-b-1 lg:border-transparent shadow-md lg:shadow-none",
+        )}
+      ></div>
+    </div>
+  );
 
   return (
     <Layout
@@ -147,98 +188,89 @@ export default function ReportDetailPage() {
     >
       {isLoading && <Spinner />}
       {!isLoading && (
-        <div className="flex flex-col lg:flex-row">
-          <div className="flex flex-col w-full lg:pr-6">
-            <div
-              className={clsx(
-                "flex flex-col gap-1 sticky top-0 z-30 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
-              )}
-            >
-              <h1
-                className={clsx(
-                  title({ size: "xs" }),
-                  "transition-all px-6 duration-200 ease-in-out",
-                  !isIntersectingBody ? "sm:text-sm pt-2" : "",
-                )}
-              >
-                {data?.report?.title}
-              </h1>
-              <div
-                className={clsx(
-                  "w-1 sm:h-2 transition-all duration-1000 ease-in-out bg-white",
-                  !isIntersectingBody && !isIntersectingTabs
-                    ? "sm:w-full border-b-1 border-white sm:shadow-md"
-                    : "w-1",
-                )}
-              ></div>
-            </div>
-            <div ref={bodyRef} className="flex flex-col gap-1 w-full px-6">
+        <div className="flex flex-col flex-grow">
+          {renderTitle()}
+          <div className={clsx(
+            "flex flex-col lg:flex-row gap-2 lg:gap-6 flex-grow pb-6",
+          )}>
+            <div ref={bodyRef} className="flex flex-col w-full px-6 lg:pr-6">
               <ReportDetail report={data?.report} className="pb-5" />
             </div>
-          </div>
-          <div
-            ref={tabsRef}
-            className={clsx(
-              "flex flex-col sticky top-0 z-30 lg:static gap-4 bottom-0",
-              "w-full py-4 lg:py-0 px-6 lg:px-4",
-              "lg:w-[50vw] h-[100vh] lg:h-fit",
-              "transition-all duration-300 ease-in-out",
-              isIntersectingTabs ? "pt-14 md:pt-8" : "pt-4",
-            )}
-          >
-            <Tabs
-              size="md"
-              aria-label="Report detail tabs"
-              color="default"
-              variant="underlined"
-              className="font-semibold"
+            <div
+              ref={tabsRef}
+              className={clsx(
+                "flex flex-col flex-1 z-30 gap-4",
+                "w-full py-4 lg:pt-0 px-6 lg:px-4",
+                "lg:w-[50vw] h-fit lg:sticky top-2",
+                "transition-all duration-300 ease-in-out",
+              )}
             >
-              <Tab value="activities" title={t("activities-tab-text")}>
-                <Activities
-                  data={data?.report?.progress}
-                  onImagePress={onImagePress}
-                  users={data?.admins || []}
-                />
-              </Tab>
-              <Tab value="attachments" title={t("attachments-tab-text")}>
-                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-3 gap-2">
-                  {reportImages.map(({ src }, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ scale: 0.5, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        duration: 0.5,
-                        delay: index * 0.2,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <Card
-                        isPressable
-                        onPress={() => onImagePress(reportImages, index)}
-                        isFooterBlurred
-                        className="border-none w-full"
+              <Tabs
+                size="md"
+                aria-label="Report detail tabs"
+                color="default"
+                variant="underlined"
+                className="font-semibold"
+              >
+                <Tab value="activities" title={t("activities-tab-text")}>
+                  <Activities
+                    actions={{
+                      onAcceptReport,
+                      onFinishReport,
+                      onSendUpdate,
+                    }}
+                    isIntersecting={isIntersectingTabs}
+                    status={data?.report?.status}
+                    data={data?.report?.progress}
+                    onImagePress={onImagePress}
+                    users={data?.admins || []}
+                  />
+                </Tab>
+                <Tab value="attachments" title={t("attachments-tab-text")}>
+                  {reportImages.length === 0 && (
+                    <p className="flex justify-center w-full px-4 text-default-500 text-sm">
+                      {t("no-attachments-text")}
+                    </p>
+                  )}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-3 gap-2">
+                    {reportImages.map(({ src }, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.2,
+                          ease: "easeInOut",
+                        }}
                       >
-                        <Image
-                          removeWrapper
-                          width={120}
-                          height={120}
-                          className="object-cover w-full"
-                          src={src}
-                          alt={src + index}
-                        />
-                        <CardFooter className="absolute h-6 bg-white/30 bottom-0 z-10 justify-between">
-                          <p className="w-full text-xs text-center line-clamp-1">{`attachment ${index + 1}`}</p>
-                        </CardFooter>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </div>
-              </Tab>
-              <Tab value="curated-tasks" title={t("curated-tasks-tab-text")}>
-                {/* <CuratedTasks /> */}
-              </Tab>
-            </Tabs>
+                        <Card
+                          isPressable
+                          onPress={() => onImagePress(reportImages, index)}
+                          isFooterBlurred
+                          className="border-none w-full"
+                        >
+                          <Image
+                            removeWrapper
+                            width={120}
+                            height={120}
+                            className="object-cover w-full"
+                            src={src}
+                            alt={src + index}
+                          />
+                          <CardFooter className="absolute h-6 bg-white/30 bottom-0 z-10 justify-between">
+                            <p className="w-full text-xs text-center line-clamp-1">{`attachment ${index + 1}`}</p>
+                          </CardFooter>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                </Tab>
+                <Tab value="curated-tasks" title={t("curated-tasks-tab-text")}>
+                  {/* <CuratedTasks /> */}
+                </Tab>
+              </Tabs>
+            </div>
           </div>
           <PhotoSlider
             images={sliderImages}

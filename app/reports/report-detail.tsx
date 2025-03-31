@@ -51,7 +51,7 @@ export const ReportDetail = ({ report, className }: ReportDetailProps) => {
           Icon={CalendarDaysIcon}
           label="created-at"
         >
-          <p className="text-xs text-default-700 font-semibold">{fullDate}</p>
+          <p className="text-xs text-default-700 font-semibold md:font-normal">{fullDate}</p>
         </Info>
         <Info className="items-center" Icon={CheckBadgeIcon} label="status">
           <Chip
@@ -59,7 +59,7 @@ export const ReportDetail = ({ report, className }: ReportDetailProps) => {
             variant="dot"
             className="border-none -ml-2"
             classNames={{
-              content: "text-default-700 font-semibold",
+              content: "text-default-700 font-semibold md:font-normal",
             }}
             color={StatusChipColor[status as keyof typeof StatusChipColor]}
           >
@@ -85,7 +85,7 @@ export const ReportDetail = ({ report, className }: ReportDetailProps) => {
           </Chip>
         </Info>
         <Info Icon={FolderOpenIcon} className="items-center" label="category">
-          <Chip variant="bordered" size="sm">
+          <Chip classNames={{ content: "font-semibold md:font-normal" }} variant="bordered" size="sm">
             {categoryLabel}
           </Chip>
         </Info>
@@ -96,7 +96,7 @@ export const ReportDetail = ({ report, className }: ReportDetailProps) => {
             className="items-center sm:items-start"
           >
             <span className="text-xs flex flex-wrap gap-x-1 text-default-700">
-              <p>{fullAddress}</p>
+              <p className="font-semibold md:font-normal">{fullAddress}</p>
               <Link
                 href={mapUrl}
                 target="_blank"

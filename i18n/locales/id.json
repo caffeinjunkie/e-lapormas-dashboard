@@ -110,10 +110,15 @@
     "visit-map-link-text": "(Lihat di peta)",
     "back-to-previous-page-button-text": "Kembali",
     "attachments-tab-text": "Lampiran",
+    "no-attachments-text": "Lampiran kosong",
     "activities-tab-text": "Aktivitas",
     "activity-accepted-text": "<bold>{user}</bold> menerima laporan.",
     "activity-in-progress-text": "<bold>{user}</bold> memproses laporan dengan komentar <bold>{message}</bold>.",
     "activity-completed-text": "<bold>{user}</bold> menyelesaikan laporan dengan komentar <bold>{message}</bold>.",
+    "activity-accept-button-text": "Terima Laporan",
+    "activity-empty-text": "Aktivitas kosong. Terima laporan untuk memulai dan berikan update kepada pelapor jika ada progres.",
+    "activity-follow-up-button-text": "Kirim Update",
+    "activity-finish-button-text": "Selesaikan",
     "curated-tasks-tab-text": "Daftar Tugas"
   },
   "StatisticsPage": {
