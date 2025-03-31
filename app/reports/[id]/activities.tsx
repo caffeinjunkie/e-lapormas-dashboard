@@ -30,7 +30,7 @@ export const Activities = ({
   data,
   status,
   isIntersecting,
-    actions,
+  actions,
   users,
   onImagePress,
 }: ActivitiesProps) => {
@@ -59,9 +59,12 @@ export const Activities = ({
           {t("activity-empty-text")}
         </p>
         <div
-          className={clsx("bg-white flex w-full transition-all duration-1000 ease-in-out animate-slide-up sm:animate-none py-4 px-6",
+          className={clsx(
+            "bg-white flex w-full transition-all duration-1000 ease-in-out animate-slide-up sm:animate-none py-4 px-6",
             "justify-center absolute md:static bottom-0",
-            !isIntersecting ? "shadow-[rgba(5,5,5,0.1)_0_-1px_10px_0px] md:shadow-none" : "shadow-none"
+            !isIntersecting
+              ? "shadow-[rgba(5,5,5,0.1)_0_-1px_10px_0px] md:shadow-none"
+              : "shadow-none",
           )}
         >
           <Button
@@ -118,7 +121,7 @@ export const Activities = ({
                   initial={{ flex: 0 }}
                   animate={{ flex: 1 }}
                   transition={{
-                    duration: 0.5 * (index + 1),
+                    duration: 0.5,
                     delay: 0.3 * (index + 1),
                     ease: "easeInOut",
                   }}

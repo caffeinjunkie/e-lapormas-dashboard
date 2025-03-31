@@ -56,7 +56,7 @@ export default function ReportDetailPage() {
     const bodyObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.intersectionRatio > 0.9) {
+          if (entry.isIntersecting) {
             setIsIntersectingBody(true);
           } else {
             setIsIntersectingBody(false);
@@ -151,7 +151,7 @@ export default function ReportDetailPage() {
         className={clsx(
           title({ size: "xs" }),
           "transition-all px-6 duration-200 ease-in-out text-md",
-          !isIntersectingBody ? "pt-0" : "pt-3",
+          !isIntersectingBody ? "pt-2 lg:pt-0" : "pt-0 lg:pt-3",
         )}
       >
         {data?.report?.title}
@@ -160,8 +160,8 @@ export default function ReportDetailPage() {
         className={clsx(
           "w-1 sm:h-2 transition-all duration-1000 ease-in-out bg-white",
           isIntersectingBody
-            ? "w-full border-b-1 border-white shadow-md sm:border-none sm:shadow-none"
-            : "md:w-full lg:w-0 border-b-1 lg:border-transparent shadow-md lg:shadow-none",
+            ? "w-full border-b-1 border-white lg:shadow-md"
+            : "md:w-full lg:w-0 border-b-1 bg-white lg:border-transparent shadow-md lg:shadow-none",
         )}
       ></div>
     </div>
@@ -190,9 +190,11 @@ export default function ReportDetailPage() {
       {!isLoading && (
         <div className="flex flex-col flex-grow">
           {renderTitle()}
-          <div className={clsx(
-            "flex flex-col lg:flex-row gap-2 lg:gap-6 flex-grow pb-6",
-          )}>
+          <div
+            className={clsx(
+              "flex flex-col lg:flex-row gap-2 lg:gap-6 flex-grow pb-6",
+            )}
+          >
             <div ref={bodyRef} className="flex flex-col w-full px-6 lg:pr-6">
               <ReportDetail report={data?.report} className="pb-5" />
             </div>
@@ -200,7 +202,7 @@ export default function ReportDetailPage() {
               ref={tabsRef}
               className={clsx(
                 "flex flex-col flex-1 z-30 gap-4",
-                "w-full py-4 lg:pt-0 px-6 lg:px-4",
+                "w-full py-4 lg:mt-[-28px] px-6 lg:px-4",
                 "lg:w-[50vw] h-fit lg:sticky top-2",
                 "transition-all duration-300 ease-in-out",
               )}
@@ -252,6 +254,7 @@ export default function ReportDetailPage() {
                         >
                           <Image
                             removeWrapper
+                            loading="lazy"
                             width={120}
                             height={120}
                             className="object-cover w-full"

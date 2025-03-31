@@ -51,7 +51,9 @@ export const ReportDetail = ({ report, className }: ReportDetailProps) => {
           Icon={CalendarDaysIcon}
           label="created-at"
         >
-          <p className="text-xs text-default-700 font-semibold md:font-normal">{fullDate}</p>
+          <p className="text-xs text-default-700 font-semibold md:font-normal">
+            {fullDate}
+          </p>
         </Info>
         <Info className="items-center" Icon={CheckBadgeIcon} label="status">
           <Chip
@@ -85,7 +87,11 @@ export const ReportDetail = ({ report, className }: ReportDetailProps) => {
           </Chip>
         </Info>
         <Info Icon={FolderOpenIcon} className="items-center" label="category">
-          <Chip classNames={{ content: "font-semibold md:font-normal" }} variant="bordered" size="sm">
+          <Chip
+            classNames={{ content: "font-semibold md:font-normal" }}
+            variant="bordered"
+            size="sm"
+          >
             {categoryLabel}
           </Chip>
         </Info>
