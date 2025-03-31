@@ -23,30 +23,6 @@ module.exports = {
             transform: "translateY(0)",
           },
         },
-        "slide-right": {
-          "0%": {
-            transform: "translateX(-100%)",
-          },
-          "100%": {
-            transform: "translateX(0)",
-          },
-        },
-        "slide-up": {
-          "0%": {
-            transform: "translateY(1000%)",
-          },
-          "100%": {
-            transform: "translateY(0)",
-          },
-        },
-        "slide-down": {
-          "0%": {
-            transform: "translateY(0)",
-          },
-          "100%": {
-            transform: "translateY(1000%)",
-          },
-        },
         appear: {
           "0%": {
             opacity: "0",
@@ -69,12 +45,7 @@ module.exports = {
       },
       animation: {
         drop: "drop 0.2s ease-in-out",
-        "slide-right": "slide-right 0.2s ease-in-out",
-        "slide-up-1": "slide-up 0.3s ease-in-out",
-        "slide-up-2": "slide-up 0.4s ease-in-out",
-        "slide-down": "slide-down 0.3s ease-in-out",
         appear: "appear 0.6s ease-in-out",
-        wiggle: "wiggle 0.5s ease-out",
       },
     },
   },

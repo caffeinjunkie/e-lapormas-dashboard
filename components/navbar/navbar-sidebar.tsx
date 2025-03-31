@@ -4,6 +4,7 @@ import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { Skeleton } from "@heroui/skeleton";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { PropsWithChildren, useState } from "react";
@@ -79,15 +80,22 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                 top: `${activeIndex !== 0 ? activeIndex * 3.5 : 0}rem`,
               }}
             >
-              <div
-                className="w-1 py-4 rounded-r-lg animate-appear"
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{
+                  delay: 0.3 * (activeIndex + 1),
+                  duration: 0.3,
+                  ease: "easeInOut",
+                }}
+                className="w-1 py-4 rounded-r-lg"
                 style={{
                   backgroundColor: sidebarTheme.secondary,
                 }}
               />
             </div>
             <nav className="flex flex-col">
-              {sidebarItems.map(({ href, label, Icon }) => (
+              {sidebarItems.map(({ href, label, Icon }, index) => (
                 <NextLink
                   key={href}
                   className="flex w-full space-x-2 text-sm py-3 font-semibold group"
@@ -102,7 +110,13 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                     shouldShowConfirmation ? openModal(href) : onNavigate(href);
                   }}
                 >
-                  <div
+                  <motion.div
+                    initial={{ x: -500, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{
+                      duration: 0.3 * (index + 1),
+                      ease: "easeInOut",
+                    }}
                     style={{
                       color: sidebarTheme.text,
                     }}
@@ -113,7 +127,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                         : "opacity-50 group-hover:opacity-70",
                     )}
                   >
-                    <div className="">
+                    <div>
                       <Icon
                         color={
                           isActive(href)
@@ -123,7 +137,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
                       />
                     </div>
                     <p>{t(label)}</p>
-                  </div>
+                  </motion.div>
                 </NextLink>
               ))}
             </nav>
