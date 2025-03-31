@@ -69,11 +69,13 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
 };
 
 export const fetchTaskByTrackingId = async (trackingId: string) => {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tasks")
     .select("*")
     .eq("tracking_id", trackingId)
     .single();
 
-  return data;
+  if (error) throw error;
+
+  return { data };
 };

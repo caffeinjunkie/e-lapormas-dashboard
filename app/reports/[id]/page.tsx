@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
 import { Button } from "@heroui/button";
 import { Spinner } from "@heroui/spinner";
@@ -11,7 +12,9 @@ import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
 import { swrConfig } from "../config";
+import { fetchReportAndAdmins } from "../handlers";
 import { ReportDetail } from "../report-detail";
+import { Activities } from "./activities";
 
 import { fetchTaskByTrackingId } from "@/api/tasks";
 import Error from "@/components/error";
@@ -26,30 +29,11 @@ export default function ReportDetailPage() {
   const { id } = useParams();
   const [isIntersectingBody, setIsIntersectingBody] = useState(false);
   const [isIntersectingTabs, setIsIntersectingTabs] = useState(false);
-  const {
-    data: report,
-    error,
-    isLoading,
-    mutate,
-  } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     ["report-detail", id],
-    () => fetchTaskByTrackingId(id as string),
+    () => fetchReportAndAdmins(id as string),
     swrConfig,
   );
-
-  if (error) {
-    <Layout
-      classNames={{
-        header: "gap-4",
-        body: "px-6",
-      }}
-    >
-      <Error message={t("page-error-message")} onReset={mutate} />
-      <Button onPress={() => router.back()}>
-        {t("back-to-previous-page-button-text")}
-      </Button>
-    </Layout>;
-  }
 
   useEffect(() => {
     const bodyObserver = new IntersectionObserver(
@@ -73,7 +57,6 @@ export default function ReportDetailPage() {
           } else {
             setIsIntersectingTabs(false);
           }
-          console.log(entry);
         });
       },
       { threshold: 0.85 },
@@ -94,7 +77,28 @@ export default function ReportDetailPage() {
         tabsObserver.unobserve(tabsRef.current);
       }
     };
-  }, [report]);
+  }, [data?.report]);
+
+  if (error) {
+    return (
+      <Layout
+        classNames={{
+          header: "gap-4",
+          body: "px-6",
+        }}
+      >
+        <Error message={t("page-error-message")} onReset={mutate}>
+          <Button
+            color="primary"
+            startContent={<ArrowLeftIcon className="size-4 md:size-5" />}
+            onPress={() => router.back()}
+          >
+            {t("back-to-previous-page-button-text")}
+          </Button>
+        </Error>
+      </Layout>
+    );
+  }
 
   return (
     <Layout
@@ -121,8 +125,7 @@ export default function ReportDetailPage() {
           <div className="flex flex-col w-full lg:pr-6">
             <div
               className={clsx(
-                "flex flex-col gap-1 z-50 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
-                isIntersectingTabs ? "absolute top-0" : "sticky top-0",
+                "flex flex-col gap-1 sticky top-0 z-50 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
               )}
             >
               <h1
@@ -132,7 +135,7 @@ export default function ReportDetailPage() {
                   !isIntersectingBody ? "sm:text-sm pt-2" : "",
                 )}
               >
-                {report?.title}
+                {data?.report?.title}
               </h1>
               <div
                 className={clsx(
@@ -144,16 +147,17 @@ export default function ReportDetailPage() {
               ></div>
             </div>
             <div ref={bodyRef} className="flex flex-col gap-1 w-full px-6">
-              <ReportDetail report={report} className="pb-5" />
+              <ReportDetail report={data?.report} className="pb-5" />
             </div>
           </div>
           <div
             ref={tabsRef}
             className={clsx(
-              "flex flex-col sticky top-0 pt-4 z-50 lg:static gap-4",
-              "lg:border-l-1 border-default-300 w-full py-4 lg:py-0 px-6 lg:px-4 lg:w-[50vw] h-[100vh] lg:h-[80vh]",
+              "flex flex-col sticky top-0 z-50 lg:static gap-4 bottom-0",
+              "lg:border-l-1 border-default-300 w-full py-4 lg:py-0 px-6 lg:px-4 ",
+              "lg:w-[50vw] h-[100vh] lg:h-fit",
               "transition-all duration-300 ease-in-out",
-              isIntersectingTabs ? "pt-16" : "pt-0",
+              isIntersectingTabs ? "pt-14 md:pt-8" : "pt-4",
             )}
           >
             <Tabs
@@ -163,8 +167,12 @@ export default function ReportDetailPage() {
               variant="underlined"
               className="font-semibold"
             >
-              <Tab value="activities">{t("activities-tab-text")}</Tab>
-              <Tab value="curated-tasks">{t("curated-tasks-tab-text")}</Tab>
+              <Tab value="activities" title={t("activities-tab-text")}>
+                <Activities data={data?.report?.progress} />
+              </Tab>
+              <Tab value="curated-tasks" title={t("curated-tasks-tab-text")}>
+                {/* <CuratedTasks /> */}
+              </Tab>
             </Tabs>
           </div>
         </div>

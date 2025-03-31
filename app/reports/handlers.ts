@@ -1,4 +1,10 @@
-import { FilterType, SortType, fetchTasks } from "@/api/tasks";
+import { fetchAllAdmins } from "@/api/admin";
+import {
+  FilterType,
+  SortType,
+  fetchTaskByTrackingId,
+  fetchTasks,
+} from "@/api/tasks";
 
 interface GetReportsOptions {
   offset?: number;
@@ -81,4 +87,11 @@ export const appendParam = (params: Record<string, string>) => {
     }
   });
   return searchParams.toString();
+};
+
+export const fetchReportAndAdmins = async (id: string) => {
+  const { data } = await fetchTaskByTrackingId(id);
+  const { data: admins } = await fetchAllAdmins();
+
+  return { report: data, admins };
 };
