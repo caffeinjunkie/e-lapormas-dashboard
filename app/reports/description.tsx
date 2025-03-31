@@ -14,7 +14,7 @@ export const Description = ({
   const t = useTranslations("ReportsPage");
   return (
     <div className="flex flex-col gap-3 w-full">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <p className="text-xs font-bold text-default-500">
           {t("description-text")}
         </p>
@@ -23,7 +23,7 @@ export const Description = ({
         </div>
       </div>
       {followUpQuestions.length > 0 && (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <p className="text-xs font-bold text-default-500">
             {t("follow-up-questions-text")}
           </p>

@@ -9,6 +9,7 @@ import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { PhotoSlider } from "react-photo-view";
 import useSWR from "swr";
 
 import { swrConfig } from "../config";
@@ -16,7 +17,6 @@ import { fetchReportAndAdmins } from "../handlers";
 import { ReportDetail } from "../report-detail";
 import { Activities } from "./activities";
 
-import { fetchTaskByTrackingId } from "@/api/tasks";
 import Error from "@/components/error";
 import { Layout } from "@/components/layout";
 import { title } from "@/components/primitives";
@@ -29,6 +29,14 @@ export default function ReportDetailPage() {
   const { id } = useParams();
   const [isIntersectingBody, setIsIntersectingBody] = useState(false);
   const [isIntersectingTabs, setIsIntersectingTabs] = useState(false);
+  const [isPhotoSliderOpen, setPhotoSliderOpen] = useState(false);
+  const [sliderImages, setSliderImages] = useState<
+    {
+      src: string;
+      key: string;
+    }[]
+  >([]);
+  const [imageIndex, setImageIndex] = useState(0);
   const { data, error, isLoading, mutate } = useSWR(
     ["report-detail", id],
     () => fetchReportAndAdmins(id as string),
@@ -78,6 +86,15 @@ export default function ReportDetailPage() {
       }
     };
   }, [data?.report]);
+
+  const onImagePress = (
+    images: { src: string; key: string }[],
+    index: number = 0,
+  ) => {
+    setSliderImages(images);
+    setPhotoSliderOpen(true);
+    setImageIndex(index);
+  };
 
   if (error) {
     return (
@@ -170,6 +187,7 @@ export default function ReportDetailPage() {
               <Tab value="activities" title={t("activities-tab-text")}>
                 <Activities
                   data={data?.report?.progress}
+                  onImagePress={onImagePress}
                   users={data?.admins || []}
                 />
               </Tab>
@@ -178,6 +196,12 @@ export default function ReportDetailPage() {
               </Tab>
             </Tabs>
           </div>
+          <PhotoSlider
+            images={sliderImages}
+            index={imageIndex}
+            visible={isPhotoSliderOpen}
+            onClose={() => setPhotoSliderOpen(false)}
+          />
         </div>
       )}
     </Layout>

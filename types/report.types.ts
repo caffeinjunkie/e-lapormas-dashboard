@@ -3,7 +3,7 @@ export interface QuestionAnswer {
   a: string;
 }
 
-interface Progress {
+export interface Progress {
   updated_by: string;
   status: "IN_PROGRESS" | "COMPLETED";
   updated_at: string;

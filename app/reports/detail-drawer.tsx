@@ -115,7 +115,6 @@ export const DetailDrawer = ({
               {images.length > 0 && (
                 <ImageAttachment
                   src={images[0]}
-                  alt={selectedReport?.title || ""}
                   onPress={() => setPhotoSliderOpen(true)}
                 />
               )}
