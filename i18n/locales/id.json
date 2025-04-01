@@ -116,14 +116,15 @@
     "activity-in-progress-text": "<bold>{user}</bold> memproses laporan dengan komentar <bold>{message}</bold>.",
     "activity-completed-text": "<bold>{user}</bold> menyelesaikan laporan dengan komentar <bold>{message}</bold>.",
     "activity-accept-button-text": "Terima Laporan",
-    "activity-empty-text": "Aktivitas kosong. Terima laporan untuk memulai dan berikan update kepada pelapor jika ada progres.",
+    "activity-empty-text": "Aktivitas kosong. Terima laporan untuk memulai dan berikan update kepada pelapor jika ada pembaharuan.",
     "activity-message-placeholder": "Tulis pesan untuk pelapor",
     "activity-message-label": "Pesan",
     "activity-min-2-activity-text": "Lakukan update minimal 1 kali untuk menyelesaikan laporan.",
     "activity-follow-up-button-text": "Kirim Update",
     "activity-finish-button-text": "Selesaikan",
-    "activity-upload-image-disclaimer-label": "Pilih foto dengan ukuran maksimal 5MB.",
-    "activity-or-text": "Atau",
+    "activity-file-size-error-message": "Ukuran file tidak boleh melebihi 2MB.",
+    "activity-file-type-error-message": "Hanya file gambar yang diterima.",
+    "activity-mark-as-completed-text": "Tandai laporan selesai",
     "curated-tasks-tab-text": "Daftar Tugas"
   },
   "StatisticsPage": {

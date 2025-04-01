@@ -110,12 +110,16 @@ export default function ReportDetailPage() {
     // mutate();
   };
 
-  const onFinishReport = () => {
+  const handleFinishReport = () => {
     // TODO: Finish report
     // mutate();
   };
 
-  const onSendUpdate = () => {
+  const onFinishReport = (e: React.FormEvent, files: File[]) => {
+    // TODO: pop up r u sure
+  };
+
+  const onSendUpdate = (e: React.FormEvent, files: File[]) => {
     // TODO: Send update
     // mutate();
   };
@@ -167,10 +171,83 @@ export default function ReportDetailPage() {
     </div>
   );
 
+  const tes = () => (
+    <>
+      <ReportDetail report={data?.report} className="pb-5" />
+      <Tabs
+        size="md"
+        aria-label="Report detail tabs"
+        color="default"
+        variant="underlined"
+        className="font-semibold"
+      >
+        <Tab value="activities" title={t("activities-tab-text")}>
+          <Activities
+            actions={{
+              onAcceptReport,
+              onFinishReport,
+              onSendUpdate,
+            }}
+            isIntersecting={isIntersectingTabs}
+            status={data?.report?.status}
+            data={data?.report?.progress}
+            onImagePress={onImagePress}
+            users={data?.admins || []}
+          />
+        </Tab>
+        <Tab value="attachments" title={t("attachments-tab-text")}>
+          {reportImages.length === 0 && (
+            <p className="flex justify-center w-full px-4 text-default-500 text-sm">
+              {t("no-attachments-text")}
+            </p>
+          )}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-3 gap-2">
+            {reportImages.map(({ src }, index) => (
+              <motion.div
+                key={index}
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.2,
+                  ease: "easeInOut",
+                }}
+              >
+                <Card
+                  isPressable
+                  onPress={() => onImagePress(reportImages, index)}
+                  isFooterBlurred
+                  className="border-none w-full"
+                >
+                  <Image
+                    removeWrapper
+                    loading="lazy"
+                    width={120}
+                    height={120}
+                    className="object-cover w-full"
+                    src={src}
+                    alt={src + index}
+                  />
+                  <CardFooter className="absolute h-6 bg-white/30 bottom-0 z-10 justify-between">
+                    <p className="w-full text-xs text-center line-clamp-1">{`attachment ${index + 1}`}</p>
+                  </CardFooter>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </Tab>
+        <Tab value="curated-tasks" title={t("curated-tasks-tab-text")}>
+          {/* <CuratedTasks /> */}
+        </Tab>
+      </Tabs>
+    </>
+  );
+
   return (
     <Layout
       classNames={{
-        header: clsx("gap-4"),
+        header: "gap-4",
+        layout: "overflow-y-clip",
       }}
       headerComponent={
         <Breadcrumbs
@@ -188,26 +265,21 @@ export default function ReportDetailPage() {
     >
       {isLoading && <Spinner />}
       {!isLoading && (
-        <div className="flex flex-col flex-grow">
+        <div className="flex flex-col">
           {renderTitle()}
-          <div
-            className={clsx(
-              "flex flex-col lg:flex-row gap-2 lg:gap-6 flex-grow",
-            )}
-          >
+          <div className={clsx("flex flex-col lg:flex-row gap-2 lg:gap-4")}>
             <div
               ref={bodyRef}
-              className="flex flex-col w-full px-6 pb-0 lg:pb-6 lg:pr-6"
+              className="flex flex-col flex-1 h-[80vh] px-6 pb-0 lg:pb-6 lg:pr-6"
             >
               <ReportDetail report={data?.report} className="pb-5" />
             </div>
             <div
               ref={tabsRef}
               className={clsx(
-                "flex flex-col flex-1 z-30 gap-4",
-                "w-full py-4 lg:mt-[-28px] px-6 lg:px-4",
-                "lg:w-[50vw] h-fit lg:sticky top-2",
+                "flex flex-col z-30 gap-4 w-full lg:w-[43vh]",
                 "transition-all duration-300 ease-in-out",
+                "lg:max-h-[84vh]",
               )}
             >
               <Tabs
@@ -215,6 +287,10 @@ export default function ReportDetailPage() {
                 aria-label="Report detail tabs"
                 color="default"
                 variant="underlined"
+                classNames={{
+                  tabList: "px-4 lg:px-0 mt-4 lg:mt-[-12px]",
+                  panel: "overflow-y-scroll px-6 lg:px-4 pb-4",
+                }}
                 className="font-semibold"
               >
                 <Tab value="activities" title={t("activities-tab-text")}>
@@ -285,6 +361,7 @@ export default function ReportDetailPage() {
             onIndexChange={setImageIndex}
             onClose={() => setPhotoSliderOpen(false)}
           />
+          {/* <div className="absolute bottom-0 right-0 left-0 w-full h-full bg-black opacity-50">tes</div> */}
         </div>
       )}
     </Layout>
