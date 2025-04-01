@@ -332,3 +332,5 @@ export const Activities = forwardRef<HTMLDivElement, ActivitiesProps>(
     );
   },
 );
+
+Activities.displayName = "Activities";
