@@ -19,6 +19,7 @@ interface TopContentProps {
   onPressFilterButton: () => void;
   selectedTab: string;
   filters: string[];
+  searchValue: string;
   onSelectTab: (key: string) => void;
   selectedSortValue: string;
   selectedSortKeys: Set<string>;
@@ -31,6 +32,7 @@ export const TopContent = ({
   onSearchClear,
   selectedTab,
   filters,
+  searchValue,
   onSelectTab,
   onPressFilterButton,
   selectedSortValue,
@@ -62,6 +64,7 @@ export const TopContent = ({
           className="w-full lg:max-w-[50%]"
           placeholder={t("search-placeholder")}
           onClear={onSearchClear}
+          defaultValue={searchValue}
           onValueChange={onSearchChange}
         />
         <div className="flex gap-2 items-center w-full lg:w-fit">

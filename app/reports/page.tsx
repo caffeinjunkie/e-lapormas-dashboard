@@ -2,11 +2,19 @@
 
 import { useDisclosure } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
+import { Spinner } from "@heroui/spinner";
 import { Key } from "@react-types/shared";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import useSWR from "swr";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -24,7 +32,15 @@ import { Table } from "@/components/table";
 import { Report } from "@/types/report.types";
 import { calculateReportRow } from "@/utils/screen";
 
-export default function ReportsPage() {
+function SuspensedReportsPage() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <ReportsPage />
+    </Suspense>
+  );
+}
+
+function ReportsPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -144,6 +160,7 @@ export default function ReportsPage() {
       status: key as string,
       page: "1",
     });
+
     router.replace(`${pathname}?${param}`);
   };
 
@@ -175,6 +192,7 @@ export default function ReportsPage() {
       <TopContent
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
+        searchValue={searchQuery || ""}
         filters={[category, priority, startDate]}
         onPressFilterButton={openModal}
         selectedTab={tab as string}
@@ -185,7 +203,7 @@ export default function ReportsPage() {
         isMobile={isMobile}
       />
     );
-  }, [onSearchChange, onClear, sortBy, onSortChange, isMobile]);
+  }, [onSearchChange, onClear, sortBy, onSortChange, searchQuery, isMobile]);
 
   return (
     <Layout
@@ -256,4 +274,6 @@ export default function ReportsPage() {
   );
 }
 
-ReportsPage.displayName = "ReportsPage";
+export default SuspensedReportsPage;
+
+SuspensedReportsPage.displayName = "SuspensedReportsPage";

@@ -21,27 +21,27 @@ export const ImageAttachment = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const getImage = async () => {
-      let blob = await fetch(src).then((r) => r.blob());
+      try {
+        let blob = await fetch(src).then((r) => r.blob());
 
-      if (!blob.type.includes("image")) return;
+        if (!blob.type.includes("image")) return;
 
-      const filename = "image"; // wait for upload from pekerja.ai
-      const file = new File([blob], filename, {
-        type: "image/png",
-      });
+        const filename = "image"; // wait for upload from pekerja.ai
+        const file = new File([blob], filename, {
+          type: "image/png",
+        });
 
-      setFile(file);
+        setFile(file);
+      } catch (_) {
+        return;
+      } finally {
+        setLoading(false);
+      }
     };
 
-    try {
-      setLoading(true);
-      getImage();
-    } catch (error) {
-      return;
-    } finally {
-      setLoading(false);
-    }
+    getImage();
   }, []);
 
   return (
@@ -54,10 +54,10 @@ export const ImageAttachment = ({
       )}
     >
       {loading ? (
-        <Skeleton isLoaded={!loading} className="w-full animate-pulse h-14" />
+        <Skeleton isLoaded={!loading} className="w-40 animate-pulse h-12" />
       ) : (
         <>
-          <div className="flex flex-row items-center w-full p-2 justify-start gap-2">
+          <div className="flex flex-row w-40 items-center p-2 justify-start gap-2">
             {file ? (
               <ImageIcon size={32} color="#F31260" />
             ) : (
