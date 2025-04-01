@@ -25,7 +25,7 @@ export const TooltipButton = ({
   ...props
 }: TooltipButtonProps) => (
   <div className="relative flex w-full justify-center items-center gap-2">
-    <Tooltip isDisabled={isDisabled} {...props}>
+    <Tooltip delay={1000} isDisabled={isDisabled} {...props}>
       <Button
         isDisabled={isDisabled}
         isLoading={isLoading}

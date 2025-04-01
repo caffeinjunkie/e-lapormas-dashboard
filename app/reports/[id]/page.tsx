@@ -144,14 +144,14 @@ export default function ReportDetailPage() {
   const renderTitle = () => (
     <div
       className={clsx(
-        "flex flex-col gap-1 sticky top-0 z-30 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
+        "flex flex-col gap-1 sticky top-0 z-30 md:z-40 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
       )}
     >
       <h1
         className={clsx(
           title({ size: "xs" }),
           "transition-all px-6 duration-200 ease-in-out text-md",
-          !isIntersectingBody ? "pt-2 lg:pt-0" : "pt-0 lg:pt-3",
+          !isIntersectingBody ? "pt-2 lg:pt-0" : "pt-0",
         )}
       >
         {data?.report?.title}
@@ -160,7 +160,7 @@ export default function ReportDetailPage() {
         className={clsx(
           "w-1 sm:h-2 transition-all duration-1000 ease-in-out bg-white",
           isIntersectingBody
-            ? "w-full border-b-1 border-white lg:shadow-md"
+            ? ""
             : "md:w-full lg:w-0 border-b-1 bg-white lg:border-transparent shadow-md lg:shadow-none",
         )}
       ></div>
@@ -192,10 +192,13 @@ export default function ReportDetailPage() {
           {renderTitle()}
           <div
             className={clsx(
-              "flex flex-col lg:flex-row gap-2 lg:gap-6 flex-grow pb-6",
+              "flex flex-col lg:flex-row gap-2 lg:gap-6 flex-grow",
             )}
           >
-            <div ref={bodyRef} className="flex flex-col w-full px-6 lg:pr-6">
+            <div
+              ref={bodyRef}
+              className="flex flex-col w-full px-6 pb-0 lg:pb-6 lg:pr-6"
+            >
               <ReportDetail report={data?.report} className="pb-5" />
             </div>
             <div

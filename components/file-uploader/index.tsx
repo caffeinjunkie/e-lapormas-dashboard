@@ -36,13 +36,14 @@ export const FileUploader = ({
   legend,
 }: FileUploaderProps) => {
   const t = useTranslations("FileUploader");
+  const allowCrop = imageType !== "task";
+  const imageCropRatio = imageType === "profile" ? "1:1" : "16:9";
   const additionalProps = {
     imageResizeTargetWidth: imageType === "profile" ? 512 : 2560,
     imageResizeTargetHeight: imageType === "profile" ? 512 : 1440,
+    imageCropAspectRatio: allowCrop ? imageCropRatio : undefined,
   };
   const maxFileSize = imageType === "profile" ? "2MB" : "5MB";
-  const allowCrop = imageType !== "task";
-  const imageCropRatio = imageType === "profile" ? "1:1" : "16:9";
 
   return (
     <div>
@@ -51,7 +52,6 @@ export const FileUploader = ({
         allowImageResize={resize}
         disabled={isDisabled}
         allowImageCrop={allowCrop}
-        imageCropAspectRatio={imageCropRatio}
         maxFileSize={maxFileSize}
         acceptedFileTypes={["image/*"]}
         labelMaxFileSizeExceeded={t("max-file-size-exceeded-error")}
