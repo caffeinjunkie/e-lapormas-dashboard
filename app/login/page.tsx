@@ -3,6 +3,7 @@
 import { Card, CardBody } from "@heroui/card";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Tab, Tabs } from "@heroui/tabs";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,7 @@ import { FormEvent, useState } from "react";
 import { handleLogin, handleResetPassword } from "@/app/login/handlers";
 import { LoginForm } from "@/app/login/login-form";
 import { ResetPasswordForm } from "@/app/login/reset-password-form";
+import { Logo } from "@/components/icons";
 import { Modal } from "@/components/modal";
 import { siteConfig } from "@/config/site";
 import { buildFormData } from "@/utils/form";
@@ -35,7 +37,7 @@ export default function LoginPage() {
     message: "",
   });
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
-  const { logoSrc, backgroundImageSrcs } = siteConfig;
+  const { backgroundImageSrcs } = siteConfig;
 
   const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,22 +92,19 @@ export default function LoginPage() {
         height={1536}
         className="w-full h-full object-cover absolute top-0 left-0"
       />
-      <div className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen">
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen"
+      >
         <div className="w-full flex justify-center items-center gap-1">
-          <NextImage
-            src={logoSrc}
-            alt="Logo"
-            className="object-contain"
-            width={80}
-            height={80}
-          />
-          <div className="flex flex-col text-sm text-black">
-            <p>{t("title-1")}</p>
-            <p>{t("title-2")}</p>
-            <p>{siteConfig.organizationName}</p>
-          </div>
+          <Logo fill="black" />
         </div>
-        <Card className="max-w-md w-full min-w-[320px] overflow-scroll">
+        <Card
+          isBlurred
+          className="max-w-md w-full min-w-[320px] overflow-scroll"
+        >
           <CardBody
             className="overflow-hidden transition-max-h transition-min-h duration-500 linear"
             style={{
@@ -181,7 +180,7 @@ export default function LoginPage() {
             {modalProps.message}
           </ModalBody>
         </Modal>
-      </div>
+      </motion.div>
     </div>
   );
 }

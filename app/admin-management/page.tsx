@@ -57,6 +57,7 @@ export default function AdminManagementPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+
   const { modals, openModal, closeModal } = Modal.useMultipleModal();
   const layoutRef = useRef<HTMLDivElement>(null);
 
@@ -357,13 +358,13 @@ export default function AdminManagementPage() {
   ]);
 
   const renderCell = useCallback(
-    (user: AdminData, columnKey: string, isLast: boolean) => (
+    (user: AdminData, columnKey: string, isLast?: boolean) => (
       <AdminCell
         columnKey={columnKey}
         user={user}
         admins={admins}
         isMobile={isMobile}
-        isLast={isLast}
+        isLast={isLast ?? false}
         selfId={selfId}
         onSuperAdminToggle={() =>
           transformAdmins({

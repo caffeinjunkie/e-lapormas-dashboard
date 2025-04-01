@@ -1,4 +1,10 @@
-import { FilterType, SortType, fetchTasks } from "@/api/tasks";
+import { fetchAllAdmins } from "@/api/admin";
+import {
+  FilterType,
+  SortType,
+  fetchTaskByTrackingId,
+  fetchTasks,
+} from "@/api/tasks";
 
 interface GetReportsOptions {
   offset?: number;
@@ -6,7 +12,12 @@ interface GetReportsOptions {
   search?: string;
   status?: string;
   searchValue?: string;
-  filters?: FilterType[];
+  filters?: {
+    category?: string;
+    priority?: string;
+    startDate?: string;
+    endDate?: string;
+  };
   sortBy: string;
 }
 
@@ -35,9 +46,25 @@ export const fetchReports = async ({
   status = "PENDING",
   sortBy,
   searchValue = "",
-  filters = [],
+  filters = {},
 }: GetReportsOptions) => {
   const sort = getSortValue(sortBy);
+  const constructedFilters = Object.entries(filters)
+    .map(([field, value]) => {
+      if (value) {
+        return {
+          field,
+          value:
+            field === "startDate" || field === "endDate"
+              ? value
+              : value
+                  .split(",")
+                  .map((v) => (field === "priority" ? v.toUpperCase() : v)),
+        };
+      }
+      return null;
+    })
+    .filter(Boolean) as FilterType[];
 
   const { data, count, error } = await fetchTasks({
     offset,
@@ -45,7 +72,26 @@ export const fetchReports = async ({
     searchValue,
     status,
     sort: sort as SortType,
-    filters,
+    filters: constructedFilters as FilterType[],
   });
   return { reports: data, count, error };
+};
+
+export const appendParam = (params: Record<string, string>) => {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      searchParams.append(key, value);
+    } else {
+      searchParams.delete(key);
+    }
+  });
+  return searchParams.toString();
+};
+
+export const fetchReportAndAdmins = async (id: string) => {
+  const { data } = await fetchTaskByTrackingId(id);
+  const { data: admins } = await fetchAllAdmins();
+
+  return { report: data, admins };
 };

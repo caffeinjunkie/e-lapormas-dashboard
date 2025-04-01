@@ -15,4 +15,5 @@ export type AdminData = {
   rating?: number;
   profile_img?: string;
   created_at?: string;
+  is_hidden?: boolean;
 };

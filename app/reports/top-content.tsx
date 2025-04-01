@@ -14,12 +14,12 @@ import { SearchBar } from "@/components/search-bar";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 
 interface TopContentProps {
-  searchValue: string;
   onSearchChange: (value: string) => void;
   onSearchClear: () => void;
   onPressFilterButton: () => void;
   selectedTab: string;
-  filterCount: number;
+  filters: string[];
+  searchValue: string;
   onSelectTab: (key: string) => void;
   selectedSortValue: string;
   selectedSortKeys: Set<string>;
@@ -28,11 +28,11 @@ interface TopContentProps {
 }
 
 export const TopContent = ({
-  searchValue,
   onSearchChange,
   onSearchClear,
   selectedTab,
-  filterCount,
+  filters,
+  searchValue,
   onSelectTab,
   onPressFilterButton,
   selectedSortValue,
@@ -41,6 +41,7 @@ export const TopContent = ({
   isMobile,
 }: TopContentProps) => {
   const t = useTranslations("ReportsPage");
+  const filterCount = filters.filter((f) => f !== "").length;
 
   const transformedSortOptions = sortOptions.map(({ id, labelKey }) => ({
     id,
@@ -62,8 +63,8 @@ export const TopContent = ({
         <SearchBar
           className="w-full lg:max-w-[50%]"
           placeholder={t("search-placeholder")}
-          value={searchValue}
           onClear={onSearchClear}
+          defaultValue={searchValue}
           onValueChange={onSearchChange}
         />
         <div className="flex gap-2 items-center w-full lg:w-fit">

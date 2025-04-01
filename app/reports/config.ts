@@ -43,6 +43,12 @@ export enum SortLabel {
   LOWER_PRIORITY = "sort-lower-priority",
 }
 
+export enum StatusEnum {
+  PENDING = "PENDING",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+}
+
 export enum PriorityLabel {
   CRITICAL = "priority-critical",
   HIGH = "priority-high",
@@ -61,13 +67,6 @@ export enum PriorityChipColor {
   HIGH = "warning",
   MID = "default",
   LOW = "secondary",
-}
-
-export enum PriorityChipTextColor {
-  CRITICAL = "text-white",
-  HIGH = "text-white",
-  MID = "text-black",
-  LOW = "text-black",
 }
 
 export enum StatusChipColor {

@@ -1,7 +1,7 @@
 "use client";
 
 import { ModalHeader } from "@heroui/modal";
-import { Skeleton } from "@heroui/skeleton";
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
@@ -32,7 +32,6 @@ export const Navbar = () => {
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isNavbarFullyLoaded, setIsNavbarFullyLoaded] = useState(false);
   const [user, setUser] = useState<ProfileData | null>(null);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [orgName, setOrgName] = useState("");
   const [nextPath, setNextPath] = useState("");
 
@@ -45,6 +44,7 @@ export const Navbar = () => {
       if (!orgName) {
         const appConfig = await fetchAppConfig();
         orgName = appConfig.org_name;
+        document.cookie = `org_name=${orgName}; path=/`;
       }
 
       setOrgName(orgName!);
@@ -64,7 +64,6 @@ export const Navbar = () => {
         fullName: displayName,
         imageSrc: result.profile_img,
       });
-      setIsSuperAdmin(result.is_super_admin);
     } catch (error) {
       await handleLogout();
     } finally {
@@ -122,7 +121,6 @@ export const Navbar = () => {
     <>
       <MobileNavbar
         pathname={pathname}
-        isSuperAdmin={isSuperAdmin}
         onNavigate={handleNavigation}
         shouldShowConfirmation={shouldShowConfirmation}
         openModal={openSpecificModal}
@@ -130,7 +128,6 @@ export const Navbar = () => {
         {mobileHeaderLabel}
       </MobileNavbar>
       <Sidebar
-        isSuperAdmin={isSuperAdmin}
         pathname={pathname}
         isLoaded={isNavbarFullyLoaded}
         onNavigate={handleNavigation}
@@ -139,20 +136,20 @@ export const Navbar = () => {
         openModal={openSpecificModal}
       >
         <div className="flex justify-center px-6 pt-4 w-full">
-          <Skeleton
-            className="rounded-full h-14"
-            isLoaded={isNavbarFullyLoaded}
-          >
-            <div className="flex flex-col justify-center pb-4">
-              <Logo
-                color={siteConfig.sidebarTheme.secondary}
-                fill={siteConfig.sidebarTheme.text}
-              />
-              <p className="text-[10px] mt-[-12px] mr-3 text-right">
-                {orgName}
-              </p>
-            </div>
-          </Skeleton>
+          <div className="flex flex-col justify-center animate-drop">
+            <Logo
+              color={siteConfig.sidebarTheme.secondary}
+              fill={siteConfig.sidebarTheme.text}
+            />
+            <p
+              className={clsx(
+                "text-[10px] mt-[-12px] mr-3 text-right transition-opacity duration-3000 ease-in-out",
+                !isNavbarFullyLoaded ? "opacity-0 h-[15px]" : "animate-appear",
+              )}
+            >
+              {orgName}
+            </p>
+          </div>
         </div>
       </Sidebar>
       <Modal

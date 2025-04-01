@@ -76,15 +76,51 @@ function generatePassword(): string {
   return password;
 }
 
-const formatLocaleDate = (date: string) => {
-  const format = useFormatter();
+const formatLocaleDate = (
+  date: string,
+  format: "short" | "long" | "long-relative" = "short",
+) => {
+  const formatter = useFormatter();
   const dateTime = new Date(date);
 
-  return format.dateTime(dateTime, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  if (format === "long") {
+    return formatter.dateTime(dateTime, {
+      dateStyle: "long",
+      timeStyle: "short",
+    });
+  }
+
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const oneWeekAgo = new Date(today);
+  oneWeekAgo.setDate(today.getDate() - 7);
+
+  const diffInDays = Math.floor(
+    (today.getTime() - dateTime.getTime()) / (1000 * 60 * 60 * 24),
+  );
+  if (diffInDays < 8) {
+    return formatter.relativeTime(dateTime, today);
+  }
+
+  const getDateStyle = () => {
+    if (format === "long-relative") {
+      return {
+        dateStyle: "long",
+        timeStyle: "short",
+      };
+    }
+    return {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    };
+  };
+
+  const dateFormat = getDateStyle();
+
+  return formatter.dateTime(dateTime, dateFormat as any);
 };
 
 export {

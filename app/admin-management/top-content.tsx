@@ -87,7 +87,7 @@ export const TopContent = ({
           {isMobile ? null : t("invite-button-text")}
         </Button>
         <Button
-          color="success"
+          color="primary"
           isLoading={isSaveButtonLoading}
           isIconOnly={isMobile}
           radius="md"

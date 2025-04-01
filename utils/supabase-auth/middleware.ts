@@ -73,7 +73,7 @@ export async function updateSession(request: NextRequest) {
   // If user is not a super admin and trying to access a protected route, redirect to unauthorized
   if (!isSuperAdmin && isAdminManagementPage) {
     const url = request.nextUrl.clone();
-    url.pathname = "/unauthorized";
+    url.pathname = "/admin-management/unauthorized";
     return NextResponse.redirect(url);
   }
 

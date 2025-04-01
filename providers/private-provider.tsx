@@ -47,7 +47,9 @@ export function PrivateProvider({ children, locale }: PrivateLayoutProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  const isPrivatePath = [...privatePaths, "/unauthorized"].includes(pathname);
+  const isPrivatePath =
+    [...privatePaths, "/admin-management/unauthorized"].includes(pathname) ||
+    pathname.includes("/reports");
   const isPublicPath = publicPaths.includes(pathname);
   const isErrorPath = pathname.includes("/error");
 

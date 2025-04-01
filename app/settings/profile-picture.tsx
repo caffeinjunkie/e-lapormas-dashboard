@@ -17,7 +17,10 @@ export const ProfilePicture = ({
 }: ProfilePictureProps) => {
   return (
     <div className="flex flex-col w-full items-center gap-6 py-6">
-      <Skeleton isLoaded={!isUploading} className="rounded-full relative">
+      <Skeleton
+        isLoaded={!isUploading}
+        className={`rounded-full relative ${isUploading ? "animate-pulse" : ""}`}
+      >
         <Avatar
           className="w-24 h-24 md:w-32 md:h-32 text-small"
           src={image ?? ""}

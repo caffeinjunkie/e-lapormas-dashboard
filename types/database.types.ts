@@ -45,6 +45,7 @@ export type Database = {
           is_verified: boolean;
           rating: number;
           user_id: string;
+          is_hidden: boolean;
         };
         Insert: {
           display_name?: string;

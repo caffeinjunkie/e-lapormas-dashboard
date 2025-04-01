@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import React, { PropsWithChildren } from "react";
 
 import { title as titleClass } from "@/components/primitives";
@@ -27,7 +28,11 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
           classNames?.layout,
         )}
       >
-        <div
+        <motion.div
+          key="page"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           className={`inline-block overflow-y-scroll ${classNames?.container || "px-0"}`}
           ref={ref}
         >
@@ -40,20 +45,30 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
               classNames?.header,
             )}
           >
-            <h1
-              className={clsx(
-                "hidden md:block",
-                titleClass(),
-                isMobile ? "sm:px-6" : "px-0",
-                classNames?.title,
-              )}
-            >
-              {title}
-            </h1>
+            {title && (
+              <h1
+                className={clsx(
+                  "hidden md:block",
+                  titleClass(),
+                  isMobile ? "sm:px-6" : "px-0",
+                  classNames?.title,
+                )}
+              >
+                {title}
+              </h1>
+            )}
             {headerComponent}
           </div>
-          <div className={classNames?.body}>{children}</div>
-        </div>
+          <motion.div
+            key="body"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.75, ease: "easeInOut" }}
+            className={classNames?.body}
+          >
+            {children}
+          </motion.div>
+        </motion.div>
       </section>
     );
   },

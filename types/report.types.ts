@@ -1,9 +1,9 @@
-interface QuestionAnswer {
+export interface QuestionAnswer {
   q: string;
   a: string;
 }
 
-interface Progress {
+export interface Progress {
   updated_by: string;
   status: "IN_PROGRESS" | "COMPLETED";
   updated_at: string;
@@ -19,7 +19,7 @@ interface Address {
   lng: string;
 }
 
-export interface ReportCellType {
+export interface Report {
   id: string;
   tracking_id: string;
   title: string;
@@ -36,14 +36,11 @@ export interface ReportCellType {
     | "lainnya";
   status: "COMPLETED" | "IN_PROGRESS" | "PENDING";
   priority: "LOW" | "MID" | "HIGH" | "CRITICAL";
-}
-
-export interface Report extends ReportCellType {
   description: string;
   images: string[];
   data?: {
     follow_up_questions: QuestionAnswer[];
   } | null;
   rating: number;
-  progress?: Progress | null;
+  progress?: Progress[] | null;
 }
