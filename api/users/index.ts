@@ -33,6 +33,7 @@ type UpdateAuthUserData = {
   data?: {
     full_name?: string;
     pass_key?: string;
+    fullName?: string;
   };
   password?: string;
 };

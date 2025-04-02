@@ -49,7 +49,7 @@ export const ImageAttachment = ({
       isPressable={!!file}
       onPress={onPress}
       className={clsx(
-        "hidden sm:flex flex-row justify-between items-center w-full shadow-none border-1 border-default-200 hover:bg-default-100 rounded-xl",
+        "hidden sm:flex flex-row justify-between items-center w-full shadow-none border-1 border-default-200 hover:bg-default-100 hover:scale-105 rounded-xl",
         className,
       )}
     >

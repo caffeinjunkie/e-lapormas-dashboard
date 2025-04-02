@@ -28,6 +28,7 @@ interface ActivitiesProps {
   data: Progress[];
   status: string;
   isIntersecting: boolean;
+  isLoading: boolean;
   actions: {
     onAcceptReport: () => void;
     onFinishReport: (e: React.FormEvent, files: File[]) => void;
@@ -38,13 +39,15 @@ interface ActivitiesProps {
 }
 
 export const Activities = forwardRef<HTMLDivElement, ActivitiesProps>(
-  ({ data, status, isIntersecting, actions, users, onImagePress }, ref) => {
+  (
+    { data, status, isIntersecting, actions, users, onImagePress, isLoading },
+    ref,
+  ) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [isMarkedAsCompleted, setIsMarkedAsCompleted] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
     const [fileError, setFileError] = useState<string | null>(null);
-    const [isUploading, setIsUploading] = useState<boolean>(false);
 
     const getUserById = (id: string) => {
       return users.find((user) => user.user_id === id);
