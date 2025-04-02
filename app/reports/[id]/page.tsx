@@ -5,7 +5,7 @@ import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
 import { Button, PressEvent } from "@heroui/button";
 import { Card, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { ModalBody, ModalHeader } from "@heroui/modal";
+import { ModalBody, ModalFooter, ModalHeader } from "@heroui/modal";
 import { Spinner } from "@heroui/spinner";
 import { Tab, Tabs } from "@heroui/tabs";
 import clsx from "clsx";
@@ -21,12 +21,13 @@ import { fetchReportAndAdmins } from "../handlers";
 import { ReportDetail } from "../report-detail";
 import { Activities } from "./activities";
 import { acceptReport } from "./handlers";
-import { useLongPress } from "./use-long-press";
+import LongPressButton from "./long-press-button";
 
 import Error from "@/components/error";
 import { Layout } from "@/components/layout";
 import { Modal } from "@/components/modal";
 import { title } from "@/components/primitives";
+import { buildFormData } from "@/utils/form";
 
 export default function ReportDetailPage() {
   const t = useTranslations("ReportsPage");
@@ -34,7 +35,6 @@ export default function ReportDetailPage() {
   const bodyRef = useRef<HTMLHeadingElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
-  const { onMouseUp, onTouchEnd } = useLongPress();
   const {
     isOpen: isFinishConfirmOpen,
     openModal: openFinishConfirm,
@@ -44,6 +44,10 @@ export default function ReportDetailPage() {
   const [isIntersectingTabs, setIsIntersectingTabs] = useState(false);
   const [isPhotoSliderOpen, setPhotoSliderOpen] = useState(false);
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
+  const [updatedData, setUpdatedData] = useState<{
+    files: File[];
+    message: string;
+  }>({ files: [], message: "" });
   const [sliderImages, setSliderImages] = useState<
     {
       src: string;
@@ -120,20 +124,27 @@ export default function ReportDetailPage() {
     await acceptReport(id as string, data?.report, setIsUpdateLoading, mutate);
   };
 
-  const handleFinishReport = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleFinishReport = () => {
     // TODO: Finish report
     // mutate();
-    console.log(e);
+    setIsUpdateLoading(true);
+    
     // closeFinishConfirm();
-    onMouseUp(e);
   };
 
-  const onFinishReport = (e: React.FormEvent, files: File[]) => {
+  const onFinishReport = (
+    e: React.FormEvent<HTMLFormElement>,
+    files: File[],
+  ) => {
+    const formData = buildFormData(e);
+    const message = formData.get("message") as string;
+    setUpdatedData({ files, message });
     openFinishConfirm();
   };
 
-  const onSendUpdate = (e: React.FormEvent, files: File[]) => {
+  const onSendUpdate = (e: React.FormEvent<HTMLFormElement>, files: File[]) => {
     // TODO: Send update
+    const formData = buildFormData(e);;
     // mutate();
   };
 
@@ -257,7 +268,6 @@ export default function ReportDetailPage() {
                       onFinishReport,
                       onSendUpdate,
                     }}
-                    isLoading={isUpdateLoading}
                     isIntersecting={isIntersectingTabs}
                     status={data?.report?.status}
                     data={data?.report?.progress}
@@ -315,26 +325,7 @@ export default function ReportDetailPage() {
           <Modal
             isOpen={isFinishConfirmOpen}
             onClose={closeFinishConfirm}
-            buttons={[
-              {
-                title: t("cancel-button-text"),
-                onPress: closeFinishConfirm,
-                color: "danger",
-                variant: "light",
-                className: "w-full md:w-fit",
-              },
-              {
-                title: t("confirm-button-text"),
-                // onPress: handleFinishReport,
-                // onPressEnd: (e) => handleFinishReport(e as unknown as React.MouseEvent | React.TouchEvent),
-                onMouseUp: onMouseUp,
-                onTouchEnd: onTouchEnd,
-                isLoading: isUpdateLoading,
-                variant: "solid",
-                color: "success",
-                className: "w-full md:w-fit text-white",
-              },
-            ]}
+            withButton={false}
           >
             <ModalHeader>{t("finish-confirm-title")}</ModalHeader>
             <ModalBody>
@@ -350,6 +341,28 @@ export default function ReportDetailPage() {
                 })}
               </p>
             </ModalBody>
+            <ModalFooter>
+              <Button
+                className="w-full md:w-fit"
+                variant="light"
+                radius="sm"
+                color="danger"
+                isDisabled={isUpdateLoading}
+                onPress={closeFinishConfirm}
+              >
+                {t("cancel-button-text")}
+              </Button>
+              <LongPressButton
+                className="w-full md:w-fit data-[hover=true]:text-white"
+                variant="ghost"
+                radius="sm"
+                color="success"
+                onPressFinished={handleFinishReport}
+                isLoading={isUpdateLoading}
+              >
+                {t("confirm-button-text")}
+              </LongPressButton>
+            </ModalFooter>
           </Modal>
           <PhotoSlider
             images={sliderImages}
