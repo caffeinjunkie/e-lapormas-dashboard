@@ -50,6 +50,7 @@ function ReportsPage() {
   const priority = searchParams.get("priority") || "";
   const startDate = searchParams.get("startDate") || "";
   const endDate = searchParams.get("endDate") || "";
+  const pic = searchParams.get("pic") || "";
   const page = Number(searchParams.get("page")) || 1;
   const sortBy = searchParams.get("sortBy") || "newest";
   const queryParams = {
@@ -58,6 +59,7 @@ function ReportsPage() {
     page: page.toString(),
     category,
     priority,
+    pic,
     startDate,
     endDate,
     sortBy,
@@ -86,6 +88,7 @@ function ReportsPage() {
       page,
       rowsPerPage,
       sortBy,
+      pic,
       category,
       priority,
       startDate,
@@ -104,6 +107,7 @@ function ReportsPage() {
           priority,
           startDate,
           endDate,
+          pic,
         },
       }),
     swrConfig,
@@ -193,7 +197,7 @@ function ReportsPage() {
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
         searchValue={searchQuery || ""}
-        filters={[category, priority, startDate]}
+        filters={[category, priority, startDate, pic]}
         onPressFilterButton={openModal}
         selectedTab={tab as string}
         onSelectTab={onSelectTab}
@@ -258,6 +262,7 @@ function ReportsPage() {
         </>
       )}
       <FilterModal
+        withFilterByUser={tab !== "PENDING"}
         isOpen={isFilterModalOpen}
         onClose={closeModal}
         queryParams={queryParams}

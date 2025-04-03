@@ -6,7 +6,7 @@ export type SortType = {
 };
 
 export type FilterType = {
-  field: "category" | "priority" | "startDate" | "endDate";
+  field: "category" | "priority" | "startDate" | "endDate" | "pic";
   value: string[] | string;
 };
 
@@ -39,9 +39,6 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
     .eq("status", status)
     .or(`title.ilike.%${searchValue}%, tracking_id.ilike.%${searchValue}%`);
 
-  // use to fetch by updated_by
-  // .or(`progress.cs.${JSON.stringify([{updated_by: 'John Doe'}])}`);
-
   filters.forEach((filter) => {
     const { field, value } = filter;
 
@@ -57,6 +54,11 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
         break;
       case "endDate":
         query = query.lte("created_at", value);
+        break;
+      case "pic":
+        query = query.or(
+          `progress.cs.${JSON.stringify([{ updated_by: value }])}`,
+        );
         break;
     }
   });

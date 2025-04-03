@@ -33,7 +33,6 @@ export const uploadImageToServer = async (file: File) => {
 
     return data;
   } catch (error: any) {
-    console.error("Upload failed:", error);
     throw new Error(`Upload failed: ${error.message}`);
   }
 };
