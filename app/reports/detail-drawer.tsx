@@ -1,4 +1,4 @@
-import { PaperClipIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import {
@@ -16,7 +16,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { PhotoSlider } from "react-photo-view";
 
-import { StatusEnum } from "./config";
 import { ImageAttachment } from "./image-attachment";
 import { ReportDetail } from "./report-detail";
 
@@ -35,16 +34,10 @@ export const DetailDrawer = ({
   selectedReport,
 }: DetailDrawerProps) => {
   const t = useTranslations("ReportsPage");
-  const isPending = selectedReport?.status === StatusEnum.PENDING;
   const images = selectedReport?.images || [];
   const [isPhotoSliderOpen, setPhotoSliderOpen] = useState(false);
 
-  //TODO: check on server side if it works
   const isOnLargeDevice = window.matchMedia("(min-width: 640px)").matches;
-
-  const onActionPress = () => {
-    if (!isPending) return;
-  };
 
   return (
     <Drawer
@@ -138,18 +131,13 @@ export const DetailDrawer = ({
                 {t("close-button-text")}
               </Button>
               <Button
-                color={isPending ? "danger" : "primary"}
-                variant={isPending ? "ghost" : "solid"}
+                color="primary"
+                variant="solid"
                 className="w-full sm:w-fit"
-                as={isPending ? "button" : Link}
-                href={
-                  isPending
-                    ? undefined
-                    : `/reports/${selectedReport?.tracking_id}`
-                }
-                onPress={onActionPress}
+                as={Link}
+                href={`/reports/${selectedReport?.tracking_id}`}
               >
-                {isPending ? t("accept-button-text") : t("more-button-text")}
+                {t("more-button-text")}
               </Button>
             </DrawerFooter>
           </>
