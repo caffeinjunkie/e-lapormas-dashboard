@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 
 import { BrokenImageIcon, ImageIcon } from "@/components/icons";
+import { getByteSize } from "@/utils/string";
 
 interface ImageAttachmentProps {
   src: string;
@@ -49,7 +50,7 @@ export const ImageAttachment = ({
       isPressable={!!file}
       onPress={onPress}
       className={clsx(
-        "hidden sm:flex flex-row justify-between items-center w-full shadow-none border-1 border-default-200 hover:bg-default-100 rounded-xl",
+        "hidden sm:flex flex-row justify-between items-center w-full shadow-none border-1 border-default-200 hover:bg-default-100 hover:scale-105 rounded-xl",
         className,
       )}
     >
@@ -73,7 +74,7 @@ export const ImageAttachment = ({
                 </p>
                 <span className="text-xs">•</span>
                 <p className="text-start">
-                  {((file?.size as number) / 1048576).toFixed(2)}MB
+                  {getByteSize(file?.size as number)}
                 </p>
               </div>
             </div>

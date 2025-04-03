@@ -52,10 +52,8 @@ export const saveImageToAdmin = async (
   setLoading(true);
 
   try {
-    let uploadResult = null;
-
     if (image) {
-      uploadResult = await uploadImage({
+      await uploadImage({
         file: image,
         path: `user/${user.id}`,
         bucket: "profile-picture",
@@ -108,7 +106,9 @@ export const saveAllSettings = async (
     const fullName = formData.get("name");
 
     if (fullName) {
-      await updateAuthUser({ data: { full_name: fullName as string } });
+      await updateAuthUser({
+        data: { full_name: fullName as string, fullName: fullName as string },
+      });
     }
 
     const updatedAppConfig = {

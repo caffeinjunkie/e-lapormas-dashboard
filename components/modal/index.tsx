@@ -18,13 +18,22 @@ export interface ModalButtonProps extends ButtonProps {
 interface ModalProps extends HeroUIModalProps {
   onClose: () => void;
   isOpen: boolean;
+  withButton?: boolean;
   buttons?: ModalButtonProps[];
 }
 
 const Modal: React.FC<PropsWithChildren<ModalProps>> & {
   useModal: typeof useModal;
   useMultipleModal: typeof useMultipleModal;
-} = ({ onClose, isOpen, children, buttons = [], className, ...props }) => {
+} = ({
+  onClose,
+  isOpen,
+  children,
+  withButton = true,
+  buttons = [],
+  className,
+  ...props
+}) => {
   const t = useTranslations("Modal");
 
   return (
@@ -38,33 +47,35 @@ const Modal: React.FC<PropsWithChildren<ModalProps>> & {
         {(onClose) => (
           <>
             {children}
-            <ModalFooter className="p-4">
-              {buttons?.length > 0 &&
-                buttons?.map(
-                  ({ title, variant = "light", formId, ...props }, index) => (
-                    <Button
-                      key={index}
-                      radius="sm"
-                      form={formId}
-                      variant={variant}
-                      {...props}
-                    >
-                      {title}
-                    </Button>
-                  ),
+            {withButton && (
+              <ModalFooter className="p-4">
+                {buttons?.length > 0 &&
+                  buttons?.map(
+                    ({ title, variant = "light", formId, ...props }, index) => (
+                      <Button
+                        key={index}
+                        radius="sm"
+                        form={formId}
+                        variant={variant}
+                        {...props}
+                      >
+                        {title}
+                      </Button>
+                    ),
+                  )}
+                {buttons?.length === 0 && (
+                  <Button
+                    className="w-full"
+                    variant="light"
+                    radius="sm"
+                    color="primary"
+                    onPress={onClose}
+                  >
+                    {t("default-button-text")}
+                  </Button>
                 )}
-              {buttons?.length === 0 && (
-                <Button
-                  className="w-full"
-                  variant="light"
-                  radius="sm"
-                  color="primary"
-                  onPress={onClose}
-                >
-                  {t("default-button-text")}
-                </Button>
-              )}
-            </ModalFooter>
+              </ModalFooter>
+            )}
           </>
         )}
       </ModalContent>
