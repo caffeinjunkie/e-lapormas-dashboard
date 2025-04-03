@@ -1,3 +1,4 @@
+import { uploadImageToServer } from "@/api/pekerja-ai";
 import { updateTaskByTrackingId } from "@/api/tasks";
 import { fetchUserData } from "@/api/users";
 import { Report } from "@/types/report.types";
@@ -6,9 +7,8 @@ export const acceptReport = async (
   id: string,
   currentReport: Report,
   setLoading: (loading: boolean) => void,
-  mutate: () => void,
 ) => {
-  return updateReport(id, currentReport, setLoading, mutate);
+  return updateReport(id, currentReport, setLoading);
 };
 
 export const finishReport = async (
@@ -17,13 +17,11 @@ export const finishReport = async (
   setLoading: (loading: boolean) => void,
   message: string,
   files: File[],
-  mutate: () => void,
 ) => {
   return updateReport(
     id,
     currentReport,
     setLoading,
-    mutate,
     "COMPLETED",
     message,
     files,
@@ -34,7 +32,6 @@ export const updateReport = async (
   id: string,
   currentReport: Report,
   setLoading: (loading: boolean) => void,
-  mutate: () => void,
   status: string = "IN_PROGRESS",
   message: string = "",
   files: File[] = [],
@@ -46,8 +43,8 @@ export const updateReport = async (
     let imgUrl = "";
 
     if (files.length) {
-      // TODO: Upload files
-      // imgUrl = await uploadImage
+      const { url } = await uploadImageToServer(files[0]);
+      imgUrl = url;
     }
 
     const { data } = await updateTaskByTrackingId(id, {
@@ -68,6 +65,5 @@ export const updateReport = async (
     return { error };
   } finally {
     setLoading(false);
-    mutate();
   }
 };

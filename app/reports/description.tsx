@@ -30,18 +30,22 @@ export const Description = ({
           <div className="flex w-full flex-col gap-2 bg-default-100 p-2 rounded-xl">
             {followUpQuestions.map((item, index) => (
               <div key={index} className="flex flex-col gap-1">
-                <div className="flex flex-wrap space-x-1 items-center">
-                  <p className="text-xs font-bold text-default-500 w-12">
+                <span className="flex flex-row gap-1 items-start">
+                  <p className="text-xs font-bold text-default-500 w-10">
                     {t("follow-up-questions-q-text")}
                   </p>
-                  <p className="text-xs text-default-700">: {item.q}</p>
-                </div>
-                <div className="flex flex-wrap space-x-1 items-center">
-                  <p className="text-xs font-bold text-default-500 w-12">
+                  <p className="flex-1 text-xs font-light text-default-700">
+                    {item.q}
+                  </p>
+                </span>
+                <span className="flex flex-row gap-1 items-start">
+                  <p className="text-xs font-bold text-default-500 w-10">
                     {t("follow-up-questions-a-text")}
                   </p>
-                  <p className="text-xs text-default-700">: {item.a}</p>
-                </div>
+                  <p className="flex-1 text-xs font-light text-default-700">
+                    {item.a}
+                  </p>
+                </span>
               </div>
             ))}
           </div>

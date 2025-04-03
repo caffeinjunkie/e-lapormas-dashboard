@@ -127,7 +127,7 @@
     "finish-confirm-long-press-text": "Tekan tombol <bold>{button}</bold> selama 2 detik untuk menyelesaikan laporan.",
     "cancel-button-text": "Batalkan",
     "confirm-button-text": "Ya, selesaikan",
-    "activity-file-size-error-message": "Ukuran file tidak boleh melebihi 2MB.",
+    "activity-file-size-error-message": "Ukuran file tidak boleh melebihi 1MB.",
     "activity-file-type-error-message": "Hanya file gambar yang diterima.",
     "activity-mark-as-completed-text": "Tandai laporan selesai",
     "activity-message-error-message": "Pesan tidak boleh kosong",

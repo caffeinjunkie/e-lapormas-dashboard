@@ -22,6 +22,7 @@ import { ImageAttachment } from "../image-attachment";
 import { AchievementIcon, BellIcon, ClockIcon } from "@/components/icons";
 import { Progress } from "@/types/report.types";
 import { AdminData } from "@/types/user.types";
+import { buildFormData } from "@/utils/form";
 import { formatLocaleDate } from "@/utils/string";
 
 interface ActivitiesProps {
@@ -30,11 +31,8 @@ interface ActivitiesProps {
   isIntersecting: boolean;
   actions: {
     onAcceptReport: () => void;
-    onFinishReport: (
-      e: React.FormEvent<HTMLFormElement>,
-      files: File[],
-    ) => void;
-    onSendUpdate: (e: React.FormEvent<HTMLFormElement>, files: File[]) => void;
+    onFinishReport: (message: string, files: File[]) => void;
+    onSendUpdate: (message: string, files: File[]) => void;
   };
   users: AdminData[];
   onImagePress: (images: { src: string; key: string }[], index: number) => void;
@@ -53,10 +51,12 @@ export const Activities = ({
   const [isMarkedAsCompleted, setIsMarkedAsCompleted] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [messageCounter, setMessageCounter] = useState(0);
 
   const getUserById = (id: string) => {
     return users.find((user) => user.user_id === id);
   };
+
   const t = useTranslations("ReportsPage");
 
   const avaIcon = {
@@ -74,7 +74,7 @@ export const Activities = ({
     if (selectedFiles.length > 1) {
       return;
     }
-    if (selectedFiles[0].size > 2000000) {
+    if (selectedFiles[0].size > 1000000) {
       setFileError(t("activity-file-size-error-message"));
     }
     if (!selectedFiles[0].type.includes("image")) {
@@ -91,14 +91,16 @@ export const Activities = ({
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = buildFormData(e);
+    const message = formData.get("message") as string;
     if (files.length < 1) {
       setFileError(t("activity-files-error-message"));
       return;
     }
     if (isMarkedAsCompleted) {
-      actions.onFinishReport(e, files);
+      actions.onFinishReport(message, files);
     } else {
-      actions.onSendUpdate(e, files);
+      actions.onSendUpdate(message, files);
     }
   };
 
@@ -106,14 +108,7 @@ export const Activities = ({
     if (status === "COMPLETED") return null;
     if (status === "IN_PROGRESS") {
       return (
-        <div
-          className={clsx(
-            "flex bg-white rounded-3xl flex-col w-full gap2",
-            !isIntersecting
-              ? "md:shadow-[rgba(5,5,5,0.1)_0_-1px_10px_0px] lg:shadow-none"
-              : "",
-          )}
-        >
+        <div className={clsx("flex bg-white flex-col w-full gap2")}>
           <div className="absolute bottom-4 right-4">
             <Button
               color="warning"
@@ -128,7 +123,10 @@ export const Activities = ({
               startContent={
                 <ChatBubbleBottomCenterTextIcon className="size-5 text-white" />
               }
-              className={clsx("w-fit shadow-md", isIntersecting && "hidden")}
+              className={clsx(
+                "w-fit shadow-md z-40",
+                isIntersecting && "hidden",
+              )}
             />
           </div>
           <Form
@@ -142,6 +140,7 @@ export const Activities = ({
                 isClearable
                 name="message"
                 isRequired
+                maxLength={100}
                 onClear={() => {
                   textAreaRef.current!.value = "";
                   textAreaRef.current!.checkValidity();
@@ -154,6 +153,9 @@ export const Activities = ({
                     return t("activity-message-error-message");
                   }
                   return null;
+                }}
+                onChange={(e) => {
+                  setMessageCounter(e.target.value.length);
                 }}
                 maxRows={2}
                 rows={2}
@@ -190,6 +192,9 @@ export const Activities = ({
                 }}
                 placeholder={t("activity-message-placeholder")}
               />
+              <p className="text-xs text-right pt-1 text-default-500">
+                {messageCounter || 0}/100
+              </p>
               <input
                 id="selectImage"
                 max={1}
@@ -268,11 +273,15 @@ export const Activities = ({
     <div className="flex flex-col">
       {data?.length > 0 && (
         <div className="flex flex-col flex-grow px-2">
-          {data?.reverse().map((activity, index) => (
+          {data?.map((activity, index) => (
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.3 * (index + 1), ease: "easeInOut" }}
+              transition={{
+                duration: 0.3,
+                delay: 0.1 * index,
+                ease: "easeInOut",
+              }}
               key={index}
               className="flex flex-row gap-4"
             >
@@ -280,7 +289,8 @@ export const Activities = ({
                 initial={{ x: -30, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{
-                  duration: 0.3 * (index + 1),
+                  duration: 0.3,
+                  delay: 0.2 * index,
                   ease: "easeInOut",
                 }}
                 className="flex flex-col gap-1 items-center"
@@ -306,8 +316,8 @@ export const Activities = ({
                   initial={{ flex: 0 }}
                   animate={{ flex: 1 }}
                   transition={{
-                    duration: 0.5,
-                    delay: 0.3 * (index + 1),
+                    duration: 0.3 + index / 10,
+                    delay: 0.3 * index,
                     ease: "easeInOut",
                   }}
                   className={clsx(

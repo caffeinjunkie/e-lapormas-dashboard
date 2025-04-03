@@ -2,7 +2,7 @@
 
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
-import { Button, PressEvent } from "@heroui/button";
+import { Button } from "@heroui/button";
 import { Card, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { ModalBody, ModalFooter, ModalHeader } from "@heroui/modal";
@@ -20,14 +20,13 @@ import { swrConfig } from "../config";
 import { fetchReportAndAdmins } from "../handlers";
 import { ReportDetail } from "../report-detail";
 import { Activities } from "./activities";
-import { acceptReport } from "./handlers";
+import { acceptReport, updateReport } from "./handlers";
 import LongPressButton from "./long-press-button";
 
 import Error from "@/components/error";
 import { Layout } from "@/components/layout";
 import { Modal } from "@/components/modal";
 import { title } from "@/components/primitives";
-import { buildFormData } from "@/utils/form";
 
 export default function ReportDetailPage() {
   const t = useTranslations("ReportsPage");
@@ -60,12 +59,11 @@ export default function ReportDetailPage() {
     () => fetchReportAndAdmins(id as string),
     swrConfig,
   );
-  const reportImages: { src: string; key: string }[] = data?.report.images.map(
-    (src: string, index: number) => ({
+  const reportImages: { src: string; key: string }[] =
+    data?.report.images.map((src: string, index: number) => ({
       src,
       key: `image-${index + 1}`,
-    }),
-  );
+    })) || [];
 
   useEffect(() => {
     const bodyObserver = new IntersectionObserver(
@@ -121,31 +119,51 @@ export default function ReportDetailPage() {
   };
 
   const onAcceptReport = async () => {
-    await acceptReport(id as string, data?.report, setIsUpdateLoading, mutate);
+    const result = await acceptReport(
+      id as string,
+      data?.report,
+      setIsUpdateLoading,
+    );
+    if (!result.error) {
+      mutate();
+    }
   };
 
-  const handleFinishReport = () => {
-    // TODO: Finish report
-    // mutate();
+  const handleFinishReport = async () => {
     setIsUpdateLoading(true);
-    
-    // closeFinishConfirm();
+    const result = await updateReport(
+      id as string,
+      data?.report,
+      setIsUpdateLoading,
+      "COMPLETED",
+      updatedData.message,
+      updatedData.files,
+    );
+
+    closeFinishConfirm();
+    if (!result.error) {
+      mutate();
+    }
   };
 
-  const onFinishReport = (
-    e: React.FormEvent<HTMLFormElement>,
-    files: File[],
-  ) => {
-    const formData = buildFormData(e);
-    const message = formData.get("message") as string;
+  const onFinishReport = (message: string, files: File[]) => {
     setUpdatedData({ files, message });
     openFinishConfirm();
   };
 
-  const onSendUpdate = (e: React.FormEvent<HTMLFormElement>, files: File[]) => {
-    // TODO: Send update
-    const formData = buildFormData(e);;
-    // mutate();
+  const onSendUpdate = async (message: string, files: File[]) => {
+    const result = await updateReport(
+      id as string,
+      data?.report,
+      setIsUpdateLoading,
+      "IN_PROGRESS",
+      message,
+      files,
+    );
+    console.log(result);
+    if (!result.error) {
+      mutate();
+    }
   };
 
   if (error) {
@@ -172,7 +190,7 @@ export default function ReportDetailPage() {
   const renderTitle = () => (
     <div
       className={clsx(
-        "flex flex-col gap-1 sticky top-0 z-30 md:z-40 w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
+        "flex flex-col gap-1 sticky top-0 z-30 md:z-40 lg:max-w-[50vw] w-full pt-2 bg-white transition-all duration-1000 ease-in-out",
       )}
     >
       <h1
@@ -238,7 +256,7 @@ export default function ReportDetailPage() {
           <div className={clsx("flex flex-col lg:flex-row gap-2 lg:gap-4")}>
             <div
               ref={bodyRef}
-              className="flex flex-col flex-1 h-[80vh] px-6 pb-0 lg:pb-6 lg:pr-6"
+              className="flex flex-col flex-1 max-h-[90vh] px-6 pb-0 lg:pb-6 lg:pr-6"
             >
               <ReportDetail report={data?.report} className="pb-5" />
             </div>
