@@ -40,6 +40,11 @@ export const UserAva = ({
       <Avatar
         src={imageSrc}
         showFallback
+        fallback={
+          displayName !== "-"
+            ? displayName.slice(0, 3)
+            : description.slice(0, 1).toUpperCase() + description.slice(1, 3)
+        }
         name={displayName}
         className={avatar}
       />

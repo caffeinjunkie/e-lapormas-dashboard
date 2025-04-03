@@ -160,7 +160,6 @@ export default function ReportDetailPage() {
       message,
       files,
     );
-    console.log(result);
     if (!result.error) {
       mutate();
     }

@@ -48,7 +48,7 @@
     "title": "Ikhtisar (Planning Stage)"
   },
   "ReportsPage": {
-    "title": "Laporan (In Development)",
+    "title": "Laporan",
     "table-empty-content": "Dafta laporan kosong",
     "table-report-column-label": "Laporan",
     "table-created-at-column-label": "Tanggal",
@@ -92,9 +92,11 @@
     "filter-button-text": "Saring",
     "page-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi",
     "reports-modal-category-select-label": "Kategori",
-    "reports-modal-category-placeholder-text": "Pilih Kategori",
+    "reports-modal-category-placeholder-text": "Saring berdasarkan Kategori",
     "reports-modal-priority-select-label": "Prioritas",
-    "reports-modal-priority-placeholder-text": "Pilih Prioritas",
+    "reports-modal-priority-placeholder-text": "Saring berdasarkan Prioritas",
+    "reports-modal-user-select-label": "Admin",
+    "reports-modal-user-placeholder-text": "Saring berdasarkan Admin",
     "clear-button-text": "Hapus Filter",
     "apply-button-text": "Terapkan",
     "reports-modal-date-range-label": "Tanggal",

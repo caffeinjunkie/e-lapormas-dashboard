@@ -17,6 +17,7 @@ interface GetReportsOptions {
     priority?: string;
     startDate?: string;
     endDate?: string;
+    pic?: string;
   };
   sortBy: string;
 }
@@ -55,7 +56,7 @@ export const fetchReports = async ({
         return {
           field,
           value:
-            field === "startDate" || field === "endDate"
+            field === "startDate" || field === "endDate" || field === "pic"
               ? value
               : value
                   .split(",")
