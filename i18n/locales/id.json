@@ -133,8 +133,7 @@
     "activity-file-type-error-message": "Hanya file gambar yang diterima.",
     "activity-mark-as-completed-text": "Tandai laporan selesai",
     "activity-message-error-message": "Pesan tidak boleh kosong",
-    "activity-files-error-message": "Lampiran tidak boleh kosong",
-    "curated-tasks-tab-text": "Daftar Tugas"
+    "activity-files-error-message": "Lampiran tidak boleh kosong"
   },
   "StatisticsPage": {
     "title": "Statistik (Planning Stage)"

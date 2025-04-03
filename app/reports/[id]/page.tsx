@@ -333,9 +333,6 @@ export default function ReportDetailPage() {
                     ))}
                   </div>
                 </Tab>
-                <Tab value="curated-tasks" title={t("curated-tasks-tab-text")}>
-                  {/* <CuratedTasks /> */}
-                </Tab>
               </Tabs>
             </div>
           </div>
