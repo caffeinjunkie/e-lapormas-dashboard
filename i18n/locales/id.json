@@ -106,7 +106,6 @@
     "follow-up-questions-text": "Pertanyaan Lanjutan",
     "follow-up-questions-q-text": "Tanya",
     "follow-up-questions-a-text": "Jawab",
-    "accept-button-text": "Terima Laporan",
     "more-button-text": "Selengkapnya",
     "attachment-text": "Lampiran",
     "visit-map-link-text": "(Lihat di peta)",
@@ -133,8 +132,7 @@
     "activity-file-type-error-message": "Hanya file gambar yang diterima.",
     "activity-mark-as-completed-text": "Tandai laporan selesai",
     "activity-message-error-message": "Pesan tidak boleh kosong",
-    "activity-files-error-message": "Lampiran tidak boleh kosong",
-    "curated-tasks-tab-text": "Daftar Tugas"
+    "activity-files-error-message": "Lampiran tidak boleh kosong"
   },
   "StatisticsPage": {
     "title": "Statistik (Planning Stage)"
