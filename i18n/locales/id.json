@@ -132,10 +132,18 @@
     "activity-file-type-error-message": "Hanya file gambar yang diterima.",
     "activity-mark-as-completed-text": "Tandai laporan selesai",
     "activity-message-error-message": "Pesan tidak boleh kosong",
-    "activity-files-error-message": "Lampiran tidak boleh kosong"
+    "activity-files-error-message": "Lampiran tidak boleh kosong",
+    "activity-accept-success-title": "Laporan diterima.",
+    "activity-accept-success-message": "Laporan berhasil diterima. Anda dapat memproses laporan ini dan memberikan update kepada pelapor jika ada pembaharuan.",
+    "activity-update-success-title": "Pembaharuan laporan berhasil.",
+    "activity-update-success-message": "Laporan berhasil diperbaharui.",
+    "activity-update-failed-title": "Pembaharuan laporan gagal.",
+    "activity-update-failed-message": "Laporan gagal diperbaharui. Mohon coba sesaat lagi.",
+    "activity-update-error-title": "Pembaharuan laporan terlalu banyak.",
+    "activity-update-error-message": "Laporan sudah diperbaharui 2 kali hari ini. Anda dapat mengirim pembaharuan kembali besok."
   },
   "StatisticsPage": {
-    "title": "Statistik (Planning Stage)"
+    "title": "Statistik (In Development)"
   },
   "AnnouncementsPage": {
     "title": "Pengumuman (Planning Stage)"
