@@ -95,6 +95,7 @@ export type Database = {
           priority: Database["public"]["Enums"]["task_priority"];
           progress: Json | null;
           rating: number | null;
+          finished_at: string | null;
           status: Database["public"]["Enums"]["task_status"] | null;
           title: string;
           tracking_id: string;
@@ -110,6 +111,7 @@ export type Database = {
           priority: Database["public"]["Enums"]["task_priority"];
           progress?: Json | null;
           rating?: number | null;
+          finished_at?: string | null;
           status?: Database["public"]["Enums"]["task_status"] | null;
           title: string;
           tracking_id: string;
@@ -125,6 +127,7 @@ export type Database = {
           priority?: Database["public"]["Enums"]["task_priority"];
           progress?: Json | null;
           rating?: number | null;
+          finished_at?: string | null;
           status?: Database["public"]["Enums"]["task_status"] | null;
           title?: string;
           tracking_id?: string;

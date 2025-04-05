@@ -95,14 +95,14 @@ export const Activities = ({
     e.preventDefault();
     const formData = buildFormData(e);
     const message = formData.get("message") as string;
-    const hasUpdatedTwiceToday = checkUpdatedProgressToday(data);
+    const isOutOfUpdateQuota = checkUpdatedProgressToday(data);
     if (files.length < 1) {
       setFileError(t("activity-files-error-message"));
       return;
     }
     if (isMarkedAsCompleted) {
       actions.onFinishReport(message, files);
-    } else if (hasUpdatedTwiceToday) {
+    } else if (isOutOfUpdateQuota) {
       const toastProps = {
         title: t("activity-update-error-title"),
         description: t("activity-update-error-message"),

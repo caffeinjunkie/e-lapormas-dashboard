@@ -55,6 +55,7 @@ export const updateReport = async (
 
     const { data } = await updateTaskByTrackingId(id, {
       status,
+      finished_at: status === "COMPLETED" ? new Date().toISOString() : null,
       progress: [
         ...(currentReport.progress || []),
         {

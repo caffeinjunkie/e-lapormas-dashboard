@@ -140,7 +140,7 @@
     "activity-update-failed-title": "Pembaharuan laporan gagal.",
     "activity-update-failed-message": "Laporan gagal diperbaharui. Mohon coba sesaat lagi.",
     "activity-update-error-title": "Pembaharuan laporan terlalu banyak.",
-    "activity-update-error-message": "Laporan sudah diperbaharui 2 kali hari ini. Anda dapat mengirim pembaharuan kembali besok."
+    "activity-update-error-message": "Laporan sudah diperbaharui 3 kali hari ini. Anda dapat mengirim pembaharuan kembali besok."
   },
   "StatisticsPage": {
     "title": "Statistik (In Development)"
