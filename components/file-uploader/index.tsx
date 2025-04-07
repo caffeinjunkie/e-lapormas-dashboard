@@ -48,11 +48,13 @@ export const FileUploader = ({
   return (
     <div>
       <FilePond
+        className="h-64"
         files={files}
         allowImageResize={resize}
         disabled={isDisabled}
         allowImageCrop={allowCrop}
         maxFileSize={maxFileSize}
+        stylePanelLayout="integrated"
         acceptedFileTypes={["image/*"]}
         labelMaxFileSizeExceeded={t("max-file-size-exceeded-error")}
         labelMaxFileSize={`${t("max-file-size-error")} {filesize}`}
@@ -68,7 +70,7 @@ export const FileUploader = ({
         {...(resize ? additionalProps : {})}
       />
       {legend && (
-        <p className="text-default-500 text-xs text-center pt-5">{legend}</p>
+        <p className="text-default-500 text-xs text-center pt-10">{legend}</p>
       )}
     </div>
   );

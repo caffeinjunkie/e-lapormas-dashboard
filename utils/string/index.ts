@@ -12,6 +12,14 @@ const validateIsRequired = (
   return null;
 };
 
+const validateValidName = (t: (key: string) => string, value: string) => {
+  if (/[^a-zA-Z.'\s]/g.test(value)) {
+    return t("invalid-name-format-error-message");
+  }
+
+  return null;
+};
+
 const validateEmail = (t: (key: string) => string, value: string) => {
   if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
     return t("invalid-email-format-error-message");
@@ -136,6 +144,7 @@ export {
   generatePassword,
   validateIsRequired,
   validateEmail,
+  validateValidName,
   validatePassword,
   validateConfirmPassword,
 };

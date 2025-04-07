@@ -131,22 +131,25 @@ export const AdminCell = ({
           className={`${isLast ? "border-b-0 pb-0" : "border-b-1 border-default-200 pb-4"}`}
         >
           <div className="flex items-center justify-between">
-            <UserAva
-              imageSrc={user?.profile_img}
-              displayName={user?.display_name}
-              description={user?.email as string}
-              indicator={
-                <Chip
-                  className="capitalize border-none"
-                  color={user.is_verified ? "success" : "warning"}
-                  size="sm"
-                  variant="dot"
-                />
-              }
-              classNames={{
-                container: "gap-4",
-              }}
-            />
+            <div className="flex-1 max-w-72 sm:max-w-96 overflow-hidden">
+              <UserAva
+                imageSrc={user?.profile_img}
+                displayName={user?.display_name}
+                description={user?.email as string}
+                indicator={
+                  <Chip
+                    className="capitalize border-none"
+                    color={user.is_verified ? "success" : "warning"}
+                    size="sm"
+                    variant="dot"
+                  />
+                }
+                classNames={{
+                  container: "gap-4",
+                }}
+              />
+            </div>
+
             <div className="flex flex-col items-end gap-2">
               <Switch
                 isDisabled={selfId === user?.user_id || !user.is_verified}

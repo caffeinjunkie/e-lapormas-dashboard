@@ -31,7 +31,7 @@ import { Timezone } from "@/types/timezone.types";
 import { ProfileData } from "@/types/user.types";
 import { getCookie } from "@/utils/cookie";
 import { buildFormData } from "@/utils/form";
-import { validateIsRequired } from "@/utils/string";
+import { validateIsRequired, validateValidName } from "@/utils/string";
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
@@ -224,7 +224,10 @@ export default function SettingsPage() {
                   defaultValue={profile?.fullName}
                   name="name"
                   placeholder={t("profile-name-placeholder-text")}
-                  validate={(value) => validateIsRequired(t, value, "name")}
+                  validate={(value) =>
+                    validateIsRequired(t, value, "name") ||
+                    validateValidName(t, value)
+                  }
                 />
                 <Input
                   aria-label="org-name"

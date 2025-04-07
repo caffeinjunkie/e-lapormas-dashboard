@@ -31,6 +31,7 @@ interface FilterModalProps {
   onApplyFilter: (filterPrams: string) => void;
   queryParams: Record<string, string | number | string[] | undefined>;
   withFilterByUser?: boolean;
+  isWideScreen?: boolean;
 }
 
 interface SelectItem {
@@ -44,6 +45,7 @@ export const FilterModal = ({
   queryParams,
   onApplyFilter,
   withFilterByUser = false,
+  isWideScreen = false,
 }: FilterModalProps) => {
   const {
     data: result,
@@ -238,7 +240,7 @@ export const FilterModal = ({
               value={dateRange}
               variant="bordered"
               onChange={setDateRange}
-              visibleMonths={2}
+              visibleMonths={isWideScreen ? 2 : 1}
             />
           </I18nProvider>
         </Form>
