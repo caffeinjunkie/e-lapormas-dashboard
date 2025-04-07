@@ -265,6 +265,7 @@ function ReportsPage() {
         withFilterByUser={tab !== "PENDING"}
         isOpen={isFilterModalOpen}
         onClose={closeModal}
+        isWideScreen={isWideScreen}
         queryParams={queryParams}
         onApplyFilter={onApplyFilter}
       />

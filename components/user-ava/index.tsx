@@ -31,7 +31,7 @@ export const UserAva = ({
   const {
     container = "",
     avatar = "",
-    name = "",
+    name: nameClass = "",
     description: descriptionClass = "",
   } = classNames || {};
 
@@ -48,16 +48,18 @@ export const UserAva = ({
         name={displayName}
         className={avatar}
       />
-      <div className="flex-1 flex-col overflow-hidden whitespace-nowrap">
-        <span
-          className={`text-sm truncate flex items-center ${name}`}
-          style={{
-            color: theme.name,
-          }}
-        >
-          {displayName || "-"}
+      <div className="flex-1 flex-col overflow-hidden ">
+        <div className="flex flex-row items-center">
+          <p
+            className={`text-sm truncate ${nameClass}`}
+            style={{
+              color: theme.name,
+            }}
+          >
+            {displayName || "-"}
+          </p>
           {indicator && <span>{indicator}</span>}
-        </span>
+        </div>
         <p className={`text-xs text-gray-400 truncate ${descriptionClass}`}>
           {description}
         </p>

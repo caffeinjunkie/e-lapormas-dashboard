@@ -215,6 +215,7 @@
     "save-error-toast-title": "Terjadi Kesalahan",
     "save-error-toast-description": "Data gagal disimpan. Mohon coba sesaat lagi",
     "page-error-message": "Terjadi kesalahan. Mohon coba sesaat lagi",
+    "invalid-name-format-error-message": "Nama mengandung angka atau simbol yang tidak diperbolehkan",
     "upload-profile-picture-modal-header": "Unggah Foto",
     "upload-profile-picture-modal-save-button-text": "Simpan",
     "upload-profile-picture-modal-remove-button-text": "Hapus",
