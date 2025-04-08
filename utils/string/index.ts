@@ -89,8 +89,20 @@ const minifyNumber = (value: number) => {
   return floored.toFixed(1).replace(/\.0$/, "") + "K";
 };
 
+const getMoreOrLessKey = (value1: number, value2: number) => {
+  if (value1 > value2) return "value-more-text";
+  return "value-less-text";
+};
+
+const getPercentageDifference = (value1: number, value2: number) => {
+  const percentage = ((value1 - value2) / value2) * 100;
+  return percentage.toFixed(1).replace(/\.0$/, "");
+};
+
 export {
   getByteSize,
+  getMoreOrLessKey,
+  getPercentageDifference,
   minifyNumber,
   generatePassword,
   validateIsRequired,

@@ -153,7 +153,6 @@
     "main-metric-user-satisfactions-header-text": "Tingkat Kepuasan Masyarakat",
     "main-metric-comparison-header-text": "Perbandingan",
     "main-metric-menu-all-time": "Semua Waktu",
-    "main-metric-empty-text": "Tidak ada data",
     "demography-metric-title": "Demografi",
     "demography-metric-description": "Statistik demografi laporan, berdasarkan jenis laporan dan lokasi kejadian.",
     "development-metric-title": "Perkembangan Laporan",
@@ -264,6 +263,11 @@
   },
   "Modal": {
     "default-button-text": "Tutup"
+  },
+  "StatCard": {
+    "value-more-text": "<styled>{value}%</styled> lebih dari bulan sebelumnya",
+    "value-less-text": "<styled>{value}%</styled> kurang dari bulan sebelumnya",
+    "empty-text": "Tidak ada data"
   },
   "FileUploader": {
     "upload-input-dragndrop-text": "Tarik foto atau",

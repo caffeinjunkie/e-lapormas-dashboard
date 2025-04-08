@@ -15,7 +15,7 @@ interface DemographyMetricsProps {
 export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
   const t = useTranslations("StatisticsPage");
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 lg:pb-3">
       <div className="flex flex-col lg:min-h-16">
         <p className={clsx(title({ className: "text-md" }))}>
           {t("demography-metric-title")}
@@ -24,7 +24,7 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
           {t("demography-metric-description")}
         </p>
       </div>
-      <div className="grid gap-4 md:grid-rows-2 lg:h-[50vh]">
+      <div className="grid gap-4 md:grid-rows-2 flex-grow">
         <StatCard header="Metric 5" footer="Details">
           Content 5
         </StatCard>

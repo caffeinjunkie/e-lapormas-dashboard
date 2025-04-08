@@ -5,19 +5,25 @@ import {
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
+import { title } from "../primitives";
+
 import {
   getMoreOrLessKey,
   getPercentageDifference,
   minifyNumber,
 } from "@/utils/string";
 
-interface NumbersProps {
+interface PercentageProps {
   firstValue: number;
   secondValue: number;
   isEmpty: boolean;
 }
 
-export const Numbers = ({ firstValue, secondValue, isEmpty }: NumbersProps) => {
+export const Percentage = ({
+  firstValue,
+  secondValue,
+  isEmpty,
+}: PercentageProps) => {
   const t = useTranslations("StatCard");
   const difference = getPercentageDifference(firstValue, secondValue);
   const isMore = Number(difference) > 0;
@@ -36,9 +42,15 @@ export const Numbers = ({ firstValue, secondValue, isEmpty }: NumbersProps) => {
     >
       {!isEmpty ? (
         <>
-          <p className={clsx("text-center font-bold text-[5rem]")}>
-            {minifyNumber(firstValue)}
-          </p>
+          <span
+            className={clsx(
+              "text-center flex flex-row",
+              "font-bold text-[4.5rem]",
+            )}
+          >
+            {firstValue.toFixed(1).replace(".0", "")}
+            <p className={clsx(title({ className: "pt-5 text-xl" }))}>%</p>
+          </span>
           {secondValue > 0 && (
             <p className="text-default-500 text-xs text-center">
               {t.rich(getMoreOrLessKey(firstValue, secondValue), {
@@ -65,4 +77,4 @@ export const Numbers = ({ firstValue, secondValue, isEmpty }: NumbersProps) => {
   );
 };
 
-Numbers.displayName = "Numbers";
+Percentage.displayName = "Percentage";

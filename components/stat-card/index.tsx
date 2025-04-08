@@ -4,28 +4,34 @@ import { PropsWithChildren, ReactNode } from "react";
 
 import { Line } from "./line";
 import { Numbers } from "./numbers";
+import { Percentage } from "./percentage";
 import { Pie } from "./pie";
 
 interface StatCardProps extends PropsWithChildren {
   header?: ReactNode;
   footer?: ReactNode;
-  className?: string;
+  classNames?: {
+    root?: string;
+    header?: string;
+    body?: string;
+    footer?: string;
+  };
 }
 
 export const StatCard = ({
   children,
   header,
   footer,
-  className,
+  classNames,
   ...props
 }: StatCardProps) => {
   return (
     <Card
-      className={clsx("min-h-36", className)}
+      className={clsx("min-h-36", classNames?.root)}
       classNames={{
-        header: "px-3 pt-3 pb-1",
-        body: clsx("px-3 pt-0", footer ? "pb-1" : "pb-3"),
-        footer: "px-3 pt-1 pb-3",
+        header: clsx("px-3 pt-3 pb-1", classNames?.header),
+        body: clsx("px-3 pt-0", footer ? "pb-1" : "pb-3", classNames?.body),
+        footer: clsx("px-3 pt-1 pb-3", classNames?.footer),
       }}
       {...props}
     >
@@ -40,3 +46,4 @@ StatCard.displayName = "StatCard";
 StatCard.Line = Line;
 StatCard.Numbers = Numbers;
 StatCard.Pie = Pie;
+StatCard.Percentage = Percentage;
