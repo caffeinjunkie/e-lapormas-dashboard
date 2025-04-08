@@ -36,7 +36,7 @@ export const Percentage = ({
   return (
     <div
       className={clsx(
-        "flex flex-col items-center justify-center",
+        "flex flex-col items-center justify-center mx-auto",
         !isEmpty ? "h-full" : "",
       )}
     >
@@ -44,12 +44,18 @@ export const Percentage = ({
         <>
           <span
             className={clsx(
-              "text-center flex flex-row",
-              "font-bold text-[4.5rem]",
+              "text-center inline-flex items-baseline",
+              "font-bold text-[4.5rem] lg:text-[5cqw]",
             )}
           >
             {firstValue.toFixed(1).replace(".0", "")}
-            <p className={clsx(title({ className: "pt-5 text-xl" }))}>%</p>
+            <p
+              className={clsx(
+                title({ className: "pt-5 text-3xl lg:text-[2cqw]" }),
+              )}
+            >
+              %
+            </p>
           </span>
           {secondValue > 0 && (
             <p className="text-default-500 text-xs text-center">

@@ -11,7 +11,7 @@ export const mainMetrics = [
     total_new_tasks: 20,
     total_finished_tasks: 10,
     total_in_progress_tasks: 12,
-    user_satisfactions: 75,
+    user_satisfactions: 75.84,
   },
 ];
 
