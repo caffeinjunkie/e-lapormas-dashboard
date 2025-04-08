@@ -20,9 +20,9 @@ export const StatCard = ({
 }: StatCardProps) => {
   return (
     <Card {...props}>
-      {header && <CardHeader>{header}</CardHeader>}
+      {header && <CardHeader className="w-full">{header}</CardHeader>}
       <CardBody>{children}</CardBody>
-      {footer && <CardFooter>{footer}</CardFooter>}
+      {footer && <CardFooter className="w-full">{footer}</CardFooter>}
     </Card>
   );
 };
