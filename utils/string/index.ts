@@ -76,53 +76,6 @@ function generatePassword(): string {
   return password;
 }
 
-const formatLocaleDate = (
-  date: string,
-  format: "short" | "long" | "long-relative" = "short",
-) => {
-  const formatter = useFormatter();
-  const dateTime = new Date(date);
-
-  if (format === "long") {
-    return formatter.dateTime(dateTime, {
-      dateStyle: "long",
-      timeStyle: "short",
-    });
-  }
-
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-
-  const oneWeekAgo = new Date(today);
-  oneWeekAgo.setDate(today.getDate() - 7);
-
-  const diffInDays = Math.floor(
-    (today.getTime() - dateTime.getTime()) / (1000 * 60 * 60 * 24),
-  );
-  if (diffInDays < 8) {
-    return formatter.relativeTime(dateTime, today);
-  }
-
-  const getDateStyle = () => {
-    if (format === "long-relative") {
-      return {
-        dateStyle: "long",
-        timeStyle: "short",
-      };
-    }
-    return {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-  };
-
-  const dateFormat = getDateStyle();
-
-  return formatter.dateTime(dateTime, dateFormat as any);
-};
-
 const getByteSize = (size: number) => {
   if (size < 500000) {
     return (size / 1024).toFixed(0) + "KB";
@@ -139,7 +92,6 @@ const minifyNumber = (value: number) => {
 export {
   getByteSize,
   minifyNumber,
-  formatLocaleDate,
   generatePassword,
   validateIsRequired,
   validateEmail,

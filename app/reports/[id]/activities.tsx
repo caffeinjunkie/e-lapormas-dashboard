@@ -24,8 +24,8 @@ import { checkUpdatedProgressToday } from "./utils";
 import { AchievementIcon, BellIcon, ClockIcon } from "@/components/icons";
 import { Progress } from "@/types/report.types";
 import { AdminData } from "@/types/user.types";
+import { formatLocaleDate } from "@/utils/date";
 import { buildFormData } from "@/utils/form";
-import { formatLocaleDate } from "@/utils/string";
 
 interface ActivitiesProps {
   data: Progress[];

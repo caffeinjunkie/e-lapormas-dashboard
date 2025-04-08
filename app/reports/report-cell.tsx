@@ -10,7 +10,7 @@ import { PriorityChipColor, PriorityLabel } from "./config";
 
 import { TooltipButton } from "@/components/tooltip-button";
 import { Report } from "@/types/report.types";
-import { formatLocaleDate } from "@/utils/string";
+import { formatLocaleDate, getDiffInDays } from "@/utils/date";
 
 interface ReportCellProps {
   columnKey: string;
@@ -42,6 +42,20 @@ export const ReportCell = ({
             <div className="flex flex-row gap-2">
               <div className="flex flex-col w-full">
                 <div className="flex flex-row items-center gap-1 text-xs">
+                  {report.status === "PENDING" &&
+                    getDiffInDays(report.created_at) < 2 && (
+                      <div className="pb-1">
+                        <Chip
+                          variant="shadow"
+                          color="danger"
+                          radius="sm"
+                          size="sm"
+                          className="text-white"
+                        >
+                          {t("report-cell-new-text")}
+                        </Chip>
+                      </div>
+                    )}
                   <Link
                     href={`/reports/${report.tracking_id}`}
                     className="text-xs hover:cursor-pointer"
@@ -105,14 +119,28 @@ export const ReportCell = ({
           </CardFooter>
         </Card>
       ) : (
-        <div>
+        <div className="flex flex-col">
           <Link
             href={`/reports/${report.tracking_id}`}
             className="text-xs hover:cursor-pointer"
           >
             #{report.tracking_id}
           </Link>
-          <p className="text-md font-semibold line-clamp-2">{report.title}</p>
+          <div className="flex flex-row gap-2 items-center">
+            <p className="text-md font-semibold line-clamp-2">{report.title}</p>
+            {report.status === "PENDING" &&
+              getDiffInDays(report.created_at) < 2 && (
+                <Chip
+                  variant="shadow"
+                  color="danger"
+                  radius="sm"
+                  size="sm"
+                  className="text-white"
+                >
+                  {t("report-cell-new-text")}
+                </Chip>
+              )}
+          </div>
           {!isWideScreen && (
             <p className="text-xs pt-1 text-default-500">{formattedDate}</p>
           )}
