@@ -41,10 +41,10 @@ export const Percentage = ({
       )}
     >
       {!isEmpty ? (
-        <>
+        <div className="flex flex-col items-center justify-between h-full w-full">
           <span
             className={clsx(
-              "text-center inline-flex items-baseline",
+              "text-center inline-flex h-full self-center items-baseline",
               "font-bold text-[4.5rem] lg:text-[5cqw]",
             )}
           >
@@ -58,24 +58,26 @@ export const Percentage = ({
             </p>
           </span>
           {secondValue > 0 && (
-            <p className="text-default-500 text-xs text-center">
-              {t.rich(getMoreOrLessKey(firstValue, secondValue), {
-                value: difference.replace("-", ""),
-                styled: (chunks) => (
-                  <strong
-                    className={clsx(
-                      "inline-flex items-baseline",
-                      isMore ? "text-success" : "text-red-500",
-                    )}
-                  >
-                    <span className="mr-0.5 self-center">{icon}</span>
-                    {chunks}
-                  </strong>
-                ),
-              })}
-            </p>
+            <div className="w-full mt-auto">
+              <p className="text-default-500 text-xs text-center">
+                {t.rich(getMoreOrLessKey(firstValue, secondValue), {
+                  value: difference.replace("-", ""),
+                  styled: (chunks) => (
+                    <strong
+                      className={clsx(
+                        "inline-flex items-baseline",
+                        isMore ? "text-success" : "text-red-500",
+                      )}
+                    >
+                      <span className="mr-0.5 self-center">{icon}</span>
+                      {chunks}
+                    </strong>
+                  ),
+                })}
+              </p>
+            </div>
           )}
-        </>
+        </div>
       ) : (
         <p className="text-center text-gray-500">{t("empty-text")}</p>
       )}

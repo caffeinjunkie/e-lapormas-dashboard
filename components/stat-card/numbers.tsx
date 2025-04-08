@@ -35,7 +35,7 @@ export const Numbers = ({ firstValue, secondValue, isEmpty }: NumbersProps) => {
       )}
     >
       {!isEmpty ? (
-        <>
+        <div className="flex flex-col items-center justify-between">
           <p
             className={clsx("text-center font-bold text-[5rem] lg:text-[5cqw]")}
           >
@@ -59,7 +59,7 @@ export const Numbers = ({ firstValue, secondValue, isEmpty }: NumbersProps) => {
               })}
             </p>
           )}
-        </>
+        </div>
       ) : (
         <p className="text-center text-gray-500">{t("empty-text")}</p>
       )}
