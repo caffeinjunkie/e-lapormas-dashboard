@@ -143,7 +143,14 @@
     "activity-update-error-message": "Laporan sudah diperbaharui 3 kali hari ini. Anda dapat mengirim pembaharuan kembali besok."
   },
   "StatisticsPage": {
-    "title": "Statistik (In Development)"
+    "title": "Statistik (In Development)",
+    "main-metric-title": "Pengetahuan Umum",
+    "main-metric-description": "Statistik pengetahuan laporan secara umum.",
+    "main-metric-average-text": "Rata-rata",
+    "demography-metric-title": "Demografi",
+    "demography-metric-description": "Statistik demografi laporan, berdasarkan jenis laporan dan lokasi kejadian.",
+    "development-metric-title": "Perkembangan Laporan",
+    "development-metric-description": "Statistik perkembangan laporan dalam waktu 6 bulan terakhir."
   },
   "AnnouncementsPage": {
     "title": "Pengumuman (Planning Stage)"
