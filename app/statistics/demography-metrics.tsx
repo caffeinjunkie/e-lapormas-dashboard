@@ -1,9 +1,9 @@
 import { clsx } from "clsx";
 import { useTranslations } from "next-intl";
 
+import { categoryMetrics, locationMetrics } from "@/app/statistics/mock-data";
 import { subtitle, title } from "@/components/primitives";
 import { StatCard } from "@/components/stat-card";
-import { locationMetrics, categoryMetrics } from "@/app/statistics/mock-data";
 
 interface DemographyMetricsProps {
   data: {
@@ -12,9 +12,7 @@ interface DemographyMetricsProps {
   };
 }
 
-export const DemographyMetrics = ({
-  data
-}: DemographyMetricsProps) => {
+export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
   const t = useTranslations("StatisticsPage");
   return (
     <div className="flex flex-col gap-2">

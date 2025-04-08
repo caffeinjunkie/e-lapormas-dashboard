@@ -130,8 +130,15 @@ const getByteSize = (size: number) => {
   return (size / 1048576).toFixed(2) + "MB";
 };
 
+const minifyNumber = (value: number) => {
+  if (value < 1000) return value.toString();
+  const floored = Math.floor((value / 1000) * 10) / 10;
+  return floored.toFixed(1).replace(/\.0$/, "") + "K";
+};
+
 export {
   getByteSize,
+  minifyNumber,
   formatLocaleDate,
   generatePassword,
   validateIsRequired,

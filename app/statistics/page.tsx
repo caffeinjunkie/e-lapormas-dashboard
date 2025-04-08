@@ -24,7 +24,7 @@ export default function StatisticsPage() {
       key: "all-time",
     },
   ];
-  
+
   const mainMetricMenu =
     mockData.mainMetrics.length > 0
       ? [
