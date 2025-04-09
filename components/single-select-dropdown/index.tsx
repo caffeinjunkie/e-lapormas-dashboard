@@ -16,6 +16,7 @@ interface SingleSelectDropdownProps extends DropdownMenuProps {
   items: { id: string; label: string }[];
   radius?: ButtonProps["radius"];
   triggerClassname?: string;
+  size?: ButtonProps["size"];
   buttonEndContent?: React.ReactNode;
   buttonStartContent?: React.ReactNode;
 }
@@ -30,6 +31,7 @@ const SingleSelectDropdown: React.FC<
   buttonEndContent,
   buttonStartContent,
   radius = "md",
+  size = "md",
   triggerClassname,
   className,
   selectionMode = "single",
@@ -41,6 +43,7 @@ const SingleSelectDropdown: React.FC<
         <Button
           className={`text-default-700 ${className}`}
           radius={radius}
+          size={size}
           startContent={buttonStartContent}
           endContent={buttonEndContent}
           variant="flat"

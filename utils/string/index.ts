@@ -90,11 +90,13 @@ const minifyNumber = (value: number) => {
 };
 
 const getMoreOrLessKey = (value1: number, value2: number) => {
+  if (value1 === value2) return "value-equal-text";
   if (value1 > value2) return "value-more-text";
   return "value-less-text";
 };
 
 const getPercentageDifference = (value1: number, value2: number) => {
+  if (value2 === 0) return "100";
   const percentage = ((value1 - value2) / value2) * 100;
   return percentage.toFixed(1).replace(/\.0$/, "");
 };

@@ -156,6 +156,7 @@
     "main-metric-pending-text": "Menunggu",
     "main-metric-in-progress-text": "Dalam Proses",
     "main-metric-completed-text": "Selesai",
+    "main-metric-filter-label": "Bulan",
     "demography-metric-title": "Demografi",
     "demography-metric-description": "Statistik demografi laporan, berdasarkan jenis laporan dan lokasi kejadian.",
     "development-metric-title": "Perkembangan Laporan",
@@ -268,9 +269,12 @@
     "default-button-text": "Tutup"
   },
   "StatCard": {
-    "value-more-text": "<styled>{value}%</styled> lebih dari bulan sebelumnya",
-    "value-less-text": "<styled>{value}%</styled> kurang dari bulan sebelumnya",
-    "empty-text": "Tidak ada data"
+    "value-more-text": "Naik <styled>{value}%</styled> dari bulan sebelumnya",
+    "value-less-text": "Turun <styled>{value}%</styled> dari bulan sebelumnya",
+    "value-equal-text": "Sama dengan bulan sebelumnya",
+    "empty-text": "Tidak ada data",
+    "all-time-number-text": "Jumlah data keseluruhan (akumulasi dari awal waktu)",
+    "all-time-percentage-text": "Persentase tingkat kepuasan masyarakat(rata-rata)"
   },
   "FileUploader": {
     "upload-input-dragndrop-text": "Tarik foto atau",

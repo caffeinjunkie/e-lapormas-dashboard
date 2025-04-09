@@ -43,7 +43,9 @@ export const Pie = ({
               <PieArcSeries
                 label={
                   <PieArcLabel
-                    format={(value) => `${(value.data / total) * 100}%`}
+                    format={(value) =>
+                      `${((value.data / total) * 100).toFixed(1).replace(".0", "")}%`
+                    }
                   />
                 }
                 doughnut={doughnut}

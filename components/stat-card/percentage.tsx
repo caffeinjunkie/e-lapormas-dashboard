@@ -15,6 +15,7 @@ import {
 
 interface PercentageProps {
   firstValue: number;
+  isAllTime: boolean;
   secondValue: number;
   isEmpty: boolean;
 }
@@ -22,6 +23,7 @@ interface PercentageProps {
 export const Percentage = ({
   firstValue,
   secondValue,
+  isAllTime,
   isEmpty,
 }: PercentageProps) => {
   const t = useTranslations("StatCard");
@@ -57,26 +59,32 @@ export const Percentage = ({
               %
             </p>
           </span>
-          {secondValue > 0 && (
-            <div className="w-full mt-auto">
-              <p className="text-default-500 text-xs text-center">
-                {t.rich(getMoreOrLessKey(firstValue, secondValue), {
-                  value: difference.replace("-", ""),
-                  styled: (chunks) => (
-                    <strong
-                      className={clsx(
-                        "inline-flex items-baseline",
-                        isMore ? "text-success" : "text-red-500",
-                      )}
-                    >
-                      <span className="mr-0.5 self-center">{icon}</span>
-                      {chunks}
-                    </strong>
-                  ),
-                })}
-              </p>
-            </div>
-          )}
+          <div className="w-full mt-auto">
+            <p className="text-default-500 text-xs text-center">
+              {isAllTime
+                ? t("all-time-percentage-text")
+                : t.rich(getMoreOrLessKey(firstValue, secondValue), {
+                    value: difference.replace("-", ""),
+                    styled: (chunks) => (
+                      <strong
+                        className={clsx(
+                          "inline-flex items-baseline",
+                          firstValue === secondValue
+                            ? "text-default-500"
+                            : isMore
+                              ? "text-success"
+                              : "text-red-500",
+                        )}
+                      >
+                        {firstValue === secondValue || (
+                          <span className="mr-0.5 self-center">{icon}</span>
+                        )}
+                        {chunks}
+                      </strong>
+                    ),
+                  })}
+            </p>
+          </div>
         </div>
       ) : (
         <p className="text-center text-gray-500">{t("empty-text")}</p>

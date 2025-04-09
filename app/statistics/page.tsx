@@ -18,25 +18,6 @@ export default function StatisticsPage() {
     locationMetrics,
     categoryMetrics,
   };
-  const defaultMenu = [
-    {
-      label: t("main-metric-menu-all-time"),
-      key: "all-time",
-    },
-  ];
-
-  const mainMetricMenu =
-    mockData.mainMetrics.length > 0
-      ? [
-          ...defaultMenu,
-          ...mockData.mainMetrics.map((item) => ({
-            label: item.month_year,
-            key: item.month_year,
-          })),
-        ]
-      : defaultMenu;
-
-  console.log(mainMetricMenu);
 
   return (
     <Layout title={t("title")} classNames={{ body: "px-6 md:px-8 pt-2 pb-6" }}>

@@ -14,10 +14,16 @@ import {
 interface NumbersProps {
   firstValue: number;
   secondValue: number;
+  isAllTime: boolean;
   isEmpty: boolean;
 }
 
-export const Numbers = ({ firstValue, secondValue, isEmpty }: NumbersProps) => {
+export const Numbers = ({
+  firstValue,
+  secondValue,
+  isAllTime,
+  isEmpty,
+}: NumbersProps) => {
   const t = useTranslations("StatCard");
   const difference = getPercentageDifference(firstValue, secondValue);
   const isMore = Number(difference) > 0;
@@ -41,24 +47,30 @@ export const Numbers = ({ firstValue, secondValue, isEmpty }: NumbersProps) => {
           >
             {minifyNumber(firstValue)}
           </p>
-          {secondValue > 0 && (
-            <p className="text-default-500 text-xs text-center">
-              {t.rich(getMoreOrLessKey(firstValue, secondValue), {
-                value: difference.replace("-", ""),
-                styled: (chunks) => (
-                  <strong
-                    className={clsx(
-                      "inline-flex items-baseline",
-                      isMore ? "text-success" : "text-red-500",
-                    )}
-                  >
-                    <span className="mr-0.5 self-center">{icon}</span>
-                    {chunks}
-                  </strong>
-                ),
-              })}
-            </p>
-          )}
+          <p className="text-default-500 text-xs text-center">
+            {isAllTime
+              ? t("all-time-number-text")
+              : t.rich(getMoreOrLessKey(firstValue, secondValue), {
+                  value: difference.replace("-", ""),
+                  styled: (chunks) => (
+                    <strong
+                      className={clsx(
+                        "inline-flex items-baseline",
+                        firstValue === secondValue
+                          ? "text-default-500"
+                          : isMore
+                            ? "text-success"
+                            : "text-red-500",
+                      )}
+                    >
+                      {firstValue === secondValue || (
+                        <span className="mr-0.5 self-center">{icon}</span>
+                      )}
+                      {chunks}
+                    </strong>
+                  ),
+                })}
+          </p>
         </div>
       ) : (
         <p className="text-center text-gray-500">{t("empty-text")}</p>
