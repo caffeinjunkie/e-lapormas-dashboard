@@ -11,6 +11,7 @@ import { clsx } from "clsx";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
+import { SectionHeader } from "./section-header";
 import { getAllTimeData } from "./utils";
 
 import { mainMetrics } from "@/app/statistics/mock-data";
@@ -62,20 +63,24 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
   }, [selected]);
 
   const renderHeader = (label: string) => (
-    <p className={clsx(
-      title({ className: "text-sm text-center w-full" }),
-      "inline-flex flex-wrap items-baseline justify-center"
-    )}>
-      {t(`main-metric-${label}-header-text`).split(' ').map((word, i, arr) => (
-        <span key={i} className="mr-1">
-          {word}
-          {i === arr.length - 1 && (
-            <Tooltip content={t(`main-metric-${label}-tooltip-text`)}>
-              <InformationCircleIcon className="size-4 stroke-2 text-default-400 ml-1 mb-1 inline-block" />
-            </Tooltip>
-          )}
-        </span>
-      ))}
+    <p
+      className={clsx(
+        title({ className: "text-sm text-center w-full" }),
+        "inline-flex flex-wrap items-baseline justify-center",
+      )}
+    >
+      {t(`main-metric-${label}-header-text`)
+        .split(" ")
+        .map((word, i, arr) => (
+          <span key={i} className="mr-1">
+            {word}
+            {i === arr.length - 1 && (
+              <Tooltip content={t(`main-metric-${label}-tooltip-text`)}>
+                <InformationCircleIcon className="size-4 stroke-2 text-default-400 ml-1 mb-1 inline-block" />
+              </Tooltip>
+            )}
+          </span>
+        ))}
     </p>
   );
 
@@ -102,30 +107,26 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
 
   return (
     <div className="flex flex-col gap-2 border-r-0 pr-0 pb-0 lg:border-r-1 border-default-200 lg:pr-3 lg:pb-3">
-      <div className="flex flex-row items-start justify-between lg:min-h-16">
-        <div className="flex flex-col">
-          <p className={clsx(title({ className: "text-md" }))}>
-            {t("main-metric-title")}
-          </p>
-          <p className={clsx(subtitle({ className: "text-sm" }))}>
-            {t("main-metric-description")}
-          </p>
-        </div>
-        <SingleSelectDropdown
-          size="sm"
-          label={t("main-metric-filter-label")}
-          items={mainMetricMenu as ItemType[]}
-          triggerClassname="w-full lg:w-fit"
-          closeOnSelect
-          buttonEndContent={
-            <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
-          }
-          selectedKeys={selected}
-          onSelectionChange={setSelected as (keys: SharedSelection) => void}
-        >
-          <p>{selectedMenu?.label}</p>
-        </SingleSelectDropdown>
-      </div>
+      <SectionHeader
+        title={t("main-metric-title")}
+        subtitle={t("main-metric-description")}
+        content={
+          <SingleSelectDropdown
+            size="sm"
+            label={t("main-metric-filter-label")}
+            items={mainMetricMenu as ItemType[]}
+            triggerClassname="w-fit"
+            closeOnSelect
+            buttonEndContent={
+              <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
+            }
+            selectedKeys={selected}
+            onSelectionChange={setSelected as (keys: SharedSelection) => void}
+          >
+            <p>{selectedMenu?.label}</p>
+          </SingleSelectDropdown>
+        }
+      />
       <div className="grid gap-4 md:grid-cols-2 flex-grow">
         <StatCard
           header={renderHeader("new")}
