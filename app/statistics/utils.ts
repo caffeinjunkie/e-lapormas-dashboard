@@ -12,6 +12,12 @@ export const getAllTimeData = (data: MainMetrics[]) => {
 
       if (index === array.length - 1) {
         const count = array.length;
+        acc.total_new_tasks = Number(
+          (acc.total_new_tasks / count).toFixed(1).replace(".0", ""),
+        );
+        acc.total_finished_tasks = Number(
+          (acc.total_finished_tasks / count).toFixed(1).replace(".0", ""),
+        );
         acc.user_satisfactions = Number(
           (acc.user_satisfactions / count).toFixed(1).replace(".0", ""),
         );

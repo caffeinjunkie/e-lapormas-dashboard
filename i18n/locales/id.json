@@ -152,6 +152,10 @@
     "main-metric-completed-header-text": "Laporan Selesai",
     "main-metric-user-satisfactions-header-text": "Tingkat Kepuasan Masyarakat",
     "main-metric-comparison-header-text": "Perbandingan",
+    "main-metric-new-tooltip-text": "Jumlah total laporan masuk",
+    "main-metric-completed-tooltip-text": "Jumlah total laporan selesai",
+    "main-metric-user-satisfactions-tooltip-text": "Tingkat kepuasan masyarakat terhadap kinerja penyelesaian laporan",
+    "main-metric-comparison-tooltip-text": "Perbandingan laporan yang belum dikerjakan, sedang dikerjakan, dan selesai",
     "main-metric-menu-all-time": "Semua Waktu",
     "main-metric-pending-text": "Menunggu",
     "main-metric-in-progress-text": "Dalam Proses",
@@ -273,7 +277,7 @@
     "value-less-text": "Turun <styled>{value}%</styled> dari bulan sebelumnya",
     "value-equal-text": "Sama dengan bulan sebelumnya",
     "empty-text": "Tidak ada data",
-    "all-time-number-text": "Jumlah data keseluruhan (akumulasi dari awal waktu)",
+    "all-time-number-text": "Jumlah rata-rata laporan per bulan",
     "all-time-percentage-text": "Persentase tingkat kepuasan masyarakat(rata-rata)"
   },
   "FileUploader": {

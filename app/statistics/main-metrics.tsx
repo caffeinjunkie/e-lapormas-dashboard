@@ -1,8 +1,12 @@
 "use client";
 
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
 import { Dropdown } from "@heroui/dropdown";
 import { SharedSelection } from "@heroui/system";
+import { Tooltip } from "@heroui/tooltip";
 import { clsx } from "clsx";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -57,9 +61,21 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
     setPrevData(data[Number(selected.values().next().value) - 2]);
   }, [selected]);
 
-  const renderHeader = (text: string) => (
-    <p className={clsx(title({ className: "text-sm text-center w-full" }))}>
-      {text}
+  const renderHeader = (label: string) => (
+    <p className={clsx(
+      title({ className: "text-sm text-center w-full" }),
+      "inline-flex flex-wrap items-baseline justify-center"
+    )}>
+      {t(`main-metric-${label}-header-text`).split(' ').map((word, i, arr) => (
+        <span key={i} className="mr-1">
+          {word}
+          {i === arr.length - 1 && (
+            <Tooltip content={t(`main-metric-${label}-tooltip-text`)}>
+              <InformationCircleIcon className="size-4 stroke-2 text-default-400 ml-1 mb-1 inline-block" />
+            </Tooltip>
+          )}
+        </span>
+      ))}
     </p>
   );
 
@@ -112,7 +128,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
       </div>
       <div className="grid gap-4 md:grid-cols-2 flex-grow">
         <StatCard
-          header={renderHeader(t("main-metric-new-header-text"))}
+          header={renderHeader("new")}
           classNames={{
             body: "flex h-fit items-center justify-center",
           }}
@@ -125,7 +141,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={renderHeader(t("main-metric-completed-header-text"))}
+          header={renderHeader("completed")}
           classNames={{
             body: "flex h-fit items-center justify-center",
           }}
@@ -138,7 +154,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={renderHeader(t("main-metric-user-satisfactions-header-text"))}
+          header={renderHeader("user-satisfactions")}
           classNames={{
             header: "px-12 lg:px-4",
             body: "flex h-fit items-center justify-center",
@@ -152,7 +168,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={renderHeader(t("main-metric-comparison-header-text"))}
+          header={renderHeader("comparison")}
           classNames={{
             body: "flex items-center justify-center",
           }}
