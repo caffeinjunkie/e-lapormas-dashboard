@@ -83,6 +83,35 @@ export type Database = {
         };
         Relationships: [];
       };
+      general_statistics: {
+        Row: {
+          month_year: string;
+          total_new_tasks: number;
+          total_finished_tasks: number;
+          current_in_progress_tasks: number;
+          current_pending_tasks: number;
+          current_completed_tasks: number;
+          user_satisfactions: number;
+        };
+        Relationships: [];
+      },
+      location_statistics: {
+        Row: {
+          location: string;
+          total_tasks: number;
+          total_finished_tasks: number;
+          flag_color: string;
+        };
+        Relationships: [];
+      },
+      category_statistics: {
+        Row: {
+          category: string;
+          total_tasks: number;
+          total_finished_tasks: number;
+        };
+        Relationships: [];
+      },
       tasks: {
         Row: {
           address: Json | null;

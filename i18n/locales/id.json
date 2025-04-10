@@ -305,7 +305,8 @@
   "StatCard": {
     "empty-text": "Tidak ada data",
     "line-empty-text": "Data akan muncul setelah ada aktivitas selama 2 bulan",
-    "total-pie-label-text": "Total"
+    "total-pie-label-text": "Total",
+    "other-text": "Lainnya"
   },
   "FileUploader": {
     "upload-input-dragndrop-text": "Tarik foto atau",

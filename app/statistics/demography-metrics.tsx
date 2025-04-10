@@ -5,6 +5,7 @@ import { SectionHeader } from "./components/section-header";
 
 import { StatCard } from "@/components/stat-card";
 import { CategoryMetrics, LocationMetrics } from "@/types/statistics.types";
+import { useMemo } from "react";
 
 interface DemographyMetricsProps {
   data: {
@@ -38,6 +39,14 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
     },
   ];
 
+  const memoizedLocationData = useMemo(() => data.locationMetrics.map((item) => ({
+    id: item.location,
+    label: item.location,
+    value: item.total_tasks,
+  })).sort((a, b) => a.value - b.value), [data.locationMetrics]);
+
+  console.log(memoizedLocationData);
+
   return (
     <div className="flex flex-col gap-2 ">
       <SectionHeader
@@ -62,6 +71,9 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
           />
         </StatCard>
         <StatCard
+          classNames={{
+            body: "flex flex-row items-center justify-center",
+          }}
           header={
             <MetricHeader
               metricName="demography"
@@ -71,7 +83,8 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
             />
           }
         >
-          Content 6
+          <StatCard.Pie data={memoizedLocationData} width={200} height={150} />
+          <StatCard.Pie data={memoizedLocationData} width={200} height={150} />
         </StatCard>
       </div>
     </div>

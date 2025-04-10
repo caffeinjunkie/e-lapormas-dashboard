@@ -49,3 +49,4 @@ StatCard.Numbers = Numbers;
 StatCard.Bar = Bar;
 StatCard.Pie = Pie;
 StatCard.Percentage = Percentage;
+

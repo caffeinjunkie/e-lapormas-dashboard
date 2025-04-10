@@ -15,6 +15,7 @@ export interface DemographyMetrics {
 
 export interface LocationMetrics extends DemographyMetrics {
   location: string;
+  flag_color: string;
 }
 
 export interface CategoryMetrics extends DemographyMetrics {

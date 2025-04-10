@@ -113,6 +113,19 @@ export const locationMetrics = [
   {
     location: "Location 1",
     total_tasks: 20,
+    flag_color: "#faf95a",
+    total_finished_tasks: 15,
+  },
+  {
+    location: "Location 2",
+    total_tasks: 14,
+    flag_color: "#ffa95a",
+    total_finished_tasks: 12,
+  },
+  {
+    location: "Location 3",
+    flag_color: "#f0f033",
+    total_tasks: 20,
     total_finished_tasks: 15,
   },
 ];

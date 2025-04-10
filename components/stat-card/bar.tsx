@@ -28,7 +28,7 @@ export const Bar = ({
     );
   }
   return (
-    <div>
+    <div className="w-full flex pb-2">
       <BarChart
         yAxis={[{ scaleType: "band", data: labels }]}
         series={

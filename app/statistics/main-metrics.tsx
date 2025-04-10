@@ -196,7 +196,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
             body: "flex items-center justify-center",
           }}
         >
-          <StatCard.Pie data={pieData} />
+          <StatCard.Pie data={pieData} withLegend withCenterLabel type="sliced-donut" />
         </StatCard>
       </div>
     </div>
