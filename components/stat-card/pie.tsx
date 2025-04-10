@@ -1,78 +1,71 @@
 "use client";
 
-import { Chip } from "@heroui/chip";
+import { styled } from "@mui/material/styles";
+import { PieChart } from "@mui/x-charts";
+import { useDrawingArea } from "@mui/x-charts/hooks";
 import { useTranslations } from "next-intl";
-import {
-  DiscreteLegend,
-  DiscreteLegendEntry,
-  PieArcLabel,
-  PieArcSeries,
-  PieChart,
-  PieChartProps,
-} from "reaviz";
 
-interface PieProps extends PieChartProps {
-  doughnut?: boolean;
-  colorScheme?: string;
+import { Legends } from "./legends";
+
+interface PieProps {
+  width?: number;
+  height?: number;
   data: any[];
 }
 
-export const Pie = ({
-  id,
-  data,
-  width = 300,
-  height = 200,
-  doughnut = false,
-}: PieProps) => {
+export const Pie = ({ data, width = 160, height = 160 }: PieProps) => {
   const t = useTranslations("StatCard");
   const total =
-    data?.reduce((acc, curr) => Number(acc) + Number(curr.data), 0) ?? 0;
-  const colors = data?.map((item) => item.color);
+    data?.reduce((acc, curr) => Number(acc) + Number(curr.value), 0) ?? 0;
+
+  if (!data || data.length === 0)
+    return <p className="text-center text-gray-500">{t("empty-text")}</p>;
 
   return (
     <>
-      {data?.length > 0 ? (
-        <>
-          <PieChart
-            id={id}
-            width={width}
-            height={height}
-            displayAllLabels={false}
-            data={data}
-            series={
-              <PieArcSeries
-                label={
-                  <PieArcLabel
-                    format={(value) =>
-                      `${((value.data / total) * 100).toFixed(1).replace(".0", "")}%`
-                    }
-                  />
-                }
-                doughnut={doughnut}
-                animated
-                colorScheme={colors}
-              />
-            }
-          />
-          <div className="text-center">
-            <div className="inline-flex flex-wrap justify-center gap-2">
-              {data?.map((item) => (
-                <div key={item.key} className="inline-flex items-center gap-1">
-                  <div
-                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <p className="text-[10px] whitespace-nowrap">{item.key}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      ) : (
-        <p className="text-center text-gray-500">{t("empty-text")}</p>
-      )}
+      <PieChart
+        margin={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        series={[
+          {
+            data: data,
+            innerRadius: 40,
+            outerRadius: 60,
+            paddingAngle: 5,
+            cornerRadius: 5,
+            startAngle: -90,
+            endAngle: 270,
+          },
+        ]}
+        slotProps={{
+          legend: {
+            hidden: true,
+          },
+        }}
+        width={width}
+        height={height}
+      >
+        <PieCenterLabel>{total}</PieCenterLabel>
+      </PieChart>
+      <Legends data={data} size="sm" />
     </>
   );
 };
 
 Pie.displayName = "Pie";
+
+const StyledText = styled("text")(({ theme }) => ({
+  fill: theme.palette.text.primary,
+  textAnchor: "middle",
+  dominantBaseline: "central",
+  fontSize: 24,
+  fontWeight: 700,
+}));
+
+function PieCenterLabel({ children }: { children: React.ReactNode }) {
+  const { width, height, left, top } = useDrawingArea();
+  return (
+    <StyledText x={left + width / 2} y={top + height / 2}>
+      {children || 0}
+    </StyledText>
+  );
+}

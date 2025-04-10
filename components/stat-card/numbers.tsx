@@ -19,7 +19,7 @@ export const Numbers = ({ value, isEmpty }: NumbersProps) => {
       )}
     >
       {!isEmpty ? (
-        <p className={clsx("text-center font-bold text-[5rem] lg:text-[5cqw]")}>
+        <p className={clsx("text-center font-bold text-[5rem] lg:text-[6cqw]")}>
           {minifyNumber(value)}
         </p>
       ) : (

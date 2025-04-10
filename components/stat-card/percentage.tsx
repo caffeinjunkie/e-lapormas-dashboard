@@ -23,7 +23,7 @@ export const Percentage = ({ value, isEmpty }: PercentageProps) => {
           <span
             className={clsx(
               "text-center inline-flex h-full self-center items-baseline lg:items-center",
-              "font-bold text-[4.5rem] lg:text-[4.5cqw]",
+              "font-bold text-[4.5rem] lg:text-[6cqw]",
             )}
           >
             {value.toFixed(1).replace(".0", "")}

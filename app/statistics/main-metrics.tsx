@@ -3,7 +3,7 @@
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { MetricFooter } from "./metric-footer";
 import { MetricHeader } from "./metric-header";
@@ -57,19 +57,22 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
     if (data.length === 0) return [];
     return [
       {
-        key: t("main-metric-pending-text"),
+        id: "1",
+        label: t("main-metric-pending-text"),
         color: "#f38383",
-        data: currentData?.current_pending_tasks,
+        value: currentData?.current_pending_tasks,
       },
       {
-        key: t("main-metric-in-progress-text"),
+        id: "2",
+        label: t("main-metric-in-progress-text"),
         color: "#ffb477",
-        data: currentData?.current_in_progress_tasks,
+        value: currentData?.current_in_progress_tasks,
       },
       {
-        key: t("main-metric-completed-text"),
+        id: "3",
+        label: t("main-metric-completed-text"),
         color: "#19c37e",
-        data: currentData?.current_completed_tasks,
+        value: currentData?.current_completed_tasks,
       },
     ];
   }, [currentData, data, t]);
@@ -173,13 +176,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
             body: "flex items-center justify-center",
           }}
         >
-          <StatCard.Pie
-            id="main-metric-comparison"
-            height={120}
-            width={200}
-            doughnut
-            data={pieData}
-          />
+          <StatCard.Pie data={pieData} />
         </StatCard>
       </div>
     </div>
