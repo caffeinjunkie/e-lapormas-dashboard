@@ -45,7 +45,7 @@ export const DevelopmentMetrics = ({ data }: DevelopmentMetricsProps) => {
   ];
 
   const renderHeader = () => (
-    <div className="flex flex-col sm:flex-row gap-2 justify-between items-center sm:items-start w-full p-1 pl-2">
+    <div className="flex flex-col-reverse sm:flex-row gap-2 justify-between items-center sm:items-start w-full p-1 pl-2">
       <MetricHeader
         metricName="development"
         label={`multiline-${dataLimit}-months`}

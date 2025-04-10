@@ -112,15 +112,50 @@ export const mainMetrics = [
 export const locationMetrics = [
   {
     location: "Location 1",
-    total_tasks: 10,
+    total_tasks: 20,
     total_finished_tasks: 15,
   },
 ];
 
 export const categoryMetrics = [
   {
-    location: "lainnya",
+    category: "kebijakan-publik",
+    total_tasks: 4,
+    total_finished_tasks: 4,
+  },
+  {
+    category: "kondisi-jalan",
+    total_tasks: 10,
+    total_finished_tasks: 8,
+  },
+  {
+    category: "fasilitas-umum",
+    total_tasks: 12,
+    total_finished_tasks: 4,
+  },
+  {
+    category: "makanan-bergizi",
     total_tasks: 5,
+    total_finished_tasks: 1,
+  },
+  {
+    category: "program-pemerintah",
+    total_tasks: 7,
+    total_finished_tasks: 5,
+  },
+  {
+    category: "keamanan",
+    total_tasks: 12,
+    total_finished_tasks: 6,
+  },
+  {
+    category: "pungli",
+    total_tasks: 6,
+    total_finished_tasks: 2,
+  },
+  {
+    category: "lainnya",
+    total_tasks: 10,
     total_finished_tasks: 6,
   },
 ];

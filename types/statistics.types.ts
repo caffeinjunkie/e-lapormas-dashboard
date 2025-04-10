@@ -8,14 +8,15 @@ export type MainMetrics = {
   user_satisfactions: number;
 };
 
-export type LocationMetrics = {
-  location: string;
+export interface DemographyMetrics {
   total_tasks: number;
   total_finished_tasks: number;
-};
+}
 
-export type CategoryMetrics = {
+export interface LocationMetrics extends DemographyMetrics {
+  location: string;
+}
+
+export interface CategoryMetrics extends DemographyMetrics {
   category: string;
-  total_tasks: number;
-  total_finished_tasks: number;
-};
+}

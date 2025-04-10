@@ -2,6 +2,7 @@ import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import clsx from "clsx";
 import { PropsWithChildren, ReactNode } from "react";
 
+import { Bar } from "./bar";
 import { Line } from "./line";
 import { Numbers } from "./numbers";
 import { Percentage } from "./percentage";
@@ -45,5 +46,6 @@ export const StatCard = ({
 StatCard.displayName = "StatCard";
 StatCard.Line = Line;
 StatCard.Numbers = Numbers;
+StatCard.Bar = Bar;
 StatCard.Pie = Pie;
 StatCard.Percentage = Percentage;
