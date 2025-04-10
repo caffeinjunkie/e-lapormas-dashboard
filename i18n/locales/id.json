@@ -170,11 +170,16 @@
     "demography-metric-title": "Demografi",
     "demography-metric-description": "Statistik demografi laporan, berdasarkan jenis laporan dan lokasi kejadian.",
     "development-metric-title": "Perkembangan Laporan",
-    "development-metric-description": "Statistik perkembangan laporan dalam waktu 6 bulan terakhir.",
+    "development-metric-description": "Statistik perkembangan laporan dalam kurun waktu tertentu.",
     "development-metric-new-tasks": "Laporan Baru",
     "development-metric-finished-tasks": "Laporan Selesai",
-    "development-metric-multiline-header-text": "Perkembangan Laporan",
-    "development-metric-multiline-tooltip-text": "Perkembangan laporan masuk dan selesai dalam waktu 6 bulan terakhir"
+    "development-metric-multiline-3-months-header-text": "Perkembangan Laporan (3 Bulan Terakhir)",
+    "development-metric-multiline-6-months-header-text": "Perkembangan Laporan (6 Bulan Terakhir)",
+    "development-metric-multiline-12-months-header-text": "Perkembangan Laporan (1 Tahun Terakhir)",
+    "development-metric-multiline-tooltip-text": "Perkembangan laporan masuk dan selesai dalam waktu 6 bulan terakhir",
+    "development-metric-3-months": "3 Bulan",
+    "development-metric-6-months": "6 Bulan",
+    "development-metric-12-months": "12 Bulan"
   },
   "AnnouncementsPage": {
     "title": "Pengumuman (Planning Stage)"

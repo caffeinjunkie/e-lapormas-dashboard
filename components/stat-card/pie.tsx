@@ -25,7 +25,6 @@ export const Pie = ({ data, width = 160, height = 160 }: PieProps) => {
     <>
       <PieChart
         margin={{ top: 12, bottom: 12, left: 12, right: 12 }}
-        onHighlightChange={(id) => console.log(id)}
         series={[
           {
             data: data,

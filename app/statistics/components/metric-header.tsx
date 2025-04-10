@@ -8,20 +8,23 @@ import { title } from "@/components/primitives";
 interface MetricHeaderProps {
   metricName?: string;
   label: string;
+  className?: string;
   withTooltip?: boolean;
 }
 
 export const MetricHeader = ({
   metricName = "main",
   label,
+  className,
   withTooltip = false,
 }: MetricHeaderProps) => {
   const t = useTranslations("StatisticsPage");
   return (
     <span
       className={clsx(
-        title({ className: "text-sm text-center w-full" }),
-        "inline-flex flex-wrap items-baseline justify-center",
+        title({ className: "text-sm w-full" }),
+        "inline-flex flex-wrap items-baseline",
+        className,
       )}
     >
       {withTooltip

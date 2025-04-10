@@ -1,9 +1,9 @@
 "use client";
 
 import { LineChart } from "@mui/x-charts";
+import { useTranslations } from "next-intl";
 
 import { Legends } from "./legends";
-import { useTranslations } from "next-intl";
 
 interface LineProps {
   data: { id: string; color: string; label: string; data: number[] }[];

@@ -23,7 +23,11 @@ type ItemType = { id: string; label: string };
 
 export const MainMetrics = ({ data }: MainMetricsProps) => {
   const t = useTranslations("StatisticsPage");
-  // const [selected, setSelected] = useState(data.length - 1);
+  const [currentData, setCurrentData] = useState<MainMetricsType>();
+  const [prevData, setPrevData] = useState<MainMetricsType>();
+  const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();
+  const isAllTime = selectedMenu?.id === "0";
+
   const defaultMenu = [
     {
       label: t("main-metric-menu-all-time"),
@@ -40,10 +44,6 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
   const { selected, setSelected } = SingleSelectDropdown.useDropdown(
     new Set([mainMetricMenu[mainMetricMenu.length - 1].id.toString()]),
   );
-  const [currentData, setCurrentData] = useState<MainMetricsType>();
-  const [prevData, setPrevData] = useState<MainMetricsType>();
-  const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();
-  const isAllTime = selectedMenu?.id === "0";
 
   const currentDataMemo = useMemo(() => {
     return data[Number(selected.values().next().value) - 1];
@@ -113,7 +113,9 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
       />
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-4 flex-grow">
         <StatCard
-          header={<MetricHeader withTooltip label="new" />}
+          header={
+            <MetricHeader withTooltip label="new" className="justify-center" />
+          }
           footer={
             <MetricFooter
               firstValue={currentData?.total_new_tasks || 0}
@@ -132,7 +134,13 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={<MetricHeader withTooltip label="completed" />}
+          header={
+            <MetricHeader
+              withTooltip
+              label="completed"
+              className="justify-center"
+            />
+          }
           footer={
             <MetricFooter
               firstValue={currentData?.total_finished_tasks || 0}
@@ -151,7 +159,13 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={<MetricHeader withTooltip label="user-satisfactions" />}
+          header={
+            <MetricHeader
+              withTooltip
+              label="user-satisfactions"
+              className="justify-center"
+            />
+          }
           classNames={{
             header: "px-4",
             body: "flex h-fit items-center justify-center",
@@ -171,7 +185,13 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={<MetricHeader withTooltip label="comparison" />}
+          header={
+            <MetricHeader
+              withTooltip
+              label="comparison"
+              className="justify-center"
+            />
+          }
           classNames={{
             body: "flex items-center justify-center",
           }}

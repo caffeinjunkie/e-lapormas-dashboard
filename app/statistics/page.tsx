@@ -25,7 +25,7 @@ export default function StatisticsPage() {
     >
       <MainMetrics data={mockData.mainMetrics} />
       <DemographyMetrics data={{ locationMetrics, categoryMetrics }} />
-      <DevelopmentMetrics data={mockData.mainMetrics} />
+      <DevelopmentMetrics data={mockData.mainMetrics.slice(-12)} />
     </Layout>
   );
 }
