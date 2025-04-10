@@ -21,7 +21,7 @@ export const SectionHeader = ({
 }: SectionHeaderProps) => {
   const t = useTranslations("StatisticsPage");
   return (
-    <div className="flex flex-row items-start justify-between lg:min-h-16">
+    <div className="flex flex-row items-start justify-between">
       <div className="flex flex-col">
         <p className={clsx(titlePrimitive({ className: "text-md" }))}>
           {title}

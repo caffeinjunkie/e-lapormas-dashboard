@@ -41,6 +41,15 @@ const formatLocaleDate = (
   return formatter.dateTime(dateTime, dateFormat as any);
 };
 
+const getMonthYearDate = (date: string) => {
+  const formatter = useFormatter();
+  const dateTime = new Date(date);
+  return formatter.dateTime(dateTime, {
+    year: "numeric",
+    month: "short",
+  });
+};
+
 const getDiffInDays = (date: string) => {
   const today = new Date();
   const dateTime = new Date(date);
@@ -49,4 +58,4 @@ const getDiffInDays = (date: string) => {
   );
 };
 
-export { formatLocaleDate, getDiffInDays };
+export { formatLocaleDate, getDiffInDays, getMonthYearDate };

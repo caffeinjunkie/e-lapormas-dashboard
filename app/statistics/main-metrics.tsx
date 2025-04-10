@@ -2,26 +2,23 @@
 
 import {
   ChevronDownIcon,
-  InformationCircleIcon,
 } from "@heroicons/react/24/outline";
-import { Dropdown } from "@heroui/dropdown";
 import { SharedSelection } from "@heroui/system";
-import { Tooltip } from "@heroui/tooltip";
-import { clsx } from "clsx";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
+import { MetricFooter } from "./metric-footer";
+import { MetricHeader } from "./metric-header";
 import { SectionHeader } from "./section-header";
 import { getAllTimeData } from "./utils";
 
-import { mainMetrics } from "@/app/statistics/mock-data";
-import { subtitle, title } from "@/components/primitives";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { StatCard } from "@/components/stat-card";
 import { MainMetrics as MainMetricsType } from "@/types/statistics.types";
+import { getMonthYearDate } from "@/utils/date";
 
 interface MainMetricsProps {
-  data: typeof mainMetrics;
+  data: MainMetricsType[];
 }
 
 type ItemType = { id: string; label: string };
@@ -39,7 +36,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
     ...defaultMenu,
     ...data.map((item, index) => ({
       id: (index + 1).toString(),
-      label: item.month_year,
+      label: getMonthYearDate(item.month_year),
     })),
   ];
   const { selected, setSelected } = SingleSelectDropdown.useDropdown(
@@ -61,28 +58,6 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
     setCurrentData(data[Number(selected.values().next().value) - 1]);
     setPrevData(data[Number(selected.values().next().value) - 2]);
   }, [selected]);
-
-  const renderHeader = (label: string) => (
-    <p
-      className={clsx(
-        title({ className: "text-sm text-center w-full" }),
-        "inline-flex flex-wrap items-baseline justify-center",
-      )}
-    >
-      {t(`main-metric-${label}-header-text`)
-        .split(" ")
-        .map((word, i, arr) => (
-          <span key={i} className="mr-1">
-            {word}
-            {i === arr.length - 1 && (
-              <Tooltip content={t(`main-metric-${label}-tooltip-text`)}>
-                <InformationCircleIcon className="size-4 stroke-2 text-default-400 ml-1 mb-1 inline-block" />
-              </Tooltip>
-            )}
-          </span>
-        ))}
-    </p>
-  );
 
   const formatPieData = () => {
     if (data.length === 0) return [];
@@ -106,7 +81,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 border-r-0 pr-0 pb-0 lg:border-r-1 border-default-200 lg:pr-3 lg:pb-3">
+    <div className="flex flex-col gap-2">
       <SectionHeader
         title={t("main-metric-title")}
         subtitle={t("main-metric-description")}
@@ -115,10 +90,10 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
             size="sm"
             label={t("main-metric-filter-label")}
             items={mainMetricMenu as ItemType[]}
-            triggerClassname="w-fit"
+            triggerClassname="w-fit min-w-[100px]"
             closeOnSelect
             buttonEndContent={
-              <ChevronDownIcon className="size-4 stroke-2 text-default-700" />
+              <ChevronDownIcon className="size-3 stroke-2 text-default-700" />
             }
             selectedKeys={selected}
             onSelectionChange={setSelected as (keys: SharedSelection) => void}
@@ -127,49 +102,64 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           </SingleSelectDropdown>
         }
       />
-      <div className="grid gap-4 md:grid-cols-2 flex-grow">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-4 flex-grow">
         <StatCard
-          header={renderHeader("new")}
+          header={<MetricHeader label="new" />}
+          footer={
+            <MetricFooter
+              firstValue={currentData?.total_new_tasks || 0}
+              secondValue={prevData?.total_new_tasks || 0}
+              isAllTime={isAllTime}
+            />
+          }
           classNames={{
             body: "flex h-fit items-center justify-center",
           }}
         >
           <StatCard.Numbers
-            firstValue={currentData?.total_new_tasks || 0}
-            secondValue={prevData?.total_new_tasks || 0}
-            isAllTime={isAllTime}
+            value={currentData?.total_new_tasks || 0}
             isEmpty={data.length === 0}
           />
         </StatCard>
         <StatCard
-          header={renderHeader("completed")}
+          header={<MetricHeader label="completed" />}
+          footer={
+            <MetricFooter
+              firstValue={currentData?.total_finished_tasks || 0}
+              secondValue={prevData?.total_finished_tasks || 0}
+              isAllTime={isAllTime}
+            />
+          }
           classNames={{
             body: "flex h-fit items-center justify-center",
           }}
         >
           <StatCard.Numbers
-            firstValue={currentData?.total_finished_tasks || 0}
-            secondValue={prevData?.total_finished_tasks || 0}
-            isAllTime={isAllTime}
+            value={currentData?.total_finished_tasks || 0}
             isEmpty={data.length === 0}
           />
         </StatCard>
         <StatCard
-          header={renderHeader("user-satisfactions")}
+          header={<MetricHeader label="user-satisfactions" />}
           classNames={{
-            header: "px-12 lg:px-4",
+            header: "px-4",
             body: "flex h-fit items-center justify-center",
           }}
+          footer={
+            <MetricFooter
+              firstValue={currentData?.user_satisfactions || 0}
+              secondValue={prevData?.user_satisfactions || 0}
+              isAllTime={isAllTime}
+            />
+          }
         >
           <StatCard.Percentage
-            firstValue={currentData?.user_satisfactions || 0}
-            secondValue={prevData?.user_satisfactions || 0}
-            isAllTime={isAllTime}
+            value={currentData?.user_satisfactions || 0}
             isEmpty={data.length === 0}
           />
         </StatCard>
         <StatCard
-          header={renderHeader("comparison")}
+          header={<MetricHeader label="comparison" />}
           classNames={{
             body: "flex items-center justify-center",
           }}

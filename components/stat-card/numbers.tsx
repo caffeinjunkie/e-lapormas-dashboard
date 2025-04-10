@@ -1,37 +1,17 @@
-import {
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-} from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
 import {
-  getMoreOrLessKey,
-  getPercentageDifference,
   minifyNumber,
 } from "@/utils/string";
 
 interface NumbersProps {
-  firstValue: number;
-  secondValue: number;
-  isAllTime: boolean;
+  value: number;
   isEmpty: boolean;
 }
 
-export const Numbers = ({
-  firstValue,
-  secondValue,
-  isAllTime,
-  isEmpty,
-}: NumbersProps) => {
+export const Numbers = ({ value, isEmpty }: NumbersProps) => {
   const t = useTranslations("StatCard");
-  const difference = getPercentageDifference(firstValue, secondValue);
-  const isMore = Number(difference) > 0;
-  const icon = isMore ? (
-    <ArrowTrendingUpIcon className="w-4 h-4 text-success" />
-  ) : (
-    <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
-  );
 
   return (
     <div
@@ -41,37 +21,9 @@ export const Numbers = ({
       )}
     >
       {!isEmpty ? (
-        <div className="flex flex-col items-center justify-between">
-          <p
-            className={clsx("text-center font-bold text-[5rem] lg:text-[5cqw]")}
-          >
-            {minifyNumber(firstValue)}
-          </p>
-          <p className="text-default-500 text-xs text-center">
-            {isAllTime
-              ? t("all-time-number-text")
-              : t.rich(getMoreOrLessKey(firstValue, secondValue), {
-                  value: difference.replace("-", ""),
-                  styled: (chunks) => (
-                    <strong
-                      className={clsx(
-                        "inline-flex items-baseline",
-                        firstValue === secondValue
-                          ? "text-default-500"
-                          : isMore
-                            ? "text-success"
-                            : "text-red-500",
-                      )}
-                    >
-                      {firstValue === secondValue || (
-                        <span className="mr-0.5 self-center">{icon}</span>
-                      )}
-                      {chunks}
-                    </strong>
-                  ),
-                })}
-          </p>
-        </div>
+        <p className={clsx("text-center font-bold text-[5rem] lg:text-[5cqw]")}>
+          {minifyNumber(value)}
+        </p>
       ) : (
         <p className="text-center text-gray-500">{t("empty-text")}</p>
       )}

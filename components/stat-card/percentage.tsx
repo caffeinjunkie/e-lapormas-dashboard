@@ -1,39 +1,15 @@
-import {
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-} from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
 import { title } from "../primitives";
 
-import {
-  getMoreOrLessKey,
-  getPercentageDifference,
-  minifyNumber,
-} from "@/utils/string";
-
 interface PercentageProps {
-  firstValue: number;
-  isAllTime: boolean;
-  secondValue: number;
+  value: number;
   isEmpty: boolean;
 }
 
-export const Percentage = ({
-  firstValue,
-  secondValue,
-  isAllTime,
-  isEmpty,
-}: PercentageProps) => {
+export const Percentage = ({ value, isEmpty }: PercentageProps) => {
   const t = useTranslations("StatCard");
-  const difference = getPercentageDifference(firstValue, secondValue);
-  const isMore = Number(difference) > 0;
-  const icon = isMore ? (
-    <ArrowTrendingUpIcon className="w-4 h-4 text-success" />
-  ) : (
-    <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
-  );
 
   return (
     <div
@@ -46,45 +22,19 @@ export const Percentage = ({
         <div className="flex flex-col items-center justify-between h-full w-full">
           <span
             className={clsx(
-              "text-center inline-flex h-full self-center items-baseline",
-              "font-bold text-[4.5rem] lg:text-[5cqw]",
+              "text-center inline-flex h-full self-center items-baseline lg:items-center",
+              "font-bold text-[4.5rem] lg:text-[4.5cqw]",
             )}
           >
-            {firstValue.toFixed(1).replace(".0", "")}
+            {value.toFixed(1).replace(".0", "")}
             <p
               className={clsx(
-                title({ className: "pt-5 text-3xl lg:text-[2cqw]" }),
+                title({ className: "lg:pt-5 text-3xl lg:text-[2cqw]" }),
               )}
             >
               %
             </p>
           </span>
-          <div className="w-full mt-auto">
-            <p className="text-default-500 text-xs text-center">
-              {isAllTime
-                ? t("all-time-percentage-text")
-                : t.rich(getMoreOrLessKey(firstValue, secondValue), {
-                    value: difference.replace("-", ""),
-                    styled: (chunks) => (
-                      <strong
-                        className={clsx(
-                          "inline-flex items-baseline",
-                          firstValue === secondValue
-                            ? "text-default-500"
-                            : isMore
-                              ? "text-success"
-                              : "text-red-500",
-                        )}
-                      >
-                        {firstValue === secondValue || (
-                          <span className="mr-0.5 self-center">{icon}</span>
-                        )}
-                        {chunks}
-                      </strong>
-                    ),
-                  })}
-            </p>
-          </div>
         </div>
       ) : (
         <p className="text-center text-gray-500">{t("empty-text")}</p>
