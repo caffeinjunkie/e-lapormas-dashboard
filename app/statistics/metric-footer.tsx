@@ -11,12 +11,14 @@ import { getMoreOrLessKey, getPercentageDifference } from "@/utils/string";
 interface MetricFooterProps {
   firstValue: number;
   secondValue: number;
+  name: string;
   isAllTime: boolean;
 }
 
 export const MetricFooter = ({
   firstValue,
   secondValue,
+  name,
   isAllTime,
 }: MetricFooterProps) => {
   const t = useTranslations("StatisticsPage");
@@ -26,7 +28,7 @@ export const MetricFooter = ({
     <div className="w-full mt-auto">
       <p className="text-default-500 text-xs text-center">
         {isAllTime
-          ? t("all-time-percentage-text")
+          ? t(`all-time-${name}-text`)
           : t.rich(getMoreOrLessKey(firstValue, secondValue), {
               value: getPercentageDifference(firstValue, secondValue).replace(
                 "-",

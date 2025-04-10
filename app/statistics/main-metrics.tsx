@@ -3,7 +3,7 @@
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import { MetricFooter } from "./metric-footer";
 import { MetricHeader } from "./metric-header";
@@ -45,19 +45,15 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
   const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();
   const isAllTime = selectedMenu?.id === "0";
 
-  useEffect(() => {
-    const currentMenu = mainMetricMenu.find((item) => selected.has(item.id));
-    setSelectedMenu(currentMenu);
-    if (currentMenu?.id === "0") {
-      const allTimeData = getAllTimeData(data);
-      setCurrentData(allTimeData);
-      return;
-    }
-    setCurrentData(data[Number(selected.values().next().value) - 1]);
-    setPrevData(data[Number(selected.values().next().value) - 2]);
-  }, [selected]);
+  const currentDataMemo = useMemo(() => {
+    return data[Number(selected.values().next().value) - 1];
+  }, [selected, data, selectedMenu]);
 
-  const formatPieData = () => {
+  const prevDataMemo = useMemo(() => {
+    return data[Number(selected.values().next().value) - 2];
+  }, [selected, data, selectedMenu]);
+
+  const pieData = useMemo(() => {
     if (data.length === 0) return [];
     return [
       {
@@ -76,7 +72,19 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
         data: currentData?.current_completed_tasks,
       },
     ];
-  };
+  }, [currentData, data, t]);
+
+  useEffect(() => {
+    if (data.length === 0) return;
+    const currentMenu = mainMetricMenu.find((item) => selected.has(item.id));
+    setSelectedMenu(currentMenu);
+    if (currentMenu?.id === "0") {
+      setCurrentData(getAllTimeData(data));
+      return;
+    }
+    setCurrentData(currentDataMemo);
+    setPrevData(prevDataMemo!);
+  }, [selected]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -107,6 +115,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
             <MetricFooter
               firstValue={currentData?.total_new_tasks || 0}
               secondValue={prevData?.total_new_tasks || 0}
+              name="new-reports"
               isAllTime={isAllTime}
             />
           }
@@ -125,6 +134,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
             <MetricFooter
               firstValue={currentData?.total_finished_tasks || 0}
               secondValue={prevData?.total_finished_tasks || 0}
+              name="finished-reports"
               isAllTime={isAllTime}
             />
           }
@@ -147,6 +157,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
             <MetricFooter
               firstValue={currentData?.user_satisfactions || 0}
               secondValue={prevData?.user_satisfactions || 0}
+              name="user-satisfactions"
               isAllTime={isAllTime}
             />
           }
@@ -167,7 +178,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
             height={120}
             width={200}
             doughnut
-            data={formatPieData()}
+            data={pieData}
           />
         </StatCard>
       </div>
