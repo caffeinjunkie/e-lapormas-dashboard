@@ -26,6 +26,8 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
   const [currentData, setCurrentData] = useState<MainMetricsType>();
   const [prevData, setPrevData] = useState<MainMetricsType>();
   const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();
+  // const [selectedYear, setSelectedYear] = useState<ItemType | undefined>();
+  // const [selectedMonth, setSelectedMonth] = useState<ItemType | undefined>();
   const isAllTime = selectedMenu?.id === "0";
 
   const defaultMenu = [
@@ -196,7 +198,12 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
             body: "flex items-center justify-center",
           }}
         >
-          <StatCard.Pie data={pieData} withLegend withCenterLabel type="sliced-donut" />
+          <StatCard.Pie
+            data={pieData}
+            withLegend
+            withCenterLabel
+            type="sliced-donut"
+          />
         </StatCard>
       </div>
     </div>

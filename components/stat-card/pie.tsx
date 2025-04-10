@@ -17,7 +17,15 @@ interface PieProps {
   type?: "full-donut" | "sliced-donut";
 }
 
-export const Pie = ({ data, width = 160, height = 160, withLegend = false, withCenterLabel = false, limit = 7, type = "full-donut" }: PieProps) => {
+export const Pie = ({
+  data,
+  width = 160,
+  height = 160,
+  withLegend = false,
+  withCenterLabel = false,
+  limit = 7,
+  type = "full-donut",
+}: PieProps) => {
   const t = useTranslations("StatCard");
   const total =
     data?.reduce((acc, curr) => Number(acc) + Number(curr.value), 0) ?? 0;
@@ -28,7 +36,10 @@ export const Pie = ({ data, width = 160, height = 160, withLegend = false, withC
   const droppedData = data.slice(0, data.length - limit);
   const slicedData = data.length > limit ? data.slice(-limit) : data;
   const droppedDataSum = droppedData.reduce((acc, curr) => acc + curr.value, 0);
-  const pieData = [...slicedData, { id: "other", label: t("other-text"), value: droppedDataSum }];
+  const pieData = [
+    ...slicedData,
+    { id: "other", label: t("other-text"), value: droppedDataSum },
+  ];
 
   return (
     <div className="flex flex-col items-center justify-center">

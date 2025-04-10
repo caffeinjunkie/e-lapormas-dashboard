@@ -94,7 +94,7 @@ export type Database = {
           user_satisfactions: number;
         };
         Relationships: [];
-      },
+      };
       location_statistics: {
         Row: {
           location: string;
@@ -103,7 +103,7 @@ export type Database = {
           flag_color: string;
         };
         Relationships: [];
-      },
+      };
       category_statistics: {
         Row: {
           category: string;
@@ -111,7 +111,7 @@ export type Database = {
           total_finished_tasks: number;
         };
         Relationships: [];
-      },
+      };
       tasks: {
         Row: {
           address: Json | null;

@@ -1,11 +1,11 @@
 import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 
 import { MetricHeader } from "./components/metric-header";
 import { SectionHeader } from "./components/section-header";
 
 import { StatCard } from "@/components/stat-card";
 import { CategoryMetrics, LocationMetrics } from "@/types/statistics.types";
-import { useMemo } from "react";
 
 interface DemographyMetricsProps {
   data: {
@@ -39,11 +39,17 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
     },
   ];
 
-  const memoizedLocationData = useMemo(() => data.locationMetrics.map((item) => ({
-    id: item.location,
-    label: item.location,
-    value: item.total_tasks,
-  })).sort((a, b) => a.value - b.value), [data.locationMetrics]);
+  const memoizedLocationData = useMemo(
+    () =>
+      data.locationMetrics
+        .map((item) => ({
+          id: item.location,
+          label: item.location,
+          value: item.total_tasks,
+        }))
+        .sort((a, b) => a.value - b.value),
+    [data.locationMetrics],
+  );
 
   console.log(memoizedLocationData);
 
