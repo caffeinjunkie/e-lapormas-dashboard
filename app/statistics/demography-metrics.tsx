@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 
-import { SectionHeader } from "./section-header";
+import { SectionHeader } from "./components/section-header";
 
 import { categoryMetrics, locationMetrics } from "@/app/statistics/mock-data";
 import { StatCard } from "@/components/stat-card";

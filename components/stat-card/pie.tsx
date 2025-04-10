@@ -1,7 +1,7 @@
 "use client";
 
 import { styled } from "@mui/material/styles";
-import { PieChart } from "@mui/x-charts";
+import { PieChart, pieArcLabelClasses } from "@mui/x-charts";
 import { useDrawingArea } from "@mui/x-charts/hooks";
 import { useTranslations } from "next-intl";
 
@@ -25,17 +25,27 @@ export const Pie = ({ data, width = 160, height = 160 }: PieProps) => {
     <>
       <PieChart
         margin={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        onHighlightChange={(id) => console.log(id)}
         series={[
           {
             data: data,
             innerRadius: 40,
-            outerRadius: 60,
+            outerRadius: 70,
             paddingAngle: 5,
             cornerRadius: 5,
             startAngle: -90,
             endAngle: 270,
+            arcLabel: (item) => `${((item.value / total) * 100).toFixed(0)}%`,
+            arcLabelMinAngle: 35,
+            arcLabelRadius: "80%",
           },
         ]}
+        sx={{
+          [`& .${pieArcLabelClasses.root}`]: {
+            fontWeight: "bold",
+            fontSize: "11px",
+          },
+        }}
         slotProps={{
           legend: {
             hidden: true,

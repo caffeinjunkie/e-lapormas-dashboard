@@ -172,7 +172,9 @@
     "development-metric-title": "Perkembangan Laporan",
     "development-metric-description": "Statistik perkembangan laporan dalam waktu 6 bulan terakhir.",
     "development-metric-new-tasks": "Laporan Baru",
-    "development-metric-finished-tasks": "Laporan Selesai"
+    "development-metric-finished-tasks": "Laporan Selesai",
+    "development-metric-multiline-header-text": "Perkembangan Laporan",
+    "development-metric-multiline-tooltip-text": "Perkembangan laporan masuk dan selesai dalam waktu 6 bulan terakhir"
   },
   "AnnouncementsPage": {
     "title": "Pengumuman (Planning Stage)"
@@ -282,6 +284,7 @@
   },
   "StatCard": {
     "empty-text": "Tidak ada data",
+    "line-empty-text": "Data akan muncul setelah ada aktivitas selama 2 bulan",
     "total-pie-label-text": "Total"
   },
   "FileUploader": {

@@ -5,15 +5,15 @@ import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
-import { MetricFooter } from "./metric-footer";
-import { MetricHeader } from "./metric-header";
-import { SectionHeader } from "./section-header";
+import { MetricFooter } from "./components/metric-footer";
+import { MetricHeader } from "./components/metric-header";
+import { SectionHeader } from "./components/section-header";
 import { getAllTimeData } from "./utils";
 
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { StatCard } from "@/components/stat-card";
 import { MainMetrics as MainMetricsType } from "@/types/statistics.types";
-import { getMonthYearDate } from "@/utils/date";
+import { formatMonthYearDate } from "@/utils/date";
 
 interface MainMetricsProps {
   data: MainMetricsType[];
@@ -34,7 +34,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
     ...defaultMenu,
     ...data.map((item, index) => ({
       id: (index + 1).toString(),
-      label: getMonthYearDate(item.month_year),
+      label: formatMonthYearDate(item.month_year),
     })),
   ];
   const { selected, setSelected } = SingleSelectDropdown.useDropdown(
@@ -113,7 +113,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
       />
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-4 flex-grow">
         <StatCard
-          header={<MetricHeader label="new" />}
+          header={<MetricHeader withTooltip label="new" />}
           footer={
             <MetricFooter
               firstValue={currentData?.total_new_tasks || 0}
@@ -132,7 +132,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={<MetricHeader label="completed" />}
+          header={<MetricHeader withTooltip label="completed" />}
           footer={
             <MetricFooter
               firstValue={currentData?.total_finished_tasks || 0}
@@ -151,7 +151,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={<MetricHeader label="user-satisfactions" />}
+          header={<MetricHeader withTooltip label="user-satisfactions" />}
           classNames={{
             header: "px-4",
             body: "flex h-fit items-center justify-center",
@@ -171,7 +171,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
           />
         </StatCard>
         <StatCard
-          header={<MetricHeader label="comparison" />}
+          header={<MetricHeader withTooltip label="comparison" />}
           classNames={{
             body: "flex items-center justify-center",
           }}
