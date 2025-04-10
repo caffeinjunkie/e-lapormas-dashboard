@@ -278,12 +278,7 @@
     "default-button-text": "Tutup"
   },
   "StatCard": {
-    "value-more-text": "Naik <styled>{value}%</styled> dari bulan sebelumnya",
-    "value-less-text": "Turun <styled>{value}%</styled> dari bulan sebelumnya",
-    "value-equal-text": "Sama dengan bulan sebelumnya",
-    "empty-text": "Tidak ada data",
-    "all-time-number-text": "Jumlah rata-rata laporan per bulan",
-    "all-time-percentage-text": "Persentase tingkat kepuasan masyarakat(rata-rata)"
+    "empty-text": "Tidak ada data"
   },
   "FileUploader": {
     "upload-input-dragndrop-text": "Tarik foto atau",

@@ -20,17 +20,14 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
         title={t("demography-metric-title")}
         subtitle={t("demography-metric-description")}
       />
-      <StatCard header="Metric 5" footer="Details">
-        Content 5
-      </StatCard>
-      {/* <div className="grid gap-4 md:grid-rows-2 w-full">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 w-full">
         <StatCard header="Metric 5" footer="Details">
           Content 5
         </StatCard>
         <StatCard header="Metric 6" footer="Details">
           Content 6
         </StatCard>
-      </div> */}
+      </div>
     </div>
   );
 };

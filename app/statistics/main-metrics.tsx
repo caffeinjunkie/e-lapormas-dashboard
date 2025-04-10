@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  ChevronDownIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";

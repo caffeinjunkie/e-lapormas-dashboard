@@ -1,9 +1,7 @@
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
-import {
-  minifyNumber,
-} from "@/utils/string";
+import { minifyNumber } from "@/utils/string";
 
 interface NumbersProps {
   value: number;

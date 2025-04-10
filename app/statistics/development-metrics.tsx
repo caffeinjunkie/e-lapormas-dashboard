@@ -13,6 +13,12 @@ interface DevelopmentMetricsProps {
 
 export const DevelopmentMetrics = ({ data }: DevelopmentMetricsProps) => {
   const t = useTranslations("StatisticsPage");
+  const series = data.map((item, index) => ({
+    id: index.toString(),
+    key: item.month_year,
+    data: item.total_new_tasks,
+  }));
+
   return (
     <div className="flex flex-col gap-2">
       <SectionHeader
@@ -20,7 +26,7 @@ export const DevelopmentMetrics = ({ data }: DevelopmentMetricsProps) => {
         subtitle={t("development-metric-description")}
       />
       <StatCard header="Metric 7" footer="Details">
-        Content 7
+        {/* <StatCard.Line id="multi" series={series} /> */}
       </StatCard>
     </div>
   );
