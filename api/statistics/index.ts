@@ -24,22 +24,15 @@ export const fetchLocationStatistics = async () => {
   return data;
 };
 
-export const fetchGeneralStatistics = async () => {
-  const { data, error } = await supabase.from("general_statistics").select("*");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-};
-
-export const fetchGeneralStatisticsWithLimit = async (limit: number) => {
+export const fetchGeneralStatistics = async (
+  offset: number = 0,
+  limit: number = 12,
+) => {
   const { data, error } = await supabase
     .from("general_statistics")
     .select("*")
     .order("month_year", { ascending: false })
-    .limit(limit);
+    .range(offset, offset + limit - 1);
 
   if (error) {
     throw error;

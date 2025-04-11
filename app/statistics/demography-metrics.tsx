@@ -39,19 +39,31 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
     },
   ];
 
-  const memoizedLocationData = useMemo(
+  const memoizedTotalTasksData = useMemo(
     () =>
       data.locationMetrics
         .map((item) => ({
           id: item.location,
           label: item.location,
+          color: item.flag_color,
           value: item.total_tasks,
         }))
         .sort((a, b) => a.value - b.value),
     [data.locationMetrics],
   );
 
-  console.log(memoizedLocationData);
+  const memoizedFinishedTasksData = useMemo(
+    () =>
+      data.locationMetrics
+        .map((item) => ({
+          id: item.location,
+          label: item.location,
+          color: item.flag_color,
+          value: item.total_finished_tasks,
+        }))
+        .sort((a, b) => a.value - b.value),
+    [data.locationMetrics],
+  );
 
   return (
     <div className="flex flex-col gap-2 ">
@@ -89,8 +101,16 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
             />
           }
         >
-          <StatCard.Pie data={memoizedLocationData} width={200} height={150} />
-          <StatCard.Pie data={memoizedLocationData} width={200} height={150} />
+          <StatCard.Pie
+            data={memoizedTotalTasksData}
+            width={200}
+            height={150}
+          />
+          <StatCard.Pie
+            data={memoizedFinishedTasksData}
+            width={200}
+            height={150}
+          />
         </StatCard>
       </div>
     </div>

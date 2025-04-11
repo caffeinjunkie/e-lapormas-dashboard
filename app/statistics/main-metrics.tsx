@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Select, SelectItem } from "@heroui/select";
+import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
@@ -15,20 +16,15 @@ import { StatCard } from "@/components/stat-card";
 import { MainMetrics as MainMetricsType } from "@/types/statistics.types";
 import { formatMonthYearDate } from "@/utils/date";
 
-interface MainMetricsProps {
-  data: MainMetricsType[];
-}
-
 type ItemType = { id: string; label: string };
 
-export const MainMetrics = ({ data }: MainMetricsProps) => {
+export const MainMetrics = ({ data }: { data: MainMetricsType[] }) => {
   const t = useTranslations("StatisticsPage");
   const [currentData, setCurrentData] = useState<MainMetricsType>();
   const [prevData, setPrevData] = useState<MainMetricsType>();
-  const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();
-  // const [selectedYear, setSelectedYear] = useState<ItemType | undefined>();
-  // const [selectedMonth, setSelectedMonth] = useState<ItemType | undefined>();
+  const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();;
   const isAllTime = selectedMenu?.id === "0";
+  const [isMounted, setIsMounted] = useState(false);
 
   const defaultMenu = [
     {
@@ -80,6 +76,7 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
   }, [currentData, data, t]);
 
   useEffect(() => {
+    setIsMounted(true);
     if (data.length === 0) return;
     const currentMenu = mainMetricMenu.find((item) => selected.has(item.id));
     setSelectedMenu(currentMenu);
@@ -91,26 +88,34 @@ export const MainMetrics = ({ data }: MainMetricsProps) => {
     setPrevData(prevDataMemo!);
   }, [selected]);
 
+  if (!isMounted) {
+    return (
+      <div className="flex w-full absolute left-0 items-center justify-center bottom-0 h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <SectionHeader
         title={t("main-metric-title")}
         subtitle={t("main-metric-description")}
         content={
-          <SingleSelectDropdown
+          <Select
             size="sm"
-            label={t("main-metric-filter-label")}
             items={mainMetricMenu as ItemType[]}
-            triggerClassname="w-fit min-w-[100px]"
-            closeOnSelect
-            buttonEndContent={
-              <ChevronDownIcon className="size-3 stroke-2 text-default-700" />
-            }
             selectedKeys={selected}
+            selectionMode="single"
+            className="w-full max-w-40"
             onSelectionChange={setSelected as (keys: SharedSelection) => void}
           >
-            <p>{selectedMenu?.label}</p>
-          </SingleSelectDropdown>
+            {(item) => (
+              <SelectItem key={item.id} className="outline-none">
+                {item.label}
+              </SelectItem>
+            )}
+          </Select>
         }
       />
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-4 flex-grow">
