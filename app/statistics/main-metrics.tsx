@@ -160,37 +160,29 @@ export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
     firstValue?: number,
     secondValue?: number,
   ) => (
-    <Skeleton
-      key={name}
-      className={clsx(
-        "min-h-24 lg:min-h-64 rounded-2xl",
-        isLoading && "animate-pulse",
-      )}
-      isLoaded={!isLoading}
+    <StatCard
+      isLoading={isLoading}
+      header={
+        <MetricHeader withTooltip label={name} className="justify-center" />
+      }
+      footer={
+        withFooter && (
+          <MetricFooter
+            firstValue={firstValue || 0}
+            secondValue={secondValue || 0}
+            name={name}
+            isAllTime={isAllTime}
+          />
+        )
+      }
+      classNames={{
+        root: "min-h-24 lg:min-h-64",
+        header: "px-4",
+        body: "flex items-center justify-center",
+      }}
     >
-      <StatCard
-        header={
-          <MetricHeader withTooltip label={name} className="justify-center" />
-        }
-        footer={
-          withFooter && (
-            <MetricFooter
-              firstValue={firstValue || 0}
-              secondValue={secondValue || 0}
-              name={name}
-              isAllTime={isAllTime}
-            />
-          )
-        }
-        classNames={{
-          root: "min-h-24 lg:min-h-64",
-          header: "px-4",
-          body: "flex items-center justify-center",
-        }}
-      >
-        {children}
-      </StatCard>
-    </Skeleton>
+      {children}
+    </StatCard>
   );
 
   return (

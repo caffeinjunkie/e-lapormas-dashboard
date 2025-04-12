@@ -1,4 +1,5 @@
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
+import { Skeleton } from "@heroui/skeleton";
 import clsx from "clsx";
 import { PropsWithChildren, ReactNode } from "react";
 
@@ -11,6 +12,7 @@ import { Pie } from "./pie";
 interface StatCardProps extends PropsWithChildren {
   header?: ReactNode;
   footer?: ReactNode;
+  isLoading?: boolean;
   classNames?: {
     root?: string;
     header?: string;
@@ -23,10 +25,18 @@ export const StatCard = ({
   children,
   header,
   footer,
+  isLoading,
   classNames,
   ...props
 }: StatCardProps) => {
-  return (
+  return isLoading ? (
+    <Skeleton
+      className={clsx(
+        "min-h-36 lg:min-h-48  rounded-2xl",
+        isLoading && "animate-pulse",
+      )}
+    />
+  ) : (
     <Card
       className={clsx("min-h-36", classNames?.root)}
       classNames={{

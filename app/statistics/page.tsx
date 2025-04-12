@@ -47,6 +47,8 @@ export default function StatisticsPage() {
           locationData: locationData ?? [],
           categoryData: categoryData ?? [],
         }}
+        error={categoryError || locationError}
+        isLoading={{ category: categoryLoading, location: locationLoading }}
       />
       <DevelopmentMetrics data={mockData.mainMetrics.slice(-12)} />
     </Layout>

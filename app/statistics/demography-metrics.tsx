@@ -14,9 +14,18 @@ interface DemographyMetricsProps {
     categoryData: CategoryMetrics[];
     locationData: LocationMetrics[];
   };
+  error?: unknown;
+  isLoading?: {
+    category: boolean;
+    location: boolean;
+  };
 }
 
-export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
+export const DemographyMetrics = ({
+  data,
+  error,
+  isLoading,
+}: DemographyMetricsProps) => {
   const { categoryData, locationData } = data;
   const t = useTranslations("StatisticsPage");
   const series1 = categoryData.map(
@@ -86,6 +95,7 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
       />
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 w-full">
         <StatCard
+          isLoading={isLoading?.category}
           header={
             <MetricHeader
               metricName="demography"
@@ -103,6 +113,7 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
           />
         </StatCard>
         <StatCard
+          isLoading={isLoading?.location}
           classNames={{
             body: "flex flex-row items-center justify-center",
           }}
