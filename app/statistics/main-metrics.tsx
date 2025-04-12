@@ -1,8 +1,10 @@
 "use client";
 
 import { Select, SelectItem } from "@heroui/select";
+import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
@@ -11,48 +13,53 @@ import { MetricHeader } from "./components/metric-header";
 import { SectionHeader } from "./components/section-header";
 import { getAllTimeData } from "./utils";
 
-import { SingleSelectDropdown } from "@/components/single-select-dropdown";
 import { StatCard } from "@/components/stat-card";
 import { MainMetrics as MainMetricsType } from "@/types/statistics.types";
 import { formatMonthYearDate } from "@/utils/date";
 
 type ItemType = { id: string; label: string };
 
-export const MainMetrics = ({ data }: { data: MainMetricsType[] }) => {
+interface MainMetricsProps {
+  data: MainMetricsType[];
+  isLoading: boolean;
+}
+
+export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
   const t = useTranslations("StatisticsPage");
   const [currentData, setCurrentData] = useState<MainMetricsType>();
   const [prevData, setPrevData] = useState<MainMetricsType>();
-  const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();;
-  const isAllTime = selectedMenu?.id === "0";
+  const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();
+  const isAllTime = selectedMenu?.id === data.length.toString();
   const [isMounted, setIsMounted] = useState(false);
 
   const defaultMenu = [
     {
       label: t("main-metric-menu-all-time"),
-      id: "0",
+      id: data.length.toString(),
     },
   ];
   const mainMetricMenu = [
-    ...defaultMenu,
-    ...data.map((item, index) => ({
-      id: (index + 1).toString(),
+    ...(data?.map((item, index) => ({
+      id: index.toString(),
       label: formatMonthYearDate(item.month_year),
-    })),
+    })) || []),
+    ...defaultMenu,
   ];
-  const { selected, setSelected } = SingleSelectDropdown.useDropdown(
-    new Set([mainMetricMenu[mainMetricMenu.length - 1].id.toString()]),
+
+  const [selected, setSelected] = useState(
+    new Set([mainMetricMenu[mainMetricMenu.length - 2].id.toString()]),
   );
 
   const currentDataMemo = useMemo(() => {
-    return data[Number(selected.values().next().value) - 1];
+    return data?.[Number(selected.values().next().value)];
   }, [selected, data, selectedMenu]);
 
   const prevDataMemo = useMemo(() => {
-    return data[Number(selected.values().next().value) - 2];
+    return data?.[Number(selected.values().next().value) - 1];
   }, [selected, data, selectedMenu]);
 
   const pieData = useMemo(() => {
-    if (data.length === 0) return [];
+    if (!data) return [];
     return [
       {
         id: "1",
@@ -77,10 +84,10 @@ export const MainMetrics = ({ data }: { data: MainMetricsType[] }) => {
 
   useEffect(() => {
     setIsMounted(true);
-    if (data.length === 0) return;
+    if (!data) return;
     const currentMenu = mainMetricMenu.find((item) => selected.has(item.id));
     setSelectedMenu(currentMenu);
-    if (currentMenu?.id === "0") {
+    if (currentMenu?.id === data.length.toString()) {
       setCurrentData(getAllTimeData(data));
       return;
     }
@@ -96,6 +103,96 @@ export const MainMetrics = ({ data }: { data: MainMetricsType[] }) => {
     );
   }
 
+  const items = [
+    {
+      name: "new",
+      withFooter: true,
+      firstValue: currentData?.total_new_tasks || 0,
+      secondValue: prevData?.total_new_tasks || 0,
+      children: (
+        <StatCard.Numbers
+          isEmpty={!data}
+          value={currentData?.total_new_tasks || 0}
+        />
+      ),
+    },
+    {
+      name: "completed",
+      withFooter: true,
+      firstValue: currentData?.total_finished_tasks || 0,
+      secondValue: prevData?.total_finished_tasks || 0,
+      children: (
+        <StatCard.Numbers
+          isEmpty={!data}
+          value={currentData?.total_finished_tasks || 0}
+        />
+      ),
+    },
+    {
+      name: "user-satisfactions",
+      withFooter: true,
+      firstValue: currentData?.user_satisfactions || 0,
+      secondValue: prevData?.user_satisfactions || 0,
+      children: (
+        <StatCard.Percentage
+          isEmpty={!data}
+          value={currentData?.user_satisfactions || 0}
+        />
+      ),
+    },
+    {
+      name: "comparison",
+      children: (
+        <StatCard.Pie
+          data={pieData}
+          withLegend
+          withCenterLabel
+          type="sliced-donut"
+        />
+      ),
+    },
+  ];
+
+  const renderItem = (
+    name: string,
+    children: React.ReactNode,
+    withFooter: boolean = false,
+    firstValue?: number,
+    secondValue?: number,
+  ) => (
+    <Skeleton
+      key={name}
+      className={clsx(
+        "min-h-24 lg:min-h-64 rounded-2xl",
+        isLoading && "animate-pulse",
+      )}
+      isLoaded={!isLoading}
+    >
+      <StatCard
+        header={
+          <MetricHeader withTooltip label={name} className="justify-center" />
+        }
+        footer={
+          withFooter && (
+            <MetricFooter
+              firstValue={firstValue || 0}
+              secondValue={secondValue || 0}
+              name={name}
+              isAllTime={isAllTime}
+            />
+          )
+        }
+        classNames={{
+          root: "min-h-24 lg:min-h-64",
+          header: "px-4",
+          body: "flex items-center justify-center",
+        }}
+      >
+        {children}
+      </StatCard>
+    </Skeleton>
+  );
+
   return (
     <div className="flex flex-col gap-2">
       <SectionHeader
@@ -107,6 +204,7 @@ export const MainMetrics = ({ data }: { data: MainMetricsType[] }) => {
             items={mainMetricMenu as ItemType[]}
             selectedKeys={selected}
             selectionMode="single"
+            disabledKeys={selected}
             className="w-full max-w-40"
             onSelectionChange={setSelected as (keys: SharedSelection) => void}
           >
@@ -119,97 +217,15 @@ export const MainMetrics = ({ data }: { data: MainMetricsType[] }) => {
         }
       />
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-4 flex-grow">
-        <StatCard
-          header={
-            <MetricHeader withTooltip label="new" className="justify-center" />
-          }
-          footer={
-            <MetricFooter
-              firstValue={currentData?.total_new_tasks || 0}
-              secondValue={prevData?.total_new_tasks || 0}
-              name="new-reports"
-              isAllTime={isAllTime}
-            />
-          }
-          classNames={{
-            body: "flex h-fit items-center justify-center",
-          }}
-        >
-          <StatCard.Numbers
-            value={currentData?.total_new_tasks || 0}
-            isEmpty={data.length === 0}
-          />
-        </StatCard>
-        <StatCard
-          header={
-            <MetricHeader
-              withTooltip
-              label="completed"
-              className="justify-center"
-            />
-          }
-          footer={
-            <MetricFooter
-              firstValue={currentData?.total_finished_tasks || 0}
-              secondValue={prevData?.total_finished_tasks || 0}
-              name="finished-reports"
-              isAllTime={isAllTime}
-            />
-          }
-          classNames={{
-            body: "flex h-fit items-center justify-center",
-          }}
-        >
-          <StatCard.Numbers
-            value={currentData?.total_finished_tasks || 0}
-            isEmpty={data.length === 0}
-          />
-        </StatCard>
-        <StatCard
-          header={
-            <MetricHeader
-              withTooltip
-              label="user-satisfactions"
-              className="justify-center"
-            />
-          }
-          classNames={{
-            header: "px-4",
-            body: "flex h-fit items-center justify-center",
-          }}
-          footer={
-            <MetricFooter
-              firstValue={currentData?.user_satisfactions || 0}
-              secondValue={prevData?.user_satisfactions || 0}
-              name="user-satisfactions"
-              isAllTime={isAllTime}
-            />
-          }
-        >
-          <StatCard.Percentage
-            value={currentData?.user_satisfactions || 0}
-            isEmpty={data.length === 0}
-          />
-        </StatCard>
-        <StatCard
-          header={
-            <MetricHeader
-              withTooltip
-              label="comparison"
-              className="justify-center"
-            />
-          }
-          classNames={{
-            body: "flex items-center justify-center",
-          }}
-        >
-          <StatCard.Pie
-            data={pieData}
-            withLegend
-            withCenterLabel
-            type="sliced-donut"
-          />
-        </StatCard>
+        {items.map((item) =>
+          renderItem(
+            item.name,
+            item.children,
+            item.withFooter,
+            item.firstValue,
+            item.secondValue,
+          ),
+        )}
       </div>
     </div>
   );

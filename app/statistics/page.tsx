@@ -18,12 +18,19 @@ export default function StatisticsPage() {
     locationMetrics,
     categoryMetrics,
   };
+  //   const { data, error, isLoading, mutate } = useSWR(
+  //   ["main-metrics", selected],
+  //   () =>
+  //     fetchGeneralStatistics(),
+  //   swrConfig
+  // );
+
   return (
     <Layout
       title={t("title")}
       classNames={{ body: "px-6 md:px-8 pt-2 pb-6 flex flex-col gap-4" }}
     >
-      <MainMetrics data={mockData.mainMetrics} />
+      <MainMetrics data={mockData.mainMetrics} isLoading={false} />
       <DemographyMetrics data={{ locationMetrics, categoryMetrics }} />
       <DevelopmentMetrics data={mockData.mainMetrics.slice(-12)} />
     </Layout>
