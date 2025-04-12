@@ -3,12 +3,15 @@
 import { BarChart } from "@mui/x-charts";
 import { useTranslations } from "next-intl";
 
+import { Legends } from "./legends";
+
 interface BarProps {
   isEmpty?: boolean;
   height?: number;
   data?: { id: string; color: string; label: string; data: number[] }[];
   labels?: string[];
   stack?: string;
+  withLegend?: boolean;
 }
 
 export const Bar = ({
@@ -17,6 +20,7 @@ export const Bar = ({
   data,
   labels,
   stack = "total",
+  withLegend = false,
 }: BarProps) => {
   const t = useTranslations("StatCard");
 
@@ -28,9 +32,12 @@ export const Bar = ({
     );
   }
   return (
-    <div className="w-full flex pb-2">
+    <div className="w-full flex pb-2 flex-col gap-2">
       <BarChart
         yAxis={[{ scaleType: "band", data: labels }]}
+        grid={{
+          vertical: true,
+        }}
         series={
           data?.map((item) => ({
             id: item.id,
@@ -49,6 +56,12 @@ export const Bar = ({
           },
         }}
       />
+      {withLegend && (
+        <Legends
+          data={data as { id: string; color: string; label: string }[]}
+          size="md"
+        />
+      )}
     </div>
   );
 };

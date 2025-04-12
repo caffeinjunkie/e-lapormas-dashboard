@@ -100,7 +100,6 @@ export type Database = {
           location: string;
           total_tasks: number;
           total_finished_tasks: number;
-          flag_color: string;
         };
         Relationships: [];
       };

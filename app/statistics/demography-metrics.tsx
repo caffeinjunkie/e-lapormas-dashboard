@@ -1,26 +1,29 @@
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
+import { colors } from "../config";
 import { MetricHeader } from "./components/metric-header";
 import { SectionHeader } from "./components/section-header";
 
 import { StatCard } from "@/components/stat-card";
+import { Legends } from "@/components/stat-card/legends";
 import { CategoryMetrics, LocationMetrics } from "@/types/statistics.types";
 
 interface DemographyMetricsProps {
   data: {
-    locationMetrics: LocationMetrics[];
-    categoryMetrics: CategoryMetrics[];
+    categoryData: CategoryMetrics[];
+    locationData: LocationMetrics[];
   };
 }
 
 export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
+  const { categoryData, locationData } = data;
   const t = useTranslations("StatisticsPage");
-  const series1 = data.categoryMetrics.map(
+  const series1 = categoryData.map(
     (item) => item.total_tasks - item.total_finished_tasks,
   );
-  const series2 = data.categoryMetrics.map((item) => item.total_finished_tasks);
-  const xAxis = data.categoryMetrics.map((item) =>
+  const series2 = categoryData.map((item) => item.total_finished_tasks);
+  const labels = categoryData.map((item) =>
     t(`demography-metric-category-${item.category}`),
   );
 
@@ -41,28 +44,38 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
 
   const memoizedTotalTasksData = useMemo(
     () =>
-      data.locationMetrics
-        .map((item) => ({
+      locationData
+        .map((item, index) => ({
           id: item.location,
           label: item.location,
-          color: item.flag_color,
+          color: colors[index] || "#ffffff",
           value: item.total_tasks,
         }))
         .sort((a, b) => a.value - b.value),
-    [data.locationMetrics],
+    [locationData],
   );
+
+  const legendData = [
+    ...memoizedTotalTasksData.slice(-7),
+    {
+      id: "other",
+      label: t("other-text"),
+      color: colors[7] || "#ffffff",
+      value: 0,
+    },
+  ];
 
   const memoizedFinishedTasksData = useMemo(
     () =>
-      data.locationMetrics
-        .map((item) => ({
+      locationData
+        .map((item, index) => ({
           id: item.location,
           label: item.location,
-          color: item.flag_color,
+          color: colors[index] || "#ffffff",
           value: item.total_finished_tasks,
         }))
         .sort((a, b) => a.value - b.value),
-    [data.locationMetrics],
+    [locationData],
   );
 
   return (
@@ -83,9 +96,10 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
           }
         >
           <StatCard.Bar
-            isEmpty={data.categoryMetrics.length === 0}
+            isEmpty={categoryData.length === 0}
             data={combinedCategory}
-            labels={xAxis}
+            labels={labels}
+            withLegend
           />
         </StatCard>
         <StatCard
@@ -100,16 +114,23 @@ export const DemographyMetrics = ({ data }: DemographyMetricsProps) => {
               withTooltip
             />
           }
+          footer={
+            <div className="w-full">
+              <Legends data={legendData} size="sm" />
+            </div>
+          }
         >
           <StatCard.Pie
             data={memoizedTotalTasksData}
             width={200}
             height={150}
+            content={t("demography-metric-location-total-content-text")}
           />
           <StatCard.Pie
             data={memoizedFinishedTasksData}
             width={200}
             height={150}
+            content={t("demography-metric-location-finished-content-text")}
           />
         </StatCard>
       </div>

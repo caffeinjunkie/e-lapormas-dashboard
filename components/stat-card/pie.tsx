@@ -3,6 +3,7 @@
 import { styled } from "@mui/material/styles";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts";
 import { useDrawingArea } from "@mui/x-charts/hooks";
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
 import { Legends } from "./legends";
@@ -14,6 +15,8 @@ interface PieProps {
   withCenterLabel?: boolean;
   data: any[];
   limit?: number;
+  content?: React.ReactNode;
+  contentPosition?: "top" | "bottom";
   type?: "full-donut" | "sliced-donut";
 }
 
@@ -22,6 +25,8 @@ export const Pie = ({
   width = 160,
   height = 160,
   withLegend = false,
+  content,
+  contentPosition = "bottom",
   withCenterLabel = false,
   limit = 7,
   type = "full-donut",
@@ -38,11 +43,18 @@ export const Pie = ({
   const droppedDataSum = droppedData.reduce((acc, curr) => acc + curr.value, 0);
   const pieData = [
     ...slicedData,
-    { id: "other", label: t("other-text"), value: droppedDataSum },
+    data.length > limit
+      ? { id: "other", label: t("other-text"), value: droppedDataSum }
+      : {},
   ];
 
   return (
     <div className="flex flex-col items-center justify-center">
+      {content && contentPosition === "top" && (
+        <div className={clsx("flex items-center justify-center")}>
+          {content}
+        </div>
+      )}
       <PieChart
         margin={{ top: 12, bottom: 12, left: 12, right: 12 }}
         series={[
@@ -75,6 +87,11 @@ export const Pie = ({
       >
         {withCenterLabel && <PieCenterLabel>{total}</PieCenterLabel>}
       </PieChart>
+      {content && contentPosition === "bottom" && (
+        <div className={clsx("flex items-center pt-4 text-sm justify-center")}>
+          {content}
+        </div>
+      )}
       {withLegend && <Legends data={data} size="sm" />}
     </div>
   );

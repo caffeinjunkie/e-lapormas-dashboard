@@ -60,7 +60,7 @@ export const DevelopmentMetrics = ({ data }: DevelopmentMetricsProps) => {
         radius="none"
         className="font-semibold"
         classNames={{
-          tabList: "rounded-md",
+          tabList: "rounded-lg",
           cursor: "rounded-md",
         }}
         onSelectionChange={(key) =>
