@@ -100,9 +100,13 @@ export const DevelopmentMetrics = ({
         title={t("development-metric-title")}
         subtitle={t("development-metric-description")}
       />
-      <StatCard isLoading={isLoading} header={renderHeader()} classNames={{
-        body: "px-0 lg:px-2",
-      }}>
+      <StatCard
+        isLoading={isLoading}
+        header={renderHeader()}
+        classNames={{
+          body: "px-0 lg:px-2",
+        }}
+      >
         {error ? (
           <Error
             className="h-full p-4"

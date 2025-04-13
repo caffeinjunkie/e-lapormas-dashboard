@@ -5,7 +5,6 @@ import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
-import {useInfiniteScroll} from "@heroui/use-infinite-scroll";
 
 import { MetricFooter } from "./components/metric-footer";
 import { MetricHeader } from "./components/metric-header";
@@ -39,7 +38,6 @@ export const MainMetrics = ({
   const isAllTime = selectedMenu?.id === data.length.toString();
   const [isMounted, setIsMounted] = useState(false);
   const formatter = useFormatter();
-  
 
   const defaultMenu = [
     {

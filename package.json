@@ -40,7 +40,6 @@
     "@heroui/theme": "^2.4.12",
     "@heroui/toast": "^2.0.6",
     "@heroui/tooltip": "^2.2.13",
-    "@heroui/use-infinite-scroll": "^2.2.7",
     "@lottiefiles/dotlottie-react": "^0.13.2",
     "@mui/material": "^7.0.2",
     "@mui/x-charts": "^7.28.0",
