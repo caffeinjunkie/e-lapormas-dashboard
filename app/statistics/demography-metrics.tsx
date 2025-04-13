@@ -5,6 +5,7 @@ import { colors } from "../config";
 import { MetricHeader } from "./components/metric-header";
 import { SectionHeader } from "./components/section-header";
 
+import Error from "@/components/error";
 import { StatCard } from "@/components/stat-card";
 import { Legends } from "@/components/stat-card/legends";
 import { CategoryMetrics, LocationMetrics } from "@/types/statistics.types";
@@ -14,7 +15,14 @@ interface DemographyMetricsProps {
     categoryData: CategoryMetrics[];
     locationData: LocationMetrics[];
   };
-  error?: unknown;
+  mutate?: {
+    category: () => void;
+    location: () => void;
+  };
+  error?: {
+    category?: unknown;
+    location?: unknown;
+  };
   isLoading?: {
     category: boolean;
     location: boolean;
@@ -24,6 +32,7 @@ interface DemographyMetricsProps {
 export const DemographyMetrics = ({
   data,
   error,
+  mutate,
   isLoading,
 }: DemographyMetricsProps) => {
   const { categoryData, locationData } = data;
@@ -105,12 +114,20 @@ export const DemographyMetrics = ({
             />
           }
         >
-          <StatCard.Bar
-            isEmpty={categoryData.length === 0}
-            data={combinedCategory}
-            labels={labels}
-            withLegend
-          />
+          {error?.category ? (
+            <Error
+              className="h-full"
+              message={t("error-message")}
+              onReset={() => mutate?.category()}
+            />
+          ) : (
+            <StatCard.Bar
+              isEmpty={categoryData.length === 0}
+              data={combinedCategory}
+              labels={labels}
+              withLegend
+            />
+          )}
         </StatCard>
         <StatCard
           isLoading={isLoading?.location}
@@ -131,18 +148,28 @@ export const DemographyMetrics = ({
             </div>
           }
         >
-          <StatCard.Pie
-            data={memoizedTotalTasksData}
-            width={200}
-            height={150}
-            content={t("demography-metric-location-total-content-text")}
-          />
-          <StatCard.Pie
-            data={memoizedFinishedTasksData}
-            width={200}
-            height={150}
-            content={t("demography-metric-location-finished-content-text")}
-          />
+          {error?.location ? (
+            <Error
+              className="h-full p-4"
+              message={t("error-message")}
+              onReset={() => mutate?.location()}
+            />
+          ) : (
+            <>
+              <StatCard.Pie
+                data={memoizedTotalTasksData}
+                width={180}
+                height={150}
+                content={t("demography-metric-location-total-content-text")}
+              />
+              <StatCard.Pie
+                data={memoizedFinishedTasksData}
+                width={180}
+                height={150}
+                content={t("demography-metric-location-finished-content-text")}
+              />
+            </>
+          )}
         </StatCard>
       </div>
     </div>

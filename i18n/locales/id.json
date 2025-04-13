@@ -186,6 +186,7 @@
     "demography-metric-category-lainnya": "Lainnya",
     "demography-metric-location-total-content-text": "Total Laporan",
     "demography-metric-location-finished-content-text": "Laporan Selesai",
+    "error-message": "Terjadi kesalahan. Mohon coba lagi.",
     "other-text": "Lainnya",
     "development-metric-title": "Kinerja Penanganan Laporan",
     "development-metric-description": "Statistik kinerja penanganan laporan dalam kurun waktu tertentu.",

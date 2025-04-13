@@ -41,8 +41,11 @@ const formatLocaleDate = (
   return formatter.dateTime(dateTime, dateFormat as any);
 };
 
-const formatMonthYearDate = (date: string, monthOnly: boolean = false) => {
-  const formatter = useFormatter();
+const formatMonthYearDate = (
+  formatter: any,
+  date: string,
+  monthOnly: boolean = false,
+) => {
   const dateTime = new Date(date);
 
   if (monthOnly) {

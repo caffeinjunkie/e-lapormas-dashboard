@@ -10,6 +10,7 @@ import { MainMetrics } from "./main-metrics";
 
 import {
   fetchCategoryStatistics,
+  fetchGeneralStatistics,
   fetchLocationStatistics,
 } from "@/api/statistics";
 import { mainMetrics } from "@/app/statistics/mock-data";
@@ -34,7 +35,12 @@ export default function StatisticsPage() {
     mutate: mutateLocation,
   } = useSWR(["location-metrics"], () => fetchLocationStatistics(), swrConfig);
 
-  console.log(categoryData);
+  const {
+    data: mainMetricsData,
+    error: mainMetricsError,
+    isLoading: mainMetricsLoading,
+    mutate: mutateMainMetrics,
+  } = useSWR(["main-metrics"], () => fetchGeneralStatistics(), swrConfig);
 
   return (
     <Layout
@@ -47,10 +53,25 @@ export default function StatisticsPage() {
           locationData: locationData ?? [],
           categoryData: categoryData ?? [],
         }}
-        error={categoryError || locationError}
-        isLoading={{ category: categoryLoading, location: locationLoading }}
+        error={{
+          category: categoryError,
+          location: locationError,
+        }}
+        mutate={{
+          category: mutateCategory,
+          location: mutateLocation,
+        }}
+        isLoading={{
+          category: categoryLoading,
+          location: locationLoading,
+        }}
       />
-      <DevelopmentMetrics data={mockData.mainMetrics.slice(-12)} />
+      <DevelopmentMetrics
+        data={mainMetricsData?.slice(-12) ?? []}
+        isLoading={mainMetricsLoading}
+        error={mainMetricsError}
+        mutate={mutateMainMetrics}
+      />
     </Layout>
   );
 }

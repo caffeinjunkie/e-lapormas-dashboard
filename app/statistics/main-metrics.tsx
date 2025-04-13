@@ -5,7 +5,7 @@ import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import clsx from "clsx";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
 import { MetricFooter } from "./components/metric-footer";
@@ -31,6 +31,7 @@ export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
   const [selectedMenu, setSelectedMenu] = useState<ItemType | undefined>();
   const isAllTime = selectedMenu?.id === data.length.toString();
   const [isMounted, setIsMounted] = useState(false);
+  const formatter = useFormatter();
 
   const defaultMenu = [
     {
@@ -41,7 +42,7 @@ export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
   const mainMetricMenu = [
     ...(data?.map((item, index) => ({
       id: index.toString(),
-      label: formatMonthYearDate(item.month_year),
+      label: formatMonthYearDate(formatter, item.month_year),
     })) || []),
     ...defaultMenu,
   ];
@@ -161,6 +162,7 @@ export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
     secondValue?: number,
   ) => (
     <StatCard
+      key={name}
       isLoading={isLoading}
       header={
         <MetricHeader withTooltip label={name} className="justify-center" />

@@ -1,26 +1,38 @@
 "use client";
 
 import { Tab, Tabs } from "@heroui/tabs";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { MetricHeader } from "./components/metric-header";
 import { SectionHeader } from "./components/section-header";
 
+import Error from "@/components/error";
 import { StatCard } from "@/components/stat-card";
 import { MainMetrics } from "@/types/statistics.types";
 import { formatMonthYearDate } from "@/utils/date";
 
 interface DevelopmentMetricsProps {
   data: MainMetrics[];
+  isLoading: boolean;
+  error: any;
+  mutate: () => void;
 }
 
-export const DevelopmentMetrics = ({ data }: DevelopmentMetricsProps) => {
+export const DevelopmentMetrics = ({
+  data,
+  isLoading,
+  error,
+  mutate,
+}: DevelopmentMetricsProps) => {
   const t = useTranslations("StatisticsPage");
+  const formatter = useFormatter();
   const [dataLimit, setDataLimit] = useState<3 | 6 | 12>(3);
   const series1 = data.map((item) => item.total_new_tasks);
   const series2 = data.map((item) => item.total_finished_tasks);
-  const xAxis = data.map((item) => formatMonthYearDate(item.month_year));
+  const xAxis = data.map((item) =>
+    formatMonthYearDate(formatter, item.month_year, false),
+  );
   const limitData = (array: any[], limit: number) => {
     return array.slice(-limit);
   };
@@ -88,12 +100,20 @@ export const DevelopmentMetrics = ({ data }: DevelopmentMetricsProps) => {
         title={t("development-metric-title")}
         subtitle={t("development-metric-description")}
       />
-      <StatCard header={renderHeader()}>
-        <StatCard.Line
-          labels={limitedXAxis}
-          data={combinedData}
-          isEmpty={data.length < 2}
-        />
+      <StatCard isLoading={isLoading} header={renderHeader()}>
+        {error ? (
+          <Error
+            className="h-full p-4"
+            message={t("error-message")}
+            onReset={() => mutate()}
+          />
+        ) : (
+          <StatCard.Line
+            labels={limitedXAxis}
+            data={combinedData}
+            isEmpty={data.length < 2}
+          />
+        )}
       </StatCard>
     </div>
   );
