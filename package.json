@@ -9,6 +9,8 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@heroicons/react": "^2.2.0",
     "@heroui/avatar": "^2.2.12",
     "@heroui/breadcrumbs": "^2.2.12",
@@ -39,6 +41,8 @@
     "@heroui/toast": "^2.0.6",
     "@heroui/tooltip": "^2.2.13",
     "@lottiefiles/dotlottie-react": "^0.13.2",
+    "@mui/material": "^7.0.2",
+    "@mui/x-charts": "^7.28.0",
     "@react-aria/i18n": "^3.12.7",
     "@react-aria/ssr": "3.9.7",
     "@react-aria/visually-hidden": "3.8.19",

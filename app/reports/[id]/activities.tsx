@@ -12,18 +12,20 @@ import { Checkbox } from "@heroui/checkbox";
 import { Chip } from "@heroui/chip";
 import { Form } from "@heroui/form";
 import { Textarea } from "@heroui/input";
+import { ToastProps, addToast } from "@heroui/toast";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { FormEvent, useRef, useState } from "react";
 
 import { ImageAttachment } from "../image-attachment";
+import { checkUpdatedProgressToday } from "./utils";
 
 import { AchievementIcon, BellIcon, ClockIcon } from "@/components/icons";
 import { Progress } from "@/types/report.types";
 import { AdminData } from "@/types/user.types";
+import { formatLocaleDate } from "@/utils/date";
 import { buildFormData } from "@/utils/form";
-import { formatLocaleDate } from "@/utils/string";
 
 interface ActivitiesProps {
   data: Progress[];
@@ -93,15 +95,27 @@ export const Activities = ({
     e.preventDefault();
     const formData = buildFormData(e);
     const message = formData.get("message") as string;
+    const isOutOfUpdateQuota = checkUpdatedProgressToday(data);
     if (files.length < 1) {
       setFileError(t("activity-files-error-message"));
       return;
     }
     if (isMarkedAsCompleted) {
       actions.onFinishReport(message, files);
+    } else if (isOutOfUpdateQuota) {
+      const toastProps = {
+        title: t("activity-update-error-title"),
+        description: t("activity-update-error-message"),
+        color: "danger",
+      };
+      addToast(toastProps as ToastProps);
     } else {
       actions.onSendUpdate(message, files);
     }
+  };
+
+  const onAcceptButtonPress = () => {
+    actions.onAcceptReport();
   };
 
   const renderActions = () => {
@@ -260,7 +274,7 @@ export const Activities = ({
           <Button
             color="primary"
             className={clsx("w-full lg:w-fit")}
-            onPress={actions.onAcceptReport}
+            onPress={onAcceptButtonPress}
           >
             {t("activity-accept-button-text")}
           </Button>

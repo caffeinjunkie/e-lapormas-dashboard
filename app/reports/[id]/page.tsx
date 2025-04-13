@@ -123,6 +123,7 @@ export default function ReportDetailPage() {
       id as string,
       data?.report,
       setIsUpdateLoading,
+      t,
     );
     if (!result.error) {
       mutate();
@@ -135,6 +136,7 @@ export default function ReportDetailPage() {
       id as string,
       data?.report,
       setIsUpdateLoading,
+      t,
       "COMPLETED",
       updatedData.message,
       updatedData.files,
@@ -156,6 +158,7 @@ export default function ReportDetailPage() {
       id as string,
       data?.report,
       setIsUpdateLoading,
+      t,
       "IN_PROGRESS",
       message,
       files,

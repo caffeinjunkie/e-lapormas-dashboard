@@ -83,6 +83,34 @@ export type Database = {
         };
         Relationships: [];
       };
+      general_statistics: {
+        Row: {
+          month_year: string;
+          total_new_tasks: number;
+          total_finished_tasks: number;
+          current_in_progress_tasks: number;
+          current_pending_tasks: number;
+          current_completed_tasks: number;
+          user_satisfactions: number;
+        };
+        Relationships: [];
+      };
+      location_statistics: {
+        Row: {
+          location: string;
+          total_tasks: number;
+          total_finished_tasks: number;
+        };
+        Relationships: [];
+      };
+      category_statistics: {
+        Row: {
+          category: string;
+          total_tasks: number;
+          total_finished_tasks: number;
+        };
+        Relationships: [];
+      };
       tasks: {
         Row: {
           address: Json | null;
@@ -95,6 +123,7 @@ export type Database = {
           priority: Database["public"]["Enums"]["task_priority"];
           progress: Json | null;
           rating: number | null;
+          finished_at: string | null;
           status: Database["public"]["Enums"]["task_status"] | null;
           title: string;
           tracking_id: string;
@@ -110,6 +139,7 @@ export type Database = {
           priority: Database["public"]["Enums"]["task_priority"];
           progress?: Json | null;
           rating?: number | null;
+          finished_at?: string | null;
           status?: Database["public"]["Enums"]["task_status"] | null;
           title: string;
           tracking_id: string;
@@ -125,6 +155,7 @@ export type Database = {
           priority?: Database["public"]["Enums"]["task_priority"];
           progress?: Json | null;
           rating?: number | null;
+          finished_at?: string | null;
           status?: Database["public"]["Enums"]["task_status"] | null;
           title?: string;
           tracking_id?: string;

@@ -84,63 +84,36 @@ function generatePassword(): string {
   return password;
 }
 
-const formatLocaleDate = (
-  date: string,
-  format: "short" | "long" | "long-relative" = "short",
-) => {
-  const formatter = useFormatter();
-  const dateTime = new Date(date);
-
-  if (format === "long") {
-    return formatter.dateTime(dateTime, {
-      dateStyle: "long",
-      timeStyle: "short",
-    });
-  }
-
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-
-  const oneWeekAgo = new Date(today);
-  oneWeekAgo.setDate(today.getDate() - 7);
-
-  const diffInDays = Math.floor(
-    (today.getTime() - dateTime.getTime()) / (1000 * 60 * 60 * 24),
-  );
-  if (diffInDays < 8) {
-    return formatter.relativeTime(dateTime, today);
-  }
-
-  const getDateStyle = () => {
-    if (format === "long-relative") {
-      return {
-        dateStyle: "long",
-        timeStyle: "short",
-      };
-    }
-    return {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-  };
-
-  const dateFormat = getDateStyle();
-
-  return formatter.dateTime(dateTime, dateFormat as any);
-};
-
 const getByteSize = (size: number) => {
-  if (size < 1048576) {
-    return (size / 1024).toFixed(2) + "KB";
+  if (size < 500000) {
+    return (size / 1024).toFixed(0) + "KB";
   }
   return (size / 1048576).toFixed(2) + "MB";
 };
 
+const minifyNumber = (value: number) => {
+  if (value < 1000) return value.toString();
+  const floored = Math.floor((value / 1000) * 10) / 10;
+  return floored.toFixed(1).replace(/\.0$/, "") + "K";
+};
+
+const getMoreOrLessKey = (value1: number, value2: number) => {
+  if (value1 === value2) return "value-equal-text";
+  if (value1 > value2) return "value-more-text";
+  return "value-less-text";
+};
+
+const getPercentageDifference = (value1: number, value2: number) => {
+  if (value2 === 0) return "100";
+  const percentage = ((value1 - value2) / value2) * 100;
+  return percentage.toFixed(1).replace(/\.0$/, "");
+};
+
 export {
   getByteSize,
-  formatLocaleDate,
+  getMoreOrLessKey,
+  getPercentageDifference,
+  minifyNumber,
   generatePassword,
   validateIsRequired,
   validateEmail,

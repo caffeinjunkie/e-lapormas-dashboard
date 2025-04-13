@@ -14,7 +14,7 @@ import { PriorityChipColor, StatusChipColor } from "@/app/reports/config";
 import { Description } from "@/app/reports/description";
 import { Info } from "@/app/reports/info";
 import { Report } from "@/types/report.types";
-import { formatLocaleDate } from "@/utils/string";
+import { formatLocaleDate } from "@/utils/date";
 
 interface ReportDetailProps {
   report: Report;
