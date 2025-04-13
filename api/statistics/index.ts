@@ -31,7 +31,7 @@ export const fetchGeneralStatistics = async (
   const { data, error } = await supabase
     .from("general_statistics")
     .select("*")
-    .order("month_year", { ascending: false })
+    .order("month_year", { ascending: true })
     .range(offset, offset + limit - 1);
 
   if (error) {

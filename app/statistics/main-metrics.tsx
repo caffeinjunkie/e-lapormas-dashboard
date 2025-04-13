@@ -1,10 +1,8 @@
 "use client";
 
 import { Select, SelectItem } from "@heroui/select";
-import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
-import clsx from "clsx";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
@@ -13,6 +11,7 @@ import { MetricHeader } from "./components/metric-header";
 import { SectionHeader } from "./components/section-header";
 import { getAllTimeData } from "./utils";
 
+import Error from "@/components/error";
 import { StatCard } from "@/components/stat-card";
 import { MainMetrics as MainMetricsType } from "@/types/statistics.types";
 import { formatMonthYearDate } from "@/utils/date";
@@ -22,9 +21,16 @@ type ItemType = { id: string; label: string };
 interface MainMetricsProps {
   data: MainMetricsType[];
   isLoading: boolean;
+  error?: unknown;
+  mutate: () => void;
 }
 
-export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
+export const MainMetrics = ({
+  data,
+  isLoading,
+  error,
+  mutate,
+}: MainMetricsProps) => {
   const t = useTranslations("StatisticsPage");
   const [currentData, setCurrentData] = useState<MainMetricsType>();
   const [prevData, setPrevData] = useState<MainMetricsType>();
@@ -47,9 +53,7 @@ export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
     ...defaultMenu,
   ];
 
-  const [selected, setSelected] = useState(
-    new Set([mainMetricMenu[mainMetricMenu.length - 2].id.toString()]),
-  );
+  const [selected, setSelected] = useState(new Set([String(data.length - 1)]));
 
   const currentDataMemo = useMemo(() => {
     return data?.[Number(selected.values().next().value)];
@@ -132,12 +136,12 @@ export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
     {
       name: "user-satisfactions",
       withFooter: true,
-      firstValue: currentData?.user_satisfactions || 0,
-      secondValue: prevData?.user_satisfactions || 0,
+      firstValue: currentData?.user_satisfactions! * 10 || 0,
+      secondValue: prevData?.user_satisfactions! * 10 || 0,
       children: (
         <StatCard.Percentage
           isEmpty={!data}
-          value={currentData?.user_satisfactions || 0}
+          value={currentData?.user_satisfactions! * 10 || 0}
         />
       ),
     },
@@ -165,7 +169,11 @@ export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
       key={name}
       isLoading={isLoading}
       header={
-        <MetricHeader withTooltip label={name} className="justify-center" />
+        <MetricHeader
+          withTooltip={!isAllTime}
+          label={name}
+          className="justify-center"
+        />
       }
       footer={
         withFooter && (
@@ -183,7 +191,15 @@ export const MainMetrics = ({ data, isLoading }: MainMetricsProps) => {
         body: "flex items-center justify-center",
       }}
     >
-      {children}
+      {error ? (
+        <Error
+          className="h-full p-4"
+          message={t("error-message")}
+          onReset={() => mutate()}
+        />
+      ) : (
+        children
+      )}
     </StatCard>
   );
 

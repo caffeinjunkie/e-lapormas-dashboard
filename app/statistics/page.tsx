@@ -13,14 +13,10 @@ import {
   fetchGeneralStatistics,
   fetchLocationStatistics,
 } from "@/api/statistics";
-import { mainMetrics } from "@/app/statistics/mock-data";
 import { Layout } from "@/components/layout";
 
 export default function StatisticsPage() {
   const t = useTranslations("StatisticsPage");
-  const mockData = {
-    mainMetrics,
-  };
   const {
     data: categoryData,
     error: categoryError,
@@ -47,7 +43,14 @@ export default function StatisticsPage() {
       title={t("title")}
       classNames={{ body: "px-6 md:px-8 pt-2 pb-6 flex flex-col gap-4" }}
     >
-      <MainMetrics data={mockData.mainMetrics} isLoading={false} />
+      {mainMetricsLoading || (
+        <MainMetrics
+          data={mainMetricsData ?? []}
+          error={mainMetricsError}
+          mutate={mutateMainMetrics}
+          isLoading={mainMetricsLoading}
+        />
+      )}
       <DemographyMetrics
         data={{
           locationData: locationData ?? [],

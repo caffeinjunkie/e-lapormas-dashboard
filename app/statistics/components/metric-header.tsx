@@ -27,22 +27,26 @@ export const MetricHeader = ({
         className,
       )}
     >
-      {withTooltip
-        ? t(`${metricName}-metric-${label}-header-text`)
-            .split(" ")
-            .map((word, i, arr) => (
-              <span key={i} className="mr-1">
-                {word}
-                {i === arr.length - 1 && (
-                  <Tooltip
-                    content={t(`${metricName}-metric-${label}-tooltip-text`)}
-                  >
-                    <InformationCircleIcon className="size-4 stroke-2 text-default-400 ml-1 mb-0.5 inline-block" />
-                  </Tooltip>
-                )}
-              </span>
-            ))
-        : t(`${metricName}-metric-${label}-header-text`)}
+      {withTooltip ? (
+        t(`${metricName}-metric-${label}-header-text`)
+          .split(" ")
+          .map((word, i, arr) => (
+            <span key={i} className="mr-1">
+              {word}
+              {i === arr.length - 1 && (
+                <Tooltip
+                  content={t(`${metricName}-metric-${label}-tooltip-text`)}
+                >
+                  <InformationCircleIcon className="size-4 stroke-2 text-default-400 ml-1 mb-0.5 inline-block" />
+                </Tooltip>
+              )}
+            </span>
+          ))
+      ) : (
+        <p className="text-center">
+          {t(`${metricName}-metric-${label}-header-text`)}
+        </p>
+      )}
     </span>
   );
 };
