@@ -144,7 +144,7 @@
     "activity-update-error-message": "Laporan sudah diperbaharui 3 kali hari ini. Anda dapat mengirim pembaharuan kembali besok."
   },
   "StatisticsPage": {
-    "title": "Statistik (In Development)",
+    "title": "Statistik",
     "main-metric-title": "Pengetahuan Umum",
     "main-metric-description": "Statistik pengetahuan laporan secara umum.",
     "main-metric-average-text": "Rata-rata",
