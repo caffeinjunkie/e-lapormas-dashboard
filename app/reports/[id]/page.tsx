@@ -198,7 +198,7 @@ export default function ReportDetailPage() {
       <h1
         className={clsx(
           title({ size: "xs" }),
-          "transition-all px-6 duration-200 ease-in-out text-md",
+          "transition-all px-6 duration-200 ease-in-out text-base",
           !isIntersectingBody ? "pt-2 lg:pt-0" : "pt-0",
         )}
       >

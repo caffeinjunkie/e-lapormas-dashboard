@@ -168,7 +168,7 @@ export default function CreatePasswordPage() {
             )}
             {!tokenError && (
               <>
-                <h3 className="text-md text-center font-semibold">
+                <h3 className="text-base text-center font-semibold">
                   {t("create-password-title")}
                 </h3>
                 <Form

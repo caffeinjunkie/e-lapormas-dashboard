@@ -2,7 +2,6 @@ import clsx from "clsx";
 import { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
-import { PhotoProvider } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 
 import { Providers } from "./providers";

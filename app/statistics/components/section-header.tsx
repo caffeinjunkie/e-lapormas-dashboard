@@ -23,7 +23,7 @@ export const SectionHeader = ({
   return (
     <div className="flex flex-row items-start justify-between">
       <div className="flex flex-col">
-        <p className={clsx(titlePrimitive({ className: "text-md" }))}>
+        <p className={clsx(titlePrimitive({ className: "text-base" }))}>
           {title}
         </p>
         <p className={clsx(subtitlePrimitive({ className: "text-sm" }))}>

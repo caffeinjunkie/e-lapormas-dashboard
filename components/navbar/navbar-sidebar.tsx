@@ -70,7 +70,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
     >
       <div className="fixed bottom-0 top-0 gap-4 w-[274px] flex flex-col justify-between overflow-y-scroll">
         <div className="flex flex-col gap-16">
-          <div className="flex items-center justify-start text-md font-semibold text-gray-200">
+          <div className="flex items-center justify-start text-base font-semibold text-gray-200">
             {children}
           </div>
           <div className="relative">
