@@ -28,7 +28,6 @@ export const Pie = ({
   content,
   contentPosition = "bottom",
   withCenterLabel = false,
-  limit = 7,
   type = "full-donut",
 }: PieProps) => {
   const t = useTranslations("StatCard");
@@ -37,16 +36,6 @@ export const Pie = ({
 
   if (!data || data.length === 0)
     return <p className="text-center text-gray-500">{t("empty-text")}</p>;
-
-  const droppedData = data.slice(0, data.length - limit);
-  const slicedData = data.length > limit ? data.slice(-limit) : data;
-  const droppedDataSum = droppedData.reduce((acc, curr) => acc + curr.value, 0);
-  const pieData = [
-    ...slicedData,
-    data.length > limit
-      ? { id: "other", label: t("other-text"), value: droppedDataSum }
-      : {},
-  ];
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -59,7 +48,7 @@ export const Pie = ({
         margin={{ top: 12, bottom: 12, left: 12, right: 12 }}
         series={[
           {
-            data: pieData,
+            data,
             innerRadius: type === "sliced-donut" ? 40 : 0,
             outerRadius: type === "sliced-donut" ? 70 : 75,
             paddingAngle: type === "sliced-donut" ? 2 : 0,
@@ -88,7 +77,7 @@ export const Pie = ({
         {withCenterLabel && <PieCenterLabel>{total}</PieCenterLabel>}
       </PieChart>
       {content && contentPosition === "bottom" && (
-        <div className={clsx("flex items-center pt-4 text-sm justify-center")}>
+        <div className={clsx("flex items-center pt-2 text-sm justify-center")}>
           {content}
         </div>
       )}

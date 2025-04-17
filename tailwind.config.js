@@ -61,6 +61,7 @@ module.exports = {
   darkMode: "class",
   plugins: [
     heroui(),
+    require("@tailwindcss/container-queries"),
     function ({ addUtilities }) {
       addUtilities(
         {

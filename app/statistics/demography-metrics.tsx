@@ -7,7 +7,7 @@ import { SectionHeader } from "./components/section-header";
 
 import Error from "@/components/error";
 import { StatCard } from "@/components/stat-card";
-import { Legends } from "@/components/stat-card/legends";
+import { Legends, LegendType } from "@/components/stat-card/legends";
 import { CategoryMetrics, LocationMetrics } from "@/types/statistics.types";
 
 interface DemographyMetricsProps {
@@ -37,6 +37,7 @@ export const DemographyMetrics = ({
 }: DemographyMetricsProps) => {
   const { categoryData, locationData } = data;
   const t = useTranslations("StatisticsPage");
+  const limit = 6;
   const series1 = categoryData.map(
     (item) => item.total_tasks - item.total_finished_tasks,
   );
@@ -73,16 +74,6 @@ export const DemographyMetrics = ({
     [locationData],
   );
 
-  const legendData = [
-    ...memoizedTotalTasksData.slice(-7),
-    {
-      id: "other",
-      label: t("other-text"),
-      color: colors[7] || "#ffffff",
-      value: 0,
-    },
-  ];
-
   const memoizedFinishedTasksData = useMemo(
     () =>
       locationData
@@ -95,6 +86,17 @@ export const DemographyMetrics = ({
         .sort((a, b) => a.value - b.value),
     [locationData],
   );
+
+  const sliceData = (data: (typeof memoizedTotalTasksData) | (typeof memoizedFinishedTasksData)) => {
+    if (data.length <= limit) return data;
+    const droppedData = data.slice(0, data.length - limit);
+    const slicedData = data.slice(-limit);
+    const droppedDataSum = droppedData.reduce((acc, curr) => acc + curr.value, 0);
+    return [
+      ...slicedData,
+      { id: "other", label: t("other-text"), color: colors[6] || "#ffffff", value: droppedDataSum },
+    ];
+  };
 
   return (
     <div className="flex flex-col gap-2 ">
@@ -132,7 +134,7 @@ export const DemographyMetrics = ({
         <StatCard
           isLoading={isLoading?.location}
           classNames={{
-            body: "flex flex-row items-center justify-center",
+            body: "flex flex-row items-center justify-center @container",
           }}
           header={
             <MetricHeader
@@ -144,7 +146,7 @@ export const DemographyMetrics = ({
           }
           footer={
             <div className="w-full">
-              <Legends data={legendData} size="sm" />
+              <Legends data={sliceData(memoizedTotalTasksData) as LegendType[]} size="sm" />
             </div>
           }
         >
@@ -155,20 +157,21 @@ export const DemographyMetrics = ({
               onReset={() => mutate?.location()}
             />
           ) : (
-            <>
+            <div className="flex flex-col @sm:flex-row @sm:pt-2 @lg:pt-0 items-center justify-center gap-4">
               <StatCard.Pie
-                data={memoizedTotalTasksData}
+                data={sliceData(memoizedTotalTasksData)}
                 width={180}
+                limit={4}
                 height={150}
                 content={t("demography-metric-location-total-content-text")}
               />
               <StatCard.Pie
-                data={memoizedFinishedTasksData}
+                data={sliceData(memoizedFinishedTasksData)}
                 width={180}
                 height={150}
                 content={t("demography-metric-location-finished-content-text")}
               />
-            </>
+            </div>
           )}
         </StatCard>
       </div>

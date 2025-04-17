@@ -29,8 +29,8 @@ export const ReportCell = ({
 }: ReportCellProps) => {
   const t = useTranslations("ReportsPage");
   const cellValue = report[columnKey as keyof Report];
-  const village = report.address?.village || "";
-  const location = village || "-";
+  const district = report.address?.district || "";
+  const location = district || "-";
 
   switch (columnKey) {
     case "report":
