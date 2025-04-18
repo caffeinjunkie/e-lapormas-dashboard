@@ -1,6 +1,11 @@
 import clsx from "clsx";
 
-export type LegendType = { id: string; color: string; label: string; value?: number };
+export type LegendType = {
+  id: string;
+  color: string;
+  label: string;
+  value?: number;
+};
 
 interface LegendsProps {
   data: LegendType[];

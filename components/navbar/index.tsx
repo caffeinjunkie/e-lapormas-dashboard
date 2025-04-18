@@ -143,7 +143,7 @@ export const Navbar = () => {
             />
             <p
               className={clsx(
-                "text-[10px] mt-[-12px] mr-3 text-right transition-opacity duration-3000 ease-in-out",
+                "text-[10px] mt-[-16px] text-center transition-opacity duration-3000 ease-in-out",
                 !isNavbarFullyLoaded ? "opacity-0 h-[15px]" : "animate-appear",
               )}
             >

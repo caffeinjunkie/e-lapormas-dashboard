@@ -48,7 +48,7 @@ export const updateReport = async (
     const currentUserId = user.user.id;
     let imgUrl = "";
 
-    if (files.length) {
+    if (files.length > 0) {
       const { url } = await uploadImageToServer(files[0]);
       imgUrl = url;
     }

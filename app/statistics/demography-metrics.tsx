@@ -7,7 +7,7 @@ import { SectionHeader } from "./components/section-header";
 
 import Error from "@/components/error";
 import { StatCard } from "@/components/stat-card";
-import { Legends, LegendType } from "@/components/stat-card/legends";
+import { LegendType, Legends } from "@/components/stat-card/legends";
 import { CategoryMetrics, LocationMetrics } from "@/types/statistics.types";
 
 interface DemographyMetricsProps {
@@ -87,14 +87,24 @@ export const DemographyMetrics = ({
     [locationData],
   );
 
-  const sliceData = (data: (typeof memoizedTotalTasksData) | (typeof memoizedFinishedTasksData)) => {
+  const sliceData = (
+    data: typeof memoizedTotalTasksData | typeof memoizedFinishedTasksData,
+  ) => {
     if (data.length <= limit) return data;
     const droppedData = data.slice(0, data.length - limit);
     const slicedData = data.slice(-limit);
-    const droppedDataSum = droppedData.reduce((acc, curr) => acc + curr.value, 0);
+    const droppedDataSum = droppedData.reduce(
+      (acc, curr) => acc + curr.value,
+      0,
+    );
     return [
       ...slicedData,
-      { id: "other", label: t("other-text"), color: colors[6] || "#ffffff", value: droppedDataSum },
+      {
+        id: "other",
+        label: t("other-text"),
+        color: colors[6] || "#ffffff",
+        value: droppedDataSum,
+      },
     ];
   };
 
@@ -146,7 +156,10 @@ export const DemographyMetrics = ({
           }
           footer={
             <div className="w-full">
-              <Legends data={sliceData(memoizedTotalTasksData) as LegendType[]} size="sm" />
+              <Legends
+                data={sliceData(memoizedTotalTasksData) as LegendType[]}
+                size="sm"
+              />
             </div>
           }
         >
