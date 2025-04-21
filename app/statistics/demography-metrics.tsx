@@ -109,7 +109,7 @@ export const DemographyMetrics = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 ">
+    <div className="flex flex-col gap-3">
       <SectionHeader
         title={t("demography-metric-title")}
         subtitle={t("demography-metric-description")}

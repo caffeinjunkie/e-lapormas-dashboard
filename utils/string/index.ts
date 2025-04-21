@@ -1,5 +1,3 @@
-import { useFormatter } from "next-intl";
-
 const validateIsRequired = (
   t: (key: string) => string,
   value: string,
