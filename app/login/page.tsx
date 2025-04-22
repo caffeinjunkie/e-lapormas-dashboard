@@ -103,7 +103,7 @@ export default function LoginPage() {
         </div>
         <Card
           isBlurred
-          className="max-w-md w-full min-w-[320px] overflow-scroll"
+          className="max-w-md w-full min-w-[320px]"
         >
           <CardBody
             className="overflow-hidden transition-max-h transition-min-h duration-500 linear"
