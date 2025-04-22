@@ -29,7 +29,7 @@ export const ResetPasswordForm = ({
         <Button isIconOnly size="sm" variant="light" onPress={onBackPress}>
           <ArrowLeftIcon className="size-4" strokeWidth="2" />
         </Button>
-        <h3 className="text-md font-semibold">
+        <h3 className="text-base font-semibold">
           {t("forgot-password-tab-title")}
         </h3>
       </div>

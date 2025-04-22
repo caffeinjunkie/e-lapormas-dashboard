@@ -16,7 +16,6 @@ interface BarProps {
 
 export const Bar = ({
   isEmpty,
-  height = 250,
   data,
   labels,
   stack = "total",
@@ -32,7 +31,7 @@ export const Bar = ({
     );
   }
   return (
-    <div className="w-full flex pb-2 flex-col gap-2">
+    <div className="@container w-full flex pb-2 flex-col gap-2">
       <BarChart
         yAxis={[{ scaleType: "band", data: labels }]}
         grid={{
@@ -49,7 +48,7 @@ export const Bar = ({
         }
         layout="horizontal"
         margin={{ bottom: 24, left: 132, top: 24, right: 20 }}
-        height={height}
+        className="h-[450px] @sm:h-[250px]"
         slotProps={{
           legend: {
             hidden: true,

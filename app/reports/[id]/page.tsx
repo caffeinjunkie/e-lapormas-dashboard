@@ -198,7 +198,7 @@ export default function ReportDetailPage() {
       <h1
         className={clsx(
           title({ size: "xs" }),
-          "transition-all px-6 duration-200 ease-in-out text-md",
+          "transition-all px-6 duration-200 ease-in-out text-base",
           !isIntersectingBody ? "pt-2 lg:pt-0" : "pt-0",
         )}
       >
@@ -281,7 +281,11 @@ export default function ReportDetailPage() {
                 }}
                 className="font-semibold"
               >
-                <Tab value="activities" title={t("activities-tab-text")}>
+                <Tab
+                  value="activities"
+                  title={t("activities-tab-text")}
+                  className="no-scrollbar"
+                >
                   <Activities
                     actions={{
                       onAcceptReport,
@@ -295,7 +299,11 @@ export default function ReportDetailPage() {
                     users={data?.admins || []}
                   />
                 </Tab>
-                <Tab value="attachments" title={t("attachments-tab-text")}>
+                <Tab
+                  value="attachments"
+                  title={t("attachments-tab-text")}
+                  className="no-scrollbar"
+                >
                   {reportImages.length === 0 && (
                     <p className="flex justify-center w-full px-4 text-default-500 text-sm">
                       {t("no-attachments-text")}

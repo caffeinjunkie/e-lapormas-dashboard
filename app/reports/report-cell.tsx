@@ -29,8 +29,8 @@ export const ReportCell = ({
 }: ReportCellProps) => {
   const t = useTranslations("ReportsPage");
   const cellValue = report[columnKey as keyof Report];
-  const village = report.address?.village || "";
-  const location = village || "-";
+  const district = report.address?.district || "";
+  const location = district || "-";
 
   switch (columnKey) {
     case "report":
@@ -66,7 +66,7 @@ export const ReportCell = ({
                     {t(`category-${report.category}`)}
                   </p>
                 </div>
-                <p className="text-md font-semibold line-clamp-2">
+                <p className="text-base font-semibold line-clamp-2">
                   {report.title}
                 </p>
                 <div className="flex flex-row items-center gap-1 pt-0.5 text-default-500 text-xs">
@@ -126,7 +126,9 @@ export const ReportCell = ({
             #{report.tracking_id}
           </Link>
           <div className="flex flex-row gap-2 items-center">
-            <p className="text-md font-semibold line-clamp-2">{report.title}</p>
+            <p className="text-base font-semibold line-clamp-2">
+              {report.title}
+            </p>
             {report.status === "PENDING" &&
               getDiffInDays(report.created_at) < 2 && (
                 <Chip

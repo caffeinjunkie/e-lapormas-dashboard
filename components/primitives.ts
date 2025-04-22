@@ -50,7 +50,7 @@ export const subtitle = tv({
     size: {
       xs: "text-xs",
       sm: "text-sm",
-      md: "text-md",
+      md: "text-base",
       lg: "text-lg lg:text-xl",
     },
   },

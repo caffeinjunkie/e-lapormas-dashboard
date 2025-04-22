@@ -56,9 +56,11 @@ export const fetchTasks = async (options: FetchTasksOptions) => {
         query = query.lte("created_at", value);
         break;
       case "pic":
-        query = query.or(
-          `progress.cs.${JSON.stringify([{ updated_by: value }])}`,
-        );
+        if (status !== "PENDING") {
+          query = query.or(
+            `progress.cs.${JSON.stringify([{ updated_by: value }])}`,
+          );
+        }
         break;
     }
   });

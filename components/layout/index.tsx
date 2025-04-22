@@ -33,7 +33,7 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className={`inline-block overflow-y-scroll ${classNames?.container || "px-0"}`}
+          className={`inline-block overflow-y-scroll no-scrollbar h-full ${classNames?.container || "px-0"}`}
           ref={ref}
         >
           <div

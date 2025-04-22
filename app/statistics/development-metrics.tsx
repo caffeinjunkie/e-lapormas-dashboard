@@ -95,7 +95,7 @@ export const DevelopmentMetrics = ({
   );
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <SectionHeader
         title={t("development-metric-title")}
         subtitle={t("development-metric-description")}
