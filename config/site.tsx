@@ -72,7 +72,7 @@ export const privatePaths = [...sidebarMenuItems, additionalMenuItems[0]].map(
 );
 
 export const siteConfig = {
-  name: "E-Lapor Dashboard",
+  name: "LaporID Dashboard",
   description: "Dashboard Pelaporan Elektronik",
   backgroundImageSrcs: [
     "https://chnpxcvhzxlwdaqhbhqp.supabase.co/storage/v1/object/sign/photos/Firefly%20generate%20image%20on%20indonesian%20landscape%200%20(3).jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwaG90b3MvRmlyZWZseSBnZW5lcmF0ZSBpbWFnZSBvbiBpbmRvbmVzaWFuIGxhbmRzY2FwZSAwICgzKS5qcGciLCJpYXQiOjE3NDE2MjgxMDUsImV4cCI6MTgwNDcwMDEwNX0.JMEF7P6GMMmLwABZ5Yzqh4weGX6TB7w6Fbbhd_G0330",
