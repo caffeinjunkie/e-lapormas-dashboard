@@ -19,5 +19,6 @@ export const calculateReportRow = (
   isMobile: boolean,
   isWideScreen: boolean,
 ) => {
-  setRowsPerPage(isWideScreen ? 8 : isMobile ? 10 : 5);
+  const height = window.innerHeight;
+  setRowsPerPage(isWideScreen ? Math.floor(height / 90) : isMobile ? 10 : 5);
 };

@@ -3,7 +3,6 @@
 import { useDisclosure } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
 import { Spinner } from "@heroui/spinner";
-import { Key } from "@react-types/shared";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -158,10 +157,10 @@ function ReportsPage() {
     router.replace(`${pathname}?${filterParams}`);
   };
 
-  const onSelectTab = (key: Key) => {
+  const onSelectTab = (key: string) => {
     const param = appendParam({
       ...queryParams,
-      status: key as string,
+      status: key,
       page: "1",
     });
 
@@ -197,7 +196,7 @@ function ReportsPage() {
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
         searchValue={searchQuery || ""}
-        filters={[category, priority, startDate, pic]}
+        filters={[category, priority, startDate, tab === "PENDING" ? "" : pic]}
         onPressFilterButton={openModal}
         selectedTab={tab as string}
         onSelectTab={onSelectTab}
@@ -215,7 +214,7 @@ function ReportsPage() {
       isMobile={isMobile}
       title={t("title")}
       headerComponent={topContent}
-      classNames={{ header: `gap-4 ${isMobile ? "sm:top-16 md:top-0" : ""}` }}
+      classNames={{ header: `gap-4 ${isMobile ? "sm:top-16 md:top-0" : ""}`}}
     >
       {error && <Error message={t("page-error-message")} onReset={mutate} />}
       {!error && (
