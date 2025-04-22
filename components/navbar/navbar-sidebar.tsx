@@ -68,7 +68,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
         backgroundColor: sidebarTheme.primary,
       }}
     >
-      <div className="fixed bottom-0 top-0 gap-4 w-[274px] flex flex-col justify-between overflow-y-scroll">
+      <div className="fixed bottom-0 top-0 gap-4 w-[274px] flex flex-col justify-between overflow-y-scroll no-scrollbar">
         <div className="flex flex-col gap-16">
           <div className="flex items-center justify-start text-base font-semibold text-gray-200">
             {children}
