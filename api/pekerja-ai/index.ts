@@ -5,7 +5,7 @@ export const uploadImageToServer = async (file: File) => {
   const options = {
     method: "POST",
     headers: {
-      "x-auth-token": process.env.NEXT_PUBLIC_PEKERJA_AI_IMG_UPLOAD_KEY,
+      "x-auth-token": process.env.PEKERJA_AI_IMG_UPLOAD_KEY,
       Accept: "application/json",
     },
     body: formData,
