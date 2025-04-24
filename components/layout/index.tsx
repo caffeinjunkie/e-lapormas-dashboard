@@ -24,7 +24,7 @@ const Layout = React.forwardRef<HTMLDivElement, LayoutProps>(
     return (
       <section
         className={clsx(
-          "flex md:ml-[282px] flex-col md:absolute md:rounded-xl top-16 right-0 left-0 md:top-2 md:right-2 md:bottom-2 md:left-0 overflow-y-scroll gap-4 md:py-0 bg-white",
+          "flex md:ml-[282px] flex-col no-scrollbar md:absolute md:rounded-xl top-16 right-0 left-0 md:top-2 md:right-2 md:bottom-2 md:left-0 overflow-y-scroll gap-4 md:py-0 bg-white",
           classNames?.layout,
         )}
       >

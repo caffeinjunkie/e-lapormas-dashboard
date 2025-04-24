@@ -162,14 +162,11 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
               <>
                 <UserAva
                   imageSrc={user?.imageSrc}
-                  theme={{
-                    name: sidebarTheme.text,
-                  }}
                   displayName={user?.fullName}
                   description={user?.email}
                   classNames={{
                     container: "contents",
-                    name: "font-semibold",
+                    name: "font-semibold text-white",
                     description: "text-gray-400",
                   }}
                 />

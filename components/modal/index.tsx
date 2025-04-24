@@ -40,7 +40,7 @@ const Modal: React.FC<PropsWithChildren<ModalProps>> & {
     <HeroUIModal
       isOpen={isOpen}
       onClose={onClose}
-      className={`bg-white focus:outline-none ${className}`}
+      className={`focus:outline-none ${className}`}
       {...props}
     >
       <ModalContent>

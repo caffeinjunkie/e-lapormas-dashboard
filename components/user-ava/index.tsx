@@ -22,16 +22,12 @@ export const UserAva = ({
   displayName = "",
   description,
   indicator,
-  theme = {
-    name: "black",
-    description: "",
-  },
   classNames,
 }: UserAvaProps) => {
   const {
     container = "",
     avatar = "",
-    name: nameClass = "",
+    name: nameClass = "text-black",
     description: descriptionClass = "",
   } = classNames || {};
 
@@ -50,12 +46,7 @@ export const UserAva = ({
       />
       <div className="flex-1 flex-col overflow-hidden ">
         <div className="flex flex-row items-center">
-          <p
-            className={`text-sm truncate ${nameClass}`}
-            style={{
-              color: theme.name,
-            }}
-          >
+          <p className={`text-sm truncate ${nameClass}`}>
             {displayName || "-"}
           </p>
           {indicator && <span>{indicator}</span>}

@@ -214,7 +214,7 @@ function ReportsPage() {
       isMobile={isMobile}
       title={t("title")}
       headerComponent={topContent}
-      classNames={{ header: `gap-4 ${isMobile ? "sm:top-16 md:top-0" : ""}`}}
+      classNames={{ header: `gap-4 ${isMobile ? "sm:top-16 md:top-0" : ""}` }}
     >
       {error && <Error message={t("page-error-message")} onReset={mutate} />}
       {!error && (

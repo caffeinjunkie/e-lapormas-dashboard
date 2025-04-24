@@ -176,7 +176,7 @@ export const Navbar = () => {
           },
         ]}
       >
-        <ModalHeader className="text-black">
+        <ModalHeader>
           {shouldShowConfirmation
             ? t("navigate-confirmation-title")
             : t("logout-confirmation-title")}

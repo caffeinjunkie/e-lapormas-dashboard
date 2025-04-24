@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
 import useSWR from "swr";
 
-import { categoryOptions, priorityOptions } from "./config";
+import { PriorityChipColor, categoryOptions, priorityOptions } from "./config";
 import { appendParam } from "./handlers";
 
 import { fetchAllAdmins } from "@/api/admin";
@@ -125,13 +125,28 @@ export const FilterModal = ({
             );
             return userData?.display_name || userData.email;
           }
+
           return (
             <div className="flex flex-wrap gap-2">
-              {items.map(({ key }) => (
-                <Chip size="sm" key={key}>
-                  {t(`${name}-${key}`)}
-                </Chip>
-              ))}
+              {items.map(({ key }) => {
+                const colorKey =
+                  name === "priority"
+                    ? (key as string).toUpperCase()
+                    : "default";
+                return (
+                  <Chip
+                    size="sm"
+                    key={key}
+                    color={
+                      PriorityChipColor[
+                        colorKey as keyof typeof PriorityChipColor
+                      ]
+                    }
+                  >
+                    {t(`${name}-${key}`)}
+                  </Chip>
+                );
+              })}
             </div>
           );
         }}
@@ -141,7 +156,6 @@ export const FilterModal = ({
         label={t(`reports-modal-${name}-select-label`)}
         selectedKeys={selectedItems}
         items={items}
-        variant="bordered"
         placeholder={t(`reports-modal-${name}-placeholder-text`)}
         onSelectionChange={(keys) => setItems(keys as Set<string>)}
       >
@@ -154,6 +168,9 @@ export const FilterModal = ({
                     (admin: AdminData) => admin.user_id === item.id,
                   )?.email
                 }
+                classNames={{
+                  name: "text-current",
+                }}
                 displayName={item.labelKey || "-"}
                 imageSrc={
                   result?.data.find(
@@ -238,7 +255,6 @@ export const FilterModal = ({
               aria-label="Date Range Picker"
               firstDayOfWeek="mon"
               value={dateRange}
-              variant="bordered"
               onChange={setDateRange}
               visibleMonths={isWideScreen ? 2 : 1}
             />

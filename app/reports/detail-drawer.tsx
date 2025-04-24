@@ -45,7 +45,7 @@ export const DetailDrawer = ({
       onOpenChange={onOpenChange}
       isDismissable={!isPhotoSliderOpen}
       title={selectedReport?.title}
-      className="rounded-t-lg sm:top-2 sm:bottom-2 sm:right-2 sm:rounded-xl"
+      className="rounded-t-lg sm:top-2 sm:bottom-2 sm:right-2 sm:rounded-xl max-h-[calc(100vh-24px)]"
       classNames={{
         header: "p-0",
         closeButton: "z-20 text-white hover:bg-white/20 active:bg-white/30",
@@ -96,10 +96,15 @@ export const DetailDrawer = ({
                   width={800}
                   height={200}
                   radius="none"
-                  className={`w-full h-48 object-cover ${images.length > 0 ? "" : "object-contain p-6 bg-default-200"}`}
+                  className={`w-full max-h-48 object-cover ${images.length > 0 ? "" : "object-contain p-6 bg-default-200"}`}
                 />
               </Card>
-              <h1 className={clsx(title({ size: "xs" }), "px-6 pt-4 sm:pt-0")}>
+              <h1
+                className={clsx(
+                  title({ size: "xs" }),
+                  "px-6 pt-4 sm:pt-0 text-current",
+                )}
+              >
                 {selectedReport?.title}
               </h1>
             </DrawerHeader>
