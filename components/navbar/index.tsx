@@ -92,7 +92,7 @@ export const Navbar = () => {
 
   const mobileHeaderLabel = (
     <NextLink className="flex justify-start items-center gap-1" href="/">
-      <p className="font-bold text-inherit">
+      <p className="font-bold text-black">
         {t(
           `navbar-${pathname === "/" ? "dashboard" : pathname.split("/")[1]}-label`,
         )}
