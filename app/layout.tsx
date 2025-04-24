@@ -49,7 +49,7 @@ export default async function RootLayout({
           <div className="relative flex flex-col md:flex-row h-screen">
             <NextIntlClientProvider>
               <PrivateProvider locale={locale}>
-                <main className="light overflow-auto flex-grow">
+                <main className="light overflow-auto flex-grow bg-white">
                   {children}
                 </main>
               </PrivateProvider>
