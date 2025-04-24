@@ -45,7 +45,7 @@
     "create-password-unverified-identity-error-message": "Silakan verifikasi email Anda."
   },
   "DashboardPage": {
-    "title": "Ikhtisar (Planning Stage)"
+    "title": "Ikhtisar"
   },
   "ReportsPage": {
     "title": "Laporan",
@@ -201,7 +201,7 @@
     "development-metric-12-months": "12 Bulan"
   },
   "AnnouncementsPage": {
-    "title": "Pengumuman (Planning Stage)"
+    "title": "Pengumuman"
   },
   "AdminManagementPage": {
     "title": "Manajemen Admin",
