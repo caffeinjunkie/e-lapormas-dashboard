@@ -12,14 +12,14 @@ interface MetricFooterProps {
   firstValue: number;
   secondValue: number;
   name: string;
-  isAllTime: boolean;
+  isAllTime?: boolean;
 }
 
 export const MetricFooter = ({
   firstValue,
   secondValue,
   name,
-  isAllTime,
+  isAllTime = false,
 }: MetricFooterProps) => {
   const t = useTranslations("StatisticsPage");
   const isMore = Number(getPercentageDifference(firstValue, secondValue)) > 0;

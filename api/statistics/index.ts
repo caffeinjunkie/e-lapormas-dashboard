@@ -27,13 +27,15 @@ export const fetchLocationStatistics = async () => {
 export const fetchGeneralStatistics = async (
   offset: number = 0,
   limit: number = 12,
+  order: "asc" | "desc" = "asc",
 ) => {
   const { data, error } = await supabase
     .from("general_statistics")
     .select("*")
-    .order("month_year", { ascending: true })
+    .order("month_year", { ascending: order === "asc" })
     .range(offset, offset + limit - 1);
 
+  console.log(data, "tes");
   if (error) {
     throw error;
   }
