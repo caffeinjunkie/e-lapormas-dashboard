@@ -28,10 +28,10 @@ export default function ErrorPage() {
     <div className="flex min-h-screen items-center justify-center">
       <Card className="maxw-md w-full p-2">
         <CardHeader className="flex p-4 gap-2 items-center justify-center">
-          <p className="text-lg font-semibold">{t("error-title")}</p>
+          <p className="text-lg font-semibold text-black">{t("error-title")}</p>
         </CardHeader>
         <CardBody className="flex flex-col p-4 gap-4">
-          <p className="text-sm text-default-500">{message}</p>
+          <p className="text-sm text-default-500 text-black">{message}</p>
         </CardBody>
         <CardFooter className="pt-4">
           <Button

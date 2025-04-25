@@ -6,10 +6,17 @@ import { minifyNumber } from "@/utils/string";
 interface NumbersProps {
   value: number;
   isEmpty: boolean;
+  size?: "sm" | "md" | "lg";
 }
 
-export const Numbers = ({ value, isEmpty }: NumbersProps) => {
+export const Numbers = ({ value, isEmpty, size = "md" }: NumbersProps) => {
   const t = useTranslations("StatCard");
+
+  const textSize = {
+    sm: "text-[4.5rem] lg:text-[6cqw]",
+    md: "text-[5rem] lg:text-[6cqw]",
+    lg: "text-[6rem] lg:text-[8cqw]",
+  }[size];
 
   return (
     <div
@@ -19,7 +26,7 @@ export const Numbers = ({ value, isEmpty }: NumbersProps) => {
       )}
     >
       {!isEmpty ? (
-        <p className={clsx("text-center font-bold text-[5rem] lg:text-[6cqw]")}>
+        <p className={clsx("text-center font-bold", textSize)}>
           {minifyNumber(value)}
         </p>
       ) : (

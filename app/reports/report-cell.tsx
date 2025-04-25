@@ -126,7 +126,7 @@ export const ReportCell = ({
             #{report.tracking_id}
           </Link>
           <div className="flex flex-row gap-2 items-center">
-            <p className="text-base font-semibold line-clamp-2">
+            <p className="text-base text-black font-semibold line-clamp-2">
               {report.title}
             </p>
             {report.status === "PENDING" &&
@@ -148,11 +148,17 @@ export const ReportCell = ({
         </div>
       );
     case "category":
-      return <p className="text-sm">{t(`category-${cellValue}`)}</p>;
+      return (
+        <p className="text-sm text-default-700">{t(`category-${cellValue}`)}</p>
+      );
     case "location":
-      return <p className="text-sm">{location}</p>;
+      return <p className="text-sm text-default-700">{location}</p>;
     case "created_at":
-      return <p className="text-sm">{formatLocaleDate(report.created_at)}</p>;
+      return (
+        <p className="text-sm text-default-700">
+          {formatLocaleDate(report.created_at)}
+        </p>
+      );
     case "priority":
       return (
         <Chip
@@ -172,7 +178,6 @@ export const ReportCell = ({
       return (
         <div className="flex flex-col items-center">
           <TooltipButton
-            className="text-white"
             onPress={onPressPeek}
             color="foreground"
             content={t("peek-tooltip-text")}

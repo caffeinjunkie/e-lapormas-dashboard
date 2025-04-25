@@ -45,7 +45,19 @@
     "create-password-unverified-identity-error-message": "Silakan verifikasi email Anda."
   },
   "DashboardPage": {
-    "title": "Ikhtisar (Planning Stage)"
+    "title": "Ikhtisar",
+    "subtitle": "Kumpulan informasi sekilas, untuk data lebih lengkap, masuk ke halaman masing-masing informasi melalui tombol \"Selengkapnya >\"",
+    "admin-leaderboards-title": "Leaderboards",
+    "main-metrics-title": "Indikator Kunci",
+    "latest-report-title": "Laporan Terbaru",
+    "development-metrics-title": "Perkembangan Laporan",
+    "error-message": "Terjadi kesalahan. Mohon coba sesaat lagi",
+    "new-tab-text": "Laporan Baru",
+    "completed-tab-text": "Laporan Selesai",
+    "user-satisfactions-tab-text": "Kepuasan Masyarakat",
+    "more-link-text": "Selengkapnya >",
+    "development-metric-new-tasks": "Laporan Baru",
+    "development-metric-finished-tasks": "Laporan Selesai"
   },
   "ReportsPage": {
     "title": "Laporan",
@@ -145,8 +157,8 @@
   },
   "StatisticsPage": {
     "title": "Statistik",
-    "main-metric-title": "Pengetahuan Umum",
-    "main-metric-description": "Statistik pengetahuan laporan secara umum.",
+    "main-metric-title": "Indikator Kunci",
+    "main-metric-description": "Indikator kunci kinerja penyelesaian laporan.",
     "main-metric-average-text": "Rata-rata",
     "main-metric-new-header-text": "Laporan Masuk",
     "main-metric-completed-header-text": "Laporan Selesai",
@@ -201,7 +213,8 @@
     "development-metric-12-months": "12 Bulan"
   },
   "AnnouncementsPage": {
-    "title": "Pengumuman (Planning Stage)"
+    "title": "Pengumuman",
+    "subtitle": "Buat pengumuman yang dapat dilihat oleh pengguna melalui halaman ini."
   },
   "AdminManagementPage": {
     "title": "Manajemen Admin",

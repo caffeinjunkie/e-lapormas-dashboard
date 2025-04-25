@@ -12,21 +12,30 @@ interface MetricFooterProps {
   firstValue: number;
   secondValue: number;
   name: string;
-  isAllTime: boolean;
+  isAllTime?: boolean;
+  size?: "xs" | "sm" | "md" | "lg";
 }
 
 export const MetricFooter = ({
   firstValue,
   secondValue,
   name,
-  isAllTime,
+  isAllTime = false,
+  size = "xs",
 }: MetricFooterProps) => {
   const t = useTranslations("StatisticsPage");
   const isMore = Number(getPercentageDifference(firstValue, secondValue)) > 0;
 
+  const textSize = {
+    xs: "text-xs",
+    sm: "text-sm",
+    md: "text-md",
+    lg: "text-lg",
+  }[size];
+
   return (
     <div className="w-full mt-auto">
-      <p className="text-default-500 text-xs text-center">
+      <p className={clsx("text-default-500 text-center", textSize)}>
         {isAllTime
           ? t(`all-time-${name}-text`)
           : t.rich(getMoreOrLessKey(firstValue, secondValue), {

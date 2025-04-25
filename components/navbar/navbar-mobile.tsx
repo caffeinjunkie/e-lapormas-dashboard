@@ -37,19 +37,21 @@ export const MobileNavbar: React.FC<PropsWithChildren<MobileNavbarProps>> = ({
       position="sticky"
       isMenuOpen={isOpen}
       onMenuOpenChange={toggleMenu}
-      className="flex md:hidden"
+      className="flex md:hidden bg-white"
     >
       <NavbarContent className="md:hidden basis-1 pl-4" justify="start">
-        <NavbarMenuToggle />
+        <NavbarMenuToggle className="text-black" />
         {children}
       </NavbarContent>
 
-      <NavbarMenu>
+      <NavbarMenu className="bg-white/70">
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {mobileMenu.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <NextLink
-                className={index === mobileMenu.length - 1 ? "text-danger" : ""}
+                className={
+                  index === mobileMenu.length - 1 ? "text-danger" : "text-black"
+                }
                 href={item.href === "/logout" ? "#" : item.href}
                 onClick={(e) => {
                   e.preventDefault();

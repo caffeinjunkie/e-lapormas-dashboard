@@ -215,7 +215,7 @@ export const MainMetrics = ({
             selectedKeys={selected}
             selectionMode="single"
             disabledKeys={selected}
-            className="w-full max-w-40"
+            className="w-full max-w-40 text-default-700"
             onSelectionChange={setSelected as (keys: SharedSelection) => void}
           >
             {(item) => (

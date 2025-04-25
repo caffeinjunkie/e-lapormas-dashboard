@@ -23,6 +23,18 @@ export const fetchAllAdmins = async () => {
   return { data, count };
 };
 
+export const fetchAdmins = async (offset: number = 0, limit: number = 5) => {
+  const { data, error } = await supabase
+    .from("admins")
+    .select("*")
+    .is("is_hidden", false)
+    .range(offset, offset + limit - 1)
+    .order("rating", { ascending: false });
+
+  if (error) throw error;
+  return data;
+};
+
 export const checkIsUserAlreadyInvited = async (email: string) => {
   const { count } = await supabase
     .from("admins")

@@ -101,10 +101,7 @@ export default function LoginPage() {
         <div className="w-full flex justify-center items-center gap-1">
           <Logo fill="black" />
         </div>
-        <Card
-          isBlurred
-          className="max-w-md w-full min-w-[320px]"
-        >
+        <Card isBlurred className="max-w-md w-full min-w-[320px]">
           <CardBody
             className="overflow-hidden transition-max-h transition-min-h duration-500 linear"
             style={{
@@ -138,6 +135,9 @@ export default function LoginPage() {
                 selectedKey={tab}
                 variant="underlined"
                 className="font-semibold"
+                classNames={{
+                  tabContent: "data-[active=true]: text-default-700",
+                }}
                 onSelectionChange={(key) => handleTabChange(key as string)}
               >
                 <Tab key="login" title={t("login-tab-title")}>
@@ -151,7 +151,7 @@ export default function LoginPage() {
                   />
                 </Tab>
                 <Tab key="register" title={t("register-tab-title")}>
-                  <p className="text-center text-sm text-default-500 py-4">
+                  <p className="text-center text-sm text-current py-4">
                     {t("register-tab-invite-only-message")}
                   </p>
                 </Tab>
