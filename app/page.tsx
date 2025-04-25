@@ -140,7 +140,7 @@ export default function DashboardPage() {
       key={admin.user_id}
       className={clsx(
         "flex items-center justify-between gap-8 rounded-2xl px-2",
-        index === 0 && "bg-danger text-white py-2",
+        index === 0 && "bg-success text-white py-2",
       )}
     >
       <div className="text-left flex flex-row gap-1 items-center">
@@ -183,11 +183,11 @@ export default function DashboardPage() {
   return (
     <Layout
       title={t("title")}
+      headerComponent={<p className="text-sm text-gray-500">{t("subtitle")}</p>}
       classNames={{
         body: "flex flex-col gap-4 px-4 sm:px-6 pb-6",
       }}
     >
-      <p className="text-sm text-gray-500 pb-2">{t("subtitle")}</p>
       <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
         <StatCard
           classNames={{

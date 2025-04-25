@@ -213,7 +213,8 @@
     "development-metric-12-months": "12 Bulan"
   },
   "AnnouncementsPage": {
-    "title": "Pengumuman"
+    "title": "Pengumuman",
+    "subtitle": "Buat pengumuman yang dapat dilihat oleh pengguna melalui halaman ini."
   },
   "AdminManagementPage": {
     "title": "Manajemen Admin",
