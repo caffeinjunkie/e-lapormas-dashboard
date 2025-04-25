@@ -1,28 +1,33 @@
-# Next.js & HeroUI Template
+### Overview!
 
-This is a template for creating applications using Next.js 14 (app directory) and HeroUI (v2).
+LaporID Dashboard Web App is task management web app to compliment LaporID Citizen Reporting Platform, in order to give access to public officials as admins to manage and solve incidents in a timely manner. The Dashboard provides admins with data visualization in order to give better insigth and prioritize which problems to tackle.
+### Features
 
-[Try it on CodeSandbox](https://githubbox.com/heroui-inc/heroui/next-app-template)
+1. Data Visualizatoin
+
+   - Visualize general statistics of incoming and finished reports.
+   - Performance metrics comparison displayed as 3, 6 and months line chart.
+   - Show which location has most problems and which category appeared most.
+
+2. Task Management
+   - Accept report, provide updates to reportee with image, finish report.
+   - Extensive filtering, admins can filter by date range, priorities, categories and which task is taken by an Admin.
+   - In-depth report including description, follow-up questions and location.
+
+3. Admin Management
+   - Manage admins as Super Admins, including inviting a new admin to join and deleting admins from the system.
 
 ## Technologies Used
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
 - [HeroUI v2](https://heroui.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
 
-## How to Use
+## How to Run the Project
 
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/heroui-inc/next-app-template
-```
+After cloning the project, install the dependencies then run the development server.
 
 ### Install dependencies
 
@@ -37,16 +42,6 @@ npm install
 ```bash
 npm run dev
 ```
-
-### Setup pnpm (optional)
-
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
-
-```bash
-public-hoist-pattern[]=*@heroui/*
-```
-
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
 
 ## License
 
