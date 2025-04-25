@@ -45,7 +45,8 @@
     "create-password-unverified-identity-error-message": "Silakan verifikasi email Anda."
   },
   "DashboardPage": {
-    "title": "Ikhtisar"
+    "title": "Ikhtisar",
+    "admin-leaderboards-title": "Leaderboards"
   },
   "ReportsPage": {
     "title": "Laporan",
