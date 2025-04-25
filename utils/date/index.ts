@@ -3,8 +3,9 @@ import { useFormatter } from "next-intl";
 const formatLocaleDate = (
   date: string,
   format: "short" | "long" | "long-relative" = "short",
+  customFormatter?: any,
 ) => {
-  const formatter = useFormatter();
+  const formatter = customFormatter ? customFormatter : useFormatter();
   const dateTime = new Date(date);
 
   if (format === "long") {

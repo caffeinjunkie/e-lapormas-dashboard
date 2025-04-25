@@ -46,12 +46,18 @@
   },
   "DashboardPage": {
     "title": "Ikhtisar",
+    "subtitle": "Kumpulan informasi sekilas, untuk data lebih lengkap, masuk ke halaman masing-masing informasi melalui tombol \"Selengkapnya >\"",
     "admin-leaderboards-title": "Leaderboards",
     "main-metrics-title": "Indikator Kunci",
+    "latest-report-title": "Laporan Terbaru",
+    "development-metrics-title": "Perkembangan Laporan",
     "error-message": "Terjadi kesalahan. Mohon coba sesaat lagi",
     "new-tab-text": "Laporan Baru",
     "completed-tab-text": "Laporan Selesai",
-    "user-satisfactions-tab-text": "Kepuasan Masyarakat"
+    "user-satisfactions-tab-text": "Kepuasan Masyarakat",
+    "more-link-text": "Selengkapnya >",
+    "development-metric-new-tasks": "Laporan Baru",
+    "development-metric-finished-tasks": "Laporan Selesai"
   },
   "ReportsPage": {
     "title": "Laporan",
@@ -151,8 +157,8 @@
   },
   "StatisticsPage": {
     "title": "Statistik",
-    "main-metric-title": "Pengetahuan Umum",
-    "main-metric-description": "Statistik pengetahuan laporan secara umum.",
+    "main-metric-title": "Indikator Kunci",
+    "main-metric-description": "Indikator kunci kinerja penyelesaian laporan.",
     "main-metric-average-text": "Rata-rata",
     "main-metric-new-header-text": "Laporan Masuk",
     "main-metric-completed-header-text": "Laporan Selesai",

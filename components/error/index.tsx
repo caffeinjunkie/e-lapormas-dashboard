@@ -25,7 +25,7 @@ export default function Error({
         className ? className : "absolute bottom-0 left-0 right-0 h-screen",
       )}
     >
-      <h2 className="text-center">{message}</h2>
+      <h2 className="text-center text-black">{message}</h2>
       <div className="flex flex-col px-10 gap-2">
         <Button
           onPress={onReset}

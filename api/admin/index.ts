@@ -24,7 +24,7 @@ export const fetchAllAdmins = async () => {
 };
 
 export const fetchAdmins = async (offset: number = 0, limit: number = 5) => {
-  const { data, error, count } = await supabase
+  const { data, error } = await supabase
     .from("admins")
     .select("*")
     .is("is_hidden", false)

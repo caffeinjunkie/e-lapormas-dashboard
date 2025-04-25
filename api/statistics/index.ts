@@ -35,7 +35,6 @@ export const fetchGeneralStatistics = async (
     .order("month_year", { ascending: order === "asc" })
     .range(offset, offset + limit - 1);
 
-  console.log(data, "tes");
   if (error) {
     throw error;
   }
