@@ -214,7 +214,8 @@
   },
   "AnnouncementsPage": {
     "title": "Pengumuman",
-    "subtitle": "Buat pengumuman yang dapat dilihat oleh pengguna melalui halaman ini."
+    "subtitle": "Buat pengumuman yang dapat dilihat oleh pengguna melalui halaman ini.",
+    "add-announcement": "Buat Pengumuman"
   },
   "AdminManagementPage": {
     "title": "Manajemen Admin",
