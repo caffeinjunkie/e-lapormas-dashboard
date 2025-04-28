@@ -4,7 +4,6 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
-import NextImage from "next/image";
 import { useState } from "react";
 import { useFormatter } from "use-intl";
 
@@ -14,9 +13,15 @@ import { formatLocaleDate } from "@/utils/date";
 
 interface AnnouncementCardProps {
   item: Announcement;
+  onDeletePress: (id: string) => void;
+  onEditPress: (id: string) => void;
 }
 
-export const AnnouncementCard = ({ item }: AnnouncementCardProps) => {
+export const AnnouncementCard = ({
+  item,
+  onDeletePress,
+  onEditPress,
+}: AnnouncementCardProps) => {
   const [imgError, setImgError] = useState(false);
   const formatter = useFormatter();
   const formattedPeriod = {
@@ -61,6 +66,7 @@ export const AnnouncementCard = ({ item }: AnnouncementCardProps) => {
               variant="ghost"
               color="primary"
               className="w-full border-none"
+              onPress={() => onEditPress(item.id)}
               size="lg"
               isIconOnly
               startContent={<PencilSquareIcon className="w-5 h-5" />}
@@ -69,6 +75,7 @@ export const AnnouncementCard = ({ item }: AnnouncementCardProps) => {
               radius="none"
               variant="ghost"
               className="w-full border-none"
+              onPress={() => onDeletePress(item.id)}
               color="danger"
               size="lg"
               isIconOnly

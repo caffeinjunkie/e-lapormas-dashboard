@@ -2,15 +2,32 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 import { AnnouncementCard } from "./announcement-card";
 import { announcements } from "./mock-data";
 
 import { Layout } from "@/components/layout";
+import { Modal } from "@/components/modal";
 import { subtitle } from "@/components/primitives";
 
 export default function AnnouncementsPage() {
   const t = useTranslations("AnnouncementsPage");
+  const [selectedAnnonouncement, setSelectedAnnouncement] = useState<
+    string | null
+  >(null);
+  const { modals, openModal, closeModal } = Modal.useMultipleModal();
+
+  const onEditPress = (id: string) => {
+    openModal("edit");
+    setSelectedAnnouncement(id);
+  };
+
+  const onDeletePress = (id: string) => {
+    openModal("delete");
+    setSelectedAnnouncement(id);
+  };
+
   return (
     <Layout
       title={t("title")}
@@ -45,7 +62,12 @@ export default function AnnouncementsPage() {
       }
     >
       {announcements.map((announcement) => (
-        <AnnouncementCard key={announcement.id} item={announcement} />
+        <AnnouncementCard
+          key={announcement.id}
+          item={announcement}
+          onEditPress={onEditPress}
+          onDeletePress={onDeletePress}
+        />
       ))}
     </Layout>
   );
