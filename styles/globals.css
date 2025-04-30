@@ -118,24 +118,9 @@ html {
   }
 }
 
-@keyframes bounce-reverse {
-  0% {
-    r: 10.5;
-  }
-  100% {
-    r: 0;
-  }
-}
-
 @keyframes opacity-anim {
   to {
     opacity: 1;
-  }
-}
-
-@keyframes revert-anim {
-  to {
-    transform: scale(0);
   }
 }
 
@@ -145,12 +130,6 @@ html {
   }
   to {
     fill: #ffffff;
-  }
-}
-
-@keyframes stroke-out-anim {
-  to {
-    stroke-width: 0;
   }
 }
 
