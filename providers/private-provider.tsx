@@ -1,10 +1,10 @@
 "use client";
 
 import { Modal, ModalContent } from "@heroui/modal";
-import { DotLottie, DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
+import { Logo } from "@/components/icons";
 import { Navbar } from "@/components/navbar";
 import { privatePaths } from "@/config/site";
 import { getCookie } from "@/utils/cookie";
@@ -38,7 +38,6 @@ export const usePrivate = () => {
 };
 
 export function PrivateProvider({ children, locale }: PrivateLayoutProps) {
-  const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
   const [shouldShowConfirmation, setShouldShowConfirmation] =
@@ -99,29 +98,13 @@ export function PrivateProvider({ children, locale }: PrivateLayoutProps) {
       document.cookie = "visited=true;path=/";
     }
 
-    function onComplete() {
-      setTimeout(() => {
-        onCloseModal();
-      }, 1500);
-    }
-
-    if (dotLottie) {
-      dotLottie.addEventListener("complete", onComplete);
-    }
-
-    return () => {
-      if (dotLottie) {
-        dotLottie.removeEventListener("complete", onComplete);
-      }
-    };
-  }, [dotLottie]);
+    setTimeout(() => {
+      onCloseModal();
+    }, 5000);
+  }, []);
 
   const onCloseModal = () => {
     setIsModalOpen(false);
-  };
-
-  const dotLottieRefCallback = (dotLottie: DotLottie | null) => {
-    setDotLottie(dotLottie);
   };
 
   return (
@@ -146,13 +129,8 @@ export function PrivateProvider({ children, locale }: PrivateLayoutProps) {
             onClose={onCloseModal}
             className="bg-transparent shadow-none"
           >
-            <ModalContent>
-              <DotLottieReact
-                autoplay={isModalOpen}
-                className="d-lg-block d-md-block d-sm-none d-none"
-                src="https://lottie.host/9a57dcf3-865b-4c05-9135-93252148017c/cQDH4AffBr.lottie"
-                dotLottieRefCallback={dotLottieRefCallback}
-              />
+            <ModalContent className="flex w-full justify-center items-center">
+              <Logo animated={true} width={320} height={128} />
             </ModalContent>
           </Modal>
         </>
