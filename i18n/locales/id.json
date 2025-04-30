@@ -57,7 +57,8 @@
     "user-satisfactions-tab-text": "Kepuasan Masyarakat",
     "more-link-text": "Selengkapnya >",
     "development-metric-new-tasks": "Laporan Baru",
-    "development-metric-finished-tasks": "Laporan Selesai"
+    "development-metric-finished-tasks": "Laporan Selesai",
+    "visit-link-text": "Lihat Detail"
   },
   "ReportsPage": {
     "title": "Laporan",
@@ -215,7 +216,13 @@
   "AnnouncementsPage": {
     "title": "Pengumuman",
     "subtitle": "Buat pengumuman yang dapat dilihat oleh pengguna melalui halaman ini.",
-    "add-announcement": "Buat Pengumuman"
+    "add-announcement-button-text": "Buat Pengumuman",
+    "add-announcement-title": "Buat Pengumuman",
+    "edit-announcement-title": "Ubah Pengumuman",
+    "delete-announcement-title": "Hapus Pengumuman",
+    "delete-announcement-confirmation-text": "Apakah Anda yakin ingin menghapus pengumuman ini?",
+    "delete-announcement-cancel-button-text": "Batal",
+    "delete-announcement-confirm-button-text": "Hapus"
   },
   "AdminManagementPage": {
     "title": "Manajemen Admin",

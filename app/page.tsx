@@ -1,6 +1,10 @@
 "use client";
 
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import clsx from "clsx";
 import { useFormatter, useTranslations } from "next-intl";
@@ -24,6 +28,7 @@ import {
 import { Layout } from "@/components/layout";
 import { title } from "@/components/primitives";
 import { StatCard } from "@/components/stat-card";
+import { Report } from "@/types/report.types";
 import { MainMetrics } from "@/types/statistics.types";
 import { AdminData } from "@/types/user.types";
 import { formatLocaleDate, formatMonthYearDate } from "@/utils/date";
@@ -139,7 +144,7 @@ export default function DashboardPage() {
     <div
       key={admin.user_id}
       className={clsx(
-        "flex items-center justify-between gap-8 rounded-2xl px-2",
+        "flex items-center justify-between gap-8 rounded-xl px-2",
         index === 0 && "bg-success text-white py-2",
       )}
     >
@@ -179,6 +184,52 @@ export default function DashboardPage() {
       )}
     </div>
   );
+
+  const renderReportItem = (report: Report, index: number) => {
+    const isOdd = (index + 1) % 2 !== 0;
+    return (
+      <div
+        key={index}
+        className={clsx(
+          "flex flex-col w-full py-1 px-2 rounded-xl",
+          isOdd ? "bg-default-100 py-2" : "",
+        )}
+      >
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1">
+          <div className="flex flex-col flex-1 max-w-full">
+            <Link
+              href={`/reports/${report.tracking_id}`}
+              className="text-xs text-primary"
+            >
+              #{report.tracking_id}
+            </Link>
+            <p className="line-clamp-1 font-semibold text-sm">{report.title}</p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-fit items-start sm:items-center justify-between">
+            <p className="text-xs sm:text-sm text-gray-500">
+              {formatLocaleDate(
+                report.created_at,
+                "long-relative",
+                dateFormatter,
+              )}
+            </p>
+            <Button
+              variant="light"
+              color="primary"
+              className="w-full sm:w-fit"
+              isIconOnly
+              as={Link}
+              href={`/reports/${report.tracking_id}`}
+              size="sm"
+              endContent={<ArrowRightIcon className="size-4" strokeWidth="2" />}
+            >
+              <p className="visible sm:hidden">{t("visit-link-text")}</p>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Layout
@@ -307,30 +358,9 @@ export default function DashboardPage() {
           )}
           {reportsData && !reportsError && (
             <div className="flex flex-col h-full w-full gap-2 py-2">
-              {reportsData?.reports?.map((report, index) => (
-                <div key={index} className="flex flex-col w-full">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1">
-                    <div className="flex flex-col flex-1 max-w-full">
-                      <Link
-                        href={`/reports/${report.tracking_id}`}
-                        className="text-xs text-primary"
-                      >
-                        #{report.tracking_id}
-                      </Link>
-                      <p className="line-clamp-1 font-semibold text-sm">
-                        {report.title}
-                      </p>
-                    </div>
-                    <p className="text-xs sm:text-sm text-gray-500">
-                      {formatLocaleDate(
-                        report.created_at,
-                        "long-relative",
-                        dateFormatter,
-                      )}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              {reportsData?.reports?.map((report, index) =>
+                renderReportItem(report, index),
+              )}
             </div>
           )}
         </StatCard>
