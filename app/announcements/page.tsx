@@ -1,5 +1,8 @@
+"use client";
+
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
+import { ModalBody, ModalHeader } from "@heroui/modal";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -8,7 +11,7 @@ import { AnnouncementCard } from "./announcement-card";
 import { announcements } from "./mock-data";
 
 import { Layout } from "@/components/layout";
-import { Modal } from "@/components/modal";
+import { Modal, ModalButtonProps } from "@/components/modal";
 import { subtitle } from "@/components/primitives";
 
 export default function AnnouncementsPage() {
@@ -28,6 +31,44 @@ export default function AnnouncementsPage() {
     setSelectedAnnouncement(id);
   };
 
+  const onDeleteConfirm = () => {
+    closeModal();
+    onDeletePress(selectedAnnonouncement!);
+  };
+
+  const modalConfig = {
+    add: {
+      title: t("add-announcement-title"),
+      content: <></>,
+      buttons: [],
+    },
+    edit: {
+      title: t("edit-announcement-title"),
+      content: <></>,
+      buttons: [],
+    },
+    delete: {
+      title: t("delete-announcement-title"),
+      content: t("delete-announcement-confirmation-text"),
+      buttons: [
+        {
+          color: "danger",
+          variant: "light",
+          onPress: onDeleteConfirm,
+          title: t("delete-announcement-confirm-button-text"),
+        },
+        {
+          color: "primary",
+          variant: "solid",
+          onPress: () => closeModal(),
+          title: t("delete-announcement-cancel-button-text"),
+        },
+      ],
+    },
+  };
+
+  console.log(modals, "tes");
+
   return (
     <Layout
       title={t("title")}
@@ -44,11 +85,12 @@ export default function AnnouncementsPage() {
           </p>
           <Button
             color="warning"
+            onPress={() => openModal("add")}
             startContent={
-              <div className="border-2 rounded-lg">
+              <div className="border-1.5 border-white rounded-md">
                 <PlusIcon
                   className="w-4 h-4"
-                  strokeWidth={3}
+                  strokeWidth="2.2"
                   strokeLinejoin="round"
                   strokeLinecap="round"
                 />
@@ -56,7 +98,7 @@ export default function AnnouncementsPage() {
             }
             className="text-white w-full md:w-fit"
           >
-            {t("add-announcement")}
+            {t("add-announcement-button-text")}
           </Button>
         </div>
       }
@@ -69,6 +111,36 @@ export default function AnnouncementsPage() {
           onDeletePress={onDeletePress}
         />
       ))}
+      <Modal
+        isOpen={modals.edit || modals.delete || modals.add}
+        onClose={() => closeModal()}
+        buttons={
+          modalConfig[
+            Object.keys(modals).find(
+              (modal) => modals[modal] === true,
+            ) as keyof typeof modalConfig
+          ]?.buttons as ModalButtonProps[]
+        }
+      >
+        <ModalHeader>
+          {
+            modalConfig[
+              Object.keys(modals).find(
+                (modal) => modals[modal] === true,
+              ) as keyof typeof modalConfig
+            ]?.title
+          }
+        </ModalHeader>
+        <ModalBody>
+          {
+            modalConfig[
+              Object.keys(modals).find(
+                (modal) => modals[modal] === true,
+              ) as keyof typeof modalConfig
+            ]?.content
+          }
+        </ModalBody>
+      </Modal>
     </Layout>
   );
 }
