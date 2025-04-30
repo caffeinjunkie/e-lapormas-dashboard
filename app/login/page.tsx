@@ -99,7 +99,7 @@ export default function LoginPage() {
         className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen"
       >
         <div className="w-full flex justify-center items-center gap-1">
-          <Logo fill="black" />
+          <Logo width={200} height={72} animated />
         </div>
         <Card isBlurred className="max-w-md w-full min-w-[320px]">
           <CardBody
