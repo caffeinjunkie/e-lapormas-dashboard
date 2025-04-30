@@ -37,7 +37,7 @@ export const UserAva = ({
         src={imageSrc}
         showFallback
         fallback={
-          displayName !== "-"
+          displayName && displayName !== "_"
             ? displayName.slice(0, 3)
             : description.slice(0, 1).toUpperCase() + description.slice(1, 3)
         }
