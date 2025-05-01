@@ -69,9 +69,10 @@ export default function AnnouncementsPage() {
 
   const onConfirmDelete = async () => {
     closeModal();
-    const imagePath = announcements?.data?.find(
-      (item) => item.id === selectedAnnonouncement,
-    )?.url;
+    const imagePath = announcements?.data
+      ?.find((item) => item.id === selectedAnnonouncement)
+      ?.url.split("announcements/")[1]
+      .split("?c")[0];
 
     await deleteAnnouncementById(
       selectedAnnonouncement!,

@@ -21,14 +21,15 @@ export const createNewAnnouncement = async (
     setLoading(true);
 
     let url = "";
+    const filename = `${data.title}.${images[0].type.split("/")[1]}`;
     if (images.length > 0) {
       const randomNumber = Math.random() * 10;
       await uploadImage({
         file: images[0],
-        path: data.title,
+        path: filename,
         bucket: "announcements",
       });
-      url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/announcements/${data.title}?c=${randomNumber}`;
+      url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/announcements/${filename}?c=${randomNumber}`;
     }
 
     const requestBody = {
@@ -64,14 +65,15 @@ export const editAnnouncementById = async (
     const { startDate, endDate, images, ...restOfData } = updatedData;
 
     let url = "";
+    const filename = `${updatedData.title}.${images[0].type.split("/")[1]}`;
     if (images.length > 0) {
       const randomNumber = Math.random() * 10;
       await uploadImage({
         file: images[0],
-        path: updatedData.title,
+        path: filename,
         bucket: "announcements",
       });
-      url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/announcements/${updatedData.title}?c=${randomNumber}`;
+      url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/announcements/${filename}?c=${randomNumber}`;
     }
 
     const requestBody = {

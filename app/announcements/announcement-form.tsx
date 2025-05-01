@@ -107,7 +107,9 @@ export const AnnouncementForm = ({
           <Input
             label={t("announcement-form-title-input-label")}
             type="text"
-            isDisabled={isLoadLoading || isSubmitLoading}
+            isDisabled={
+              isLoadLoading || isSubmitLoading || id === "edit-announcement"
+            }
             name="title"
             isRequired
             maxLength={100}

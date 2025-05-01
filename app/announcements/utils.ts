@@ -22,7 +22,9 @@ export const transformAnnouncementToDefaultValues = async (
 };
 
 function getFileNameAndType(url: string) {
-  const filename = decodeURIComponent(url.split("photos//")[1]).toString();
+  const filename = decodeURIComponent(url.split("announcements/")[1])
+    .split("?c")[0]
+    .toString();
   const fileExtension = filename?.split(".").pop() || "jpg".toLowerCase();
   const mimeType = `image/${fileExtension}`;
   return { filename, mimeType };
