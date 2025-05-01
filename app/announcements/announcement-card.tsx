@@ -4,12 +4,12 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useFormatter } from "use-intl";
 
 import { BrokenImageIcon } from "@/components/icons";
 import { Announcement } from "@/types/announcement.types";
-import { formatLocaleDate } from "@/utils/date";
+import { formatNormalDate } from "@/utils/date";
 
 interface AnnouncementCardProps {
   item: Announcement;
@@ -22,12 +22,13 @@ export const AnnouncementCard = ({
   onDeletePress,
   onEditPress,
 }: AnnouncementCardProps) => {
+  const t = useTranslations("AnnouncementsPage");
   const [imgError, setImgError] = useState(false);
-  const formatter = useFormatter();
   const formattedPeriod = {
-    startDate: formatLocaleDate(item.start_date, "short", formatter),
-    endDate: formatLocaleDate(item.end_date, "short", formatter),
+    startDate: formatNormalDate(item.start_date),
+    endDate: formatNormalDate(item.end_date),
   };
+
   return (
     <Card shadow="sm">
       <CardBody className="overflow-visible p-0">
@@ -51,13 +52,13 @@ export const AnnouncementCard = ({
         )}
       </CardBody>
       <CardFooter className="flex flex-col items-start justify-between h-full p-0">
-        <div className="flex flex-col items-start py-2 px-3">
+        <div className="flex flex-col items-start py-2 px-4">
           <b>{item.title}</b>
           <p className="text-sm">{item.description}</p>
         </div>
         <div className="flex flex-col items-center gap-1 w-full justify-center">
           <p className="text-default-400 text-sm font-semibold text-center">
-            Masa berlaku
+            {t("period-card-text")}
           </p>
           <p className="text-sm">{`${formattedPeriod.startDate} - ${formattedPeriod.endDate}`}</p>
           <div className="w-full flex flex-row">
@@ -65,7 +66,7 @@ export const AnnouncementCard = ({
               radius="none"
               variant="ghost"
               color="primary"
-              className="w-full border-none"
+              className="w-full border-none outline-none"
               onPress={() => onEditPress(item.id)}
               size="lg"
               isIconOnly
@@ -74,7 +75,7 @@ export const AnnouncementCard = ({
             <Button
               radius="none"
               variant="ghost"
-              className="w-full border-none"
+              className="w-full border-none outline-none"
               onPress={() => onDeletePress(item.id)}
               color="danger"
               size="lg"

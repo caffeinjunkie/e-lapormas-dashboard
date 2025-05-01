@@ -1,5 +1,15 @@
 import { useFormatter } from "next-intl";
 
+const formatNormalDate = (date: string) => {
+  const formatter = useFormatter();
+  const dateTime = new Date(date);
+  return formatter.dateTime(dateTime, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
 const formatLocaleDate = (
   date: string,
   format: "short" | "long" | "long-relative" = "short",
@@ -69,4 +79,9 @@ const getDiffInDays = (date: string) => {
   );
 };
 
-export { formatLocaleDate, getDiffInDays, formatMonthYearDate };
+export {
+  formatLocaleDate,
+  getDiffInDays,
+  formatMonthYearDate,
+  formatNormalDate,
+};

@@ -83,6 +83,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      announcements: {
+        Row: {
+          id: string;
+          title: string;
+          description: string;
+          url: string;
+          created_at: string;
+          start_date: string;
+          end_date: string;
+        };
+        Insert: {
+          id: string;
+          title: string;
+          description: string;
+          url: string;
+          created_at: string;
+          start_date: string;
+          end_date: string;
+        };
+        Update: {
+          id: string;
+          title: string;
+          description: string;
+          url: string;
+          created_at: string;
+          start_date: string;
+          end_date: string;
+        };
+        Relationships: [];
+      };
       general_statistics: {
         Row: {
           month_year: string;

@@ -222,7 +222,22 @@
     "delete-announcement-title": "Hapus Pengumuman",
     "delete-announcement-confirmation-text": "Apakah Anda yakin ingin menghapus pengumuman ini?",
     "delete-announcement-cancel-button-text": "Batal",
-    "delete-announcement-confirm-button-text": "Hapus"
+    "delete-announcement-confirm-button-text": "Hapus",
+    "no-announcements-text": "Belum ada pengumuman. Klik Buat Pengumuman untuk membuat pengumuman baru.",
+    "search-placeholder": "Cari pengumuman",
+    "announcement-form-title-input-label": "Judul Pengumuman",
+    "announcement-form-description-input-label": "Deskripsi Pengumuman",
+    "announcement-form-period-input-label": "Periode",
+    "required-title-error-message": "Judul pengumuman harus diisi",
+    "required-description-error-message": "Deskripsi pengumuman harus diisi",
+    "required-period-error-message": "Periode pengumuman harus diisi",
+    "annoucement-form-cancel-button-text": "Batal",
+    "annoucement-form-submit-button-text": "Simpan",
+    "announcement-card-title": "Judul Pengumuman",
+    "period-card-text": "Periode",
+    "required-image-error-message": "Anda harus mengunggah gambar pengumuman",
+    "error-message": "Terjadi kesalahan. Mohon coba sesaat lagi.",
+    "upload-profile-picture-disclaimer-label": "Pilih foto dengan ukuran maksimal 2MB. Gunakan foto ukuran persegi panjang horizontal untuk hasil lebih maksimal."
   },
   "AdminManagementPage": {
     "title": "Manajemen Admin",

@@ -1,6 +1,6 @@
 import { Announcement } from "@/types/announcement.types";
 
-export const announcements: Announcement[] = [
+export const mockAnnouncements: Announcement[] = [
   {
     id: "1",
     title: "Summer Sale 2023",
