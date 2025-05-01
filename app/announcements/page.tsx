@@ -9,11 +9,16 @@ import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
 import useSWR from "swr";
+import { useDebouncedCallback } from "use-debounce";
 
 import { swrConfig } from "../config";
 import { AnnouncementCard } from "./announcement-card";
 import { AnnouncementForm } from "./announcement-form";
-import { createNewAnnouncement, deleteAnnouncementById } from "./handlers";
+import {
+  createNewAnnouncement,
+  deleteAnnouncementById,
+  editAnnouncementById,
+} from "./handlers";
 
 import { fetchAnnouncements } from "@/api/announcements";
 import Error from "@/components/error";
@@ -21,28 +26,36 @@ import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
 import { subtitle } from "@/components/primitives";
 import { SearchBar } from "@/components/search-bar";
-import { Announcement } from "@/types/announcement.types";
 import { buildFormData } from "@/utils/form";
 
 export default function AnnouncementsPage() {
   const t = useTranslations("AnnouncementsPage");
+
   const [selectedAnnonouncement, setSelectedAnnouncement] = useState<
     string | null
   >(null);
   const { modals, openModal, closeModal } = Modal.useMultipleModal();
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const limit = 8;
+  const [page, setPage] = useState(1);
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    setSearchValue(value);
+  }, 500);
   const {
     data: announcements,
     error: announcementsError,
     isLoading: isAnnouncementsLoading,
     mutate: mutateAnnouncements,
   } = useSWR(
-    ["announcements-dashboard"],
-    () => fetchAnnouncements(page - 1, limit),
+    ["announcements-dashboard", page, searchValue],
+    () => fetchAnnouncements(page - 1, limit, searchValue),
     swrConfig,
   );
-  const [page, setPage] = useState(1);
+
+  const onSearchChange = (value: string) => {
+    debouncedSearch(value);
+  };
 
   const onEditPress = (id: string) => {
     openModal("edit");
@@ -67,6 +80,7 @@ export default function AnnouncementsPage() {
       closeModal,
     );
     await mutateAnnouncements();
+    setSelectedAnnouncement(null);
   };
 
   const onSubmitCreateAnnouncement = async (
@@ -90,9 +104,27 @@ export default function AnnouncementsPage() {
     await mutateAnnouncements();
   };
 
-  const onSubmitEditAnnouncement = () => {
-    closeModal();
-    onEditPress(selectedAnnonouncement!);
+  const onSubmitEditAnnouncement = async (
+    e: FormEvent<HTMLFormElement>,
+    startDate: string,
+    endDate: string,
+    files: File[],
+  ) => {
+    e.preventDefault();
+
+    const formData = buildFormData(e);
+
+    const data = {
+      id: selectedAnnonouncement!,
+      startDate,
+      endDate,
+      images: files,
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+    };
+    await editAnnouncementById(data, setIsSubmitLoading, closeModal);
+    await mutateAnnouncements();
+    setSelectedAnnouncement(null);
   };
 
   const modalConfig = {
@@ -116,7 +148,7 @@ export default function AnnouncementsPage() {
           id="edit-announcement"
           isSubmitLoading={isSubmitLoading}
           onCancel={() => closeModal()}
-          onSubmitAnnouncement={() => {}}
+          onSubmitAnnouncement={onSubmitEditAnnouncement}
           selectedAnnouncement={announcements?.data?.find(
             (item) => item.id === selectedAnnonouncement,
           )}
@@ -166,8 +198,8 @@ export default function AnnouncementsPage() {
             <SearchBar
               className="w-full flex-1 lg:max-w-[50%]"
               placeholder={t("search-placeholder")}
-              onClear={() => {}}
-              onValueChange={() => {}}
+              onClear={() => setSearchValue("")}
+              onValueChange={(value) => onSearchChange(value)}
             />
             <Button
               color="warning"

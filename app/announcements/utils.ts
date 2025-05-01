@@ -14,8 +14,8 @@ export const transformAnnouncementToDefaultValues = async (
     title: item.title,
     description: item.description,
     period: {
-      start: parseDate(item.start_date),
-      end: parseDate(item.end_date),
+      start: item.start_date.split("T")[0],
+      end: item.end_date.split("T")[0],
     },
     images: image ? [image] : [],
   };

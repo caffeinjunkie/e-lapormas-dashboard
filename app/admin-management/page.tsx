@@ -57,7 +57,6 @@ export default function AdminManagementPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [deletedAdmin, setDeletedAdmin] = useState<AdminData | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  console.log(admins, "tes");
 
   const { modals, openModal, closeModal } = Modal.useMultipleModal();
   const layoutRef = useRef<HTMLDivElement>(null);

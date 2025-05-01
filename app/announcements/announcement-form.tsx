@@ -4,7 +4,11 @@ import { DateRangePicker } from "@heroui/date-picker";
 import { Form, FormProps } from "@heroui/form";
 import { Input, Textarea } from "@heroui/input";
 import { Skeleton } from "@heroui/skeleton";
-import { CalendarDateTime, ZonedDateTime } from "@internationalized/date";
+import {
+  CalendarDateTime,
+  ZonedDateTime,
+  parseDate,
+} from "@internationalized/date";
 import { useTranslations } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -41,19 +45,15 @@ export const AnnouncementForm = ({
   onCancel,
 }: AnnouncementFormProps) => {
   const t = useTranslations("AnnouncementsPage");
-  const [dateRange, setDateRange] = useState<RangeValue<
-    CalendarDate | CalendarDateTime | ZonedDateTime
-  > | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [defaultValues, setDefaultValues] = useState<DefaultValues | null>(
     null,
   );
+  const [dateRange, setDateRange] = useState<RangeValue<
+    CalendarDate | CalendarDateTime | ZonedDateTime
+  > | null>(null);
   const [filesError, setFilesError] = useState<string | null>(null);
   const [isLoadLoading, setIsLoadLoading] = useState(false);
-
-  useEffect(() => {
-    console.log("selectedAnnouncement", dateRange);
-  }, [dateRange]);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -75,7 +75,10 @@ export const AnnouncementForm = ({
           const transformedAnnouncement =
             await transformAnnouncementToDefaultValues(selectedAnnouncement);
           setDefaultValues(transformedAnnouncement as unknown as DefaultValues);
-          console.log("transformedAnnouncement", transformedAnnouncement);
+          setDateRange({
+            start: parseDate(transformedAnnouncement.period.start),
+            end: parseDate(transformedAnnouncement.period.end),
+          });
         } catch (error) {
           console.error("Error transforming announcement:", error);
         } finally {
@@ -108,7 +111,7 @@ export const AnnouncementForm = ({
             isRequired
             maxLength={100}
             validate={(value) => validateIsRequired(t, value, "title")}
-            value={defaultValues?.title}
+            defaultValue={selectedAnnouncement?.title}
           />
         </Skeleton>
         <Skeleton className="w-full rounded-xl" isLoaded={!isLoadLoading}>
@@ -121,7 +124,7 @@ export const AnnouncementForm = ({
             maxRows={3}
             maxLength={250}
             validate={(value) => validateIsRequired(t, value, "description")}
-            value={defaultValues?.description}
+            defaultValue={selectedAnnouncement?.description}
             classNames={{
               inputWrapper: "flex-grow h-fit overflow-hidden",
               innerWrapper: "flex flex-col items-end pb-2",
@@ -134,7 +137,6 @@ export const AnnouncementForm = ({
             pageBehavior="single"
             aria-label="Announcement Period"
             firstDayOfWeek="mon"
-            defaultValue={defaultValues?.period}
             value={dateRange}
             isDisabled={isLoadLoading || isSubmitLoading}
             onChange={setDateRange}

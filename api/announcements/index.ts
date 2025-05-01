@@ -3,11 +3,13 @@ import supabase from "@/utils/supabase-db";
 export const fetchAnnouncements = async (
   offset: number = 0,
   limit: number = 8,
+  searchValue: string = "",
 ) => {
   const { data, error, count } = await supabase
     .from("announcements")
     .select("*", { count: "exact" })
     .range(offset, offset + limit - 1)
+    .or(`title.ilike.%${searchValue}%, description.ilike.%${searchValue}%`)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
