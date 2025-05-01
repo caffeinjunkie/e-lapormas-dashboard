@@ -72,6 +72,7 @@ export const Activities = ({
 
   const onSelectFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileError(null);
+    const imageFormats = ["jpg", "jpeg", "png", "heic", "heif"];
     const selectedFiles = Array.from(e.target.files || []);
     if (selectedFiles.length > 1) {
       return;
@@ -79,7 +80,7 @@ export const Activities = ({
     if (selectedFiles[0].size > 1000000) {
       setFileError(t("activity-file-size-error-message"));
     }
-    if (!selectedFiles[0].type.includes("image")) {
+    if (!new RegExp(imageFormats.join("|")).test(selectedFiles[0].type)) {
       setFileError(t("activity-file-type-error-message"));
     }
     setFiles(selectedFiles);

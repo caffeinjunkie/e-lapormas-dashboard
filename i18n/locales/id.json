@@ -143,7 +143,7 @@
     "cancel-button-text": "Batalkan",
     "confirm-button-text": "Ya, selesaikan",
     "activity-file-size-error-message": "Ukuran file tidak boleh melebihi 1MB.",
-    "activity-file-type-error-message": "Hanya file gambar yang diterima.",
+    "activity-file-type-error-message": "Mohon hanya melampirkan file berformat JPG atau PNG.",
     "activity-mark-as-completed-text": "Tandai laporan selesai",
     "activity-message-error-message": "Catatan tidak boleh kosong",
     "activity-files-error-message": "Lampiran tidak boleh kosong",
