@@ -79,6 +79,7 @@ export const AnnouncementForm = ({
             start: parseDate(transformedAnnouncement.period.start),
             end: parseDate(transformedAnnouncement.period.end),
           });
+          setFiles(transformedAnnouncement.images);
         } catch (error) {
           console.error("Error transforming announcement:", error);
         } finally {
@@ -147,7 +148,7 @@ export const AnnouncementForm = ({
         </Skeleton>
         <Skeleton className="w-full rounded-xl" isLoaded={!isLoadLoading}>
           <FileUploader
-            files={defaultValues?.images || files}
+            files={files}
             imageType="announcement"
             isDisabled={isLoadLoading || isSubmitLoading}
             className="h-[225px]"
