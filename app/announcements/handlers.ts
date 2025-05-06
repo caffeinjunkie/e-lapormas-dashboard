@@ -14,7 +14,7 @@ export const createNewAnnouncement = async (
     images: File[];
     isAutoDelete: boolean;
     title: string;
-    description: string;
+    url: string;
   },
   setLoading: (value: boolean) => void,
   onClose: () => void,
@@ -24,7 +24,7 @@ export const createNewAnnouncement = async (
     setLoading(true);
     const id = await generateSecureCode();
 
-    let url = "";
+    let imgUrl = "";
     const filename = `${id}.${images[0].type.split("/")[1]}`;
     if (images.length > 0) {
       const randomNumber = Math.random() * 10;
@@ -33,14 +33,14 @@ export const createNewAnnouncement = async (
         path: filename,
         bucket: "announcements",
       });
-      url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/announcements/${filename}?c=${randomNumber}`;
+      imgUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/announcements/${filename}?c=${randomNumber}`;
     }
 
     const requestBody = {
       id,
       start_date: startDate,
       end_date: endDate,
-      url,
+      img: imgUrl,
       is_auto_delete: isAutoDelete,
       ...restOfData,
     };
@@ -58,9 +58,10 @@ export const editAnnouncementById = async (
   updatedData: {
     startDate: string;
     endDate: string;
+    title: string;
     images: File[];
     isAutoDelete: boolean;
-    description: string;
+    url: string;
   },
   oldData: Announcement,
   setLoading: (value: boolean) => void,
@@ -68,11 +69,12 @@ export const editAnnouncementById = async (
 ) => {
   try {
     setLoading(true);
-    const { startDate, endDate, images, description, isAutoDelete } = updatedData;
+    const { startDate, endDate, images, url, isAutoDelete, title } =
+      updatedData;
     let requestBody = {} as Record<string, unknown>;
     let isDataChanged = false;
 
-    let url = "";
+    let imgUrl = "";
     if (!images[0].name.includes(oldData.id)) {
       const filename = `${oldData.id}.${images[0].type.split("/")[1]}`;
       const randomNumber = Math.random() * 10;
@@ -81,8 +83,8 @@ export const editAnnouncementById = async (
         path: filename,
         bucket: "announcements",
       });
-      url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/announcements/${filename}?c=${randomNumber}`;
-      requestBody.url = url;
+      imgUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/announcements/${filename}?c=${randomNumber}`;
+      requestBody.img = imgUrl;
       isDataChanged = true;
     }
     if (startDate !== oldData.start_date) {
@@ -93,12 +95,16 @@ export const editAnnouncementById = async (
       requestBody.end_date = endDate;
       isDataChanged = true;
     }
-    if (description !== oldData.description) {
-      requestBody.description = description;
+    if (url !== oldData.url) {
+      requestBody.url = url;
       isDataChanged = true;
     }
     if (isAutoDelete !== oldData.is_auto_delete) {
       requestBody.is_auto_delete = isAutoDelete;
+      isDataChanged = true;
+    }
+    if (title !== oldData.title) {
+      requestBody.title = title;
       isDataChanged = true;
     }
 

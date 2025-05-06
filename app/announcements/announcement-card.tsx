@@ -4,8 +4,8 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { getLocalTimeZone, today } from "@internationalized/date";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { useState } from "react";
 
 import { BrokenImageIcon } from "@/components/icons";
@@ -33,6 +33,7 @@ export const AnnouncementCard = ({
   const startDate = new Date(item.start_date);
   startDate.setHours(0, 0, 0, 0);
   const isLocked = startDate < now;
+  const link = item.url && item.url.startsWith("http") ? item.url : "https://" + item.url;
 
   return (
     <Card shadow="sm">
@@ -40,7 +41,7 @@ export const AnnouncementCard = ({
         {!imgError && (
           <Image
             alt={item.title}
-            src={item.url}
+            src={item.img}
             radius="lg"
             width="100%"
             onError={() => setImgError(true)}
@@ -59,7 +60,16 @@ export const AnnouncementCard = ({
       <CardFooter className="flex flex-col items-start justify-between h-full p-0">
         <div className="flex flex-col items-start py-2 px-4">
           <b>{item.title}</b>
-          <p className="text-sm">{item.description}</p>
+          {item.url && (
+            <Link
+              href={link}
+              target="_blank"
+              className="text-sm text-primary"
+              rel="noopener noreferrer"
+            >
+              {item.url}
+            </Link>
+          )}
         </div>
         <div className="flex flex-col items-center gap-1 w-full justify-center">
           <p className="text-default-400 text-sm font-semibold text-center">

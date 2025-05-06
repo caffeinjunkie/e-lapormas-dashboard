@@ -9,7 +9,7 @@ export const fetchAnnouncements = async (
     .from("announcements")
     .select("*", { count: "exact" })
     .range(offset, offset + limit - 1)
-    .or(`title.ilike.%${searchValue}%, description.ilike.%${searchValue}%`)
+    .or(`title.ilike.%${searchValue}%`)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
