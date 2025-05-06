@@ -237,7 +237,8 @@
     "period-card-text": "Periode",
     "required-image-error-message": "Anda harus mengunggah gambar pengumuman",
     "error-message": "Terjadi kesalahan. Mohon coba sesaat lagi.",
-    "upload-profile-picture-disclaimer-label": "Pilih foto dengan ukuran maksimal 2MB. Gunakan foto ukuran persegi panjang horizontal untuk hasil lebih maksimal."
+    "upload-profile-picture-disclaimer-label": "Pilih foto dengan ukuran maksimal 2MB. Gunakan foto ukuran persegi panjang horizontal untuk hasil lebih maksimal.",
+    "announcement-form-auto-delete-switch-label": "Hapus otomatis setelah periode berakhir?"
   },
   "AdminManagementPage": {
     "title": "Manajemen Admin",

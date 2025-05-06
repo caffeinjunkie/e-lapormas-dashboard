@@ -98,6 +98,7 @@ export default function AnnouncementsPage() {
       startDate,
       endDate,
       images: files,
+      isAutoDelete: formData.get("is_auto_delete_switch") as unknown as boolean,
       title: formData.get("title") as string,
       description: formData.get("description") as string,
     };
@@ -115,15 +116,22 @@ export default function AnnouncementsPage() {
 
     const formData = buildFormData(e);
 
-    const data = {
-      id: selectedAnnonouncement!,
+    const updatedData = {
       startDate,
       endDate,
       images: files,
-      title: formData.get("title") as string,
+      isAutoDelete: formData.get("is_auto_delete_switch") as unknown as boolean,
       description: formData.get("description") as string,
     };
-    await editAnnouncementById(data, setIsSubmitLoading, closeModal);
+    const oldData = announcements?.data?.find(
+      (item) => item.id === selectedAnnonouncement,
+    );
+    await editAnnouncementById(
+      updatedData,
+      oldData,
+      setIsSubmitLoading,
+      closeModal,
+    );
     await mutateAnnouncements();
     setSelectedAnnouncement(null);
   };

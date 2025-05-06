@@ -1,6 +1,6 @@
 {
-  "name": "e-lapormas-dashboard",
-  "version": "0.7.0",
+  "name": "lapor-id-dashboard",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

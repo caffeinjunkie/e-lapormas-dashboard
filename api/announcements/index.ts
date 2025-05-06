@@ -54,11 +54,14 @@ export const deleteAnnouncement = async (id: string) => {
   return { data: deletedData };
 };
 
-export const updateAnnouncement = async (data: Record<string, unknown>) => {
+export const updateAnnouncement = async (
+  id: string,
+  data: Record<string, unknown>,
+) => {
   const { data: updatedData, error } = await supabase
     .from("announcements")
     .update(data)
-    .eq("id", data.id)
+    .eq("id", id)
     .single();
 
   if (error) throw error;

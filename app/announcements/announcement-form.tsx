@@ -4,10 +4,13 @@ import { DateRangePicker } from "@heroui/date-picker";
 import { Form, FormProps } from "@heroui/form";
 import { Input, Textarea } from "@heroui/input";
 import { Skeleton } from "@heroui/skeleton";
+import { Switch } from "@heroui/switch";
 import {
   CalendarDateTime,
   ZonedDateTime,
+  getLocalTimeZone,
   parseDate,
+  today,
 } from "@internationalized/date";
 import { useTranslations } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
@@ -46,9 +49,6 @@ export const AnnouncementForm = ({
 }: AnnouncementFormProps) => {
   const t = useTranslations("AnnouncementsPage");
   const [files, setFiles] = useState<File[]>([]);
-  const [defaultValues, setDefaultValues] = useState<DefaultValues | null>(
-    null,
-  );
   const [dateRange, setDateRange] = useState<RangeValue<
     CalendarDate | CalendarDateTime | ZonedDateTime
   > | null>(null);
@@ -74,7 +74,6 @@ export const AnnouncementForm = ({
         try {
           const transformedAnnouncement =
             await transformAnnouncementToDefaultValues(selectedAnnouncement);
-          setDefaultValues(transformedAnnouncement as unknown as DefaultValues);
           setDateRange({
             start: parseDate(transformedAnnouncement.period.start),
             end: parseDate(transformedAnnouncement.period.end),
@@ -141,6 +140,7 @@ export const AnnouncementForm = ({
             aria-label="Announcement Period"
             firstDayOfWeek="mon"
             value={dateRange}
+            minValue={today(getLocalTimeZone())}
             isDisabled={isLoadLoading || isSubmitLoading}
             onChange={setDateRange}
             errorMessage={t("required-period-error-message")}
@@ -148,10 +148,19 @@ export const AnnouncementForm = ({
             isRequired
           />
         </Skeleton>
-        <Skeleton className="w-full rounded-xl" isLoaded={!isLoadLoading}>
+        <Switch
+          isDisabled={isLoadLoading || isSubmitLoading}
+          name="is_auto_delete_switch"
+          size="sm"
+          defaultSelected={id === "edit-announcement" ? selectedAnnouncement?.is_auto_delete : true}
+        >
+          {t("announcement-form-auto-delete-switch-label")}
+        </Switch>
+        <div className="flex flex-col gap-2 items-center justify-center">
           <FileUploader
             files={files}
             imageType="announcement"
+            isLoading={isLoadLoading}
             isDisabled={isLoadLoading || isSubmitLoading}
             className="h-[225px]"
             isRequired
@@ -159,10 +168,9 @@ export const AnnouncementForm = ({
             legend={t("upload-profile-picture-disclaimer-label")}
           />
           {filesError && (
-            <p className="text-danger text-sm text-center pt-2">{filesError}</p>
+            <p className="text-danger text-xs text-center pt-1">{filesError}</p>
           )}
-        </Skeleton>
-
+        </div>
         <div className="flex gap-2 justify-center md:justify-end w-full py-2">
           <Button
             variant="light"
