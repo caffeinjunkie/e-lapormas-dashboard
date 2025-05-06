@@ -201,6 +201,7 @@ export const Activities = ({
                   </div>
                 }
                 label={t("activity-message-label")}
+                className="text-black"
                 classNames={{
                   inputWrapper: "flex-grow h-fit overflow-hidden",
                   innerWrapper: "flex flex-col items-end pb-2",

@@ -1,6 +1,7 @@
 ### Overview!
 
 LaporID Dashboard Web App is task management web app to compliment LaporID Citizen Reporting Platform, in order to give access to public officials as admins to manage and solve incidents in a timely manner. The Dashboard provides admins with data visualization in order to give better insigth and prioritize which problems to tackle.
+
 ### Features
 
 1. Data Visualizatoin
@@ -10,6 +11,7 @@ LaporID Dashboard Web App is task management web app to compliment LaporID Citiz
    - Show which location has most problems and which category appeared most.
 
 2. Task Management
+
    - Accept report, provide updates to reportee with image, finish report.
    - Extensive filtering, admins can filter by date range, priorities, categories and which task is taken by an Admin.
    - In-depth report including description, follow-up questions and location.

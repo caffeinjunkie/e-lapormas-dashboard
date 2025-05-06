@@ -1,3 +1,4 @@
+import { Skeleton } from "@heroui/skeleton";
 import clsx from "clsx";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
@@ -25,6 +26,7 @@ interface FileUploaderProps {
   resize?: boolean;
   imageType: "profile" | "task" | "announcement";
   legend?: string;
+  isLoading?: boolean;
   className?: string;
   isRequired?: boolean;
   isDisabled?: boolean;
@@ -36,6 +38,7 @@ export const FileUploader = ({
   resize = true,
   imageType,
   className,
+  isLoading = false,
   isRequired = false,
   isDisabled = false,
   legend,
@@ -48,34 +51,40 @@ export const FileUploader = ({
     imageResizeTargetHeight: imageType === "profile" ? 512 : 1440,
     imageCropAspectRatio: allowCrop ? imageCropRatio : undefined,
   };
-  const maxFileSize = imageType === "profile" ? "2MB" : "5MB";
 
   return (
     <div>
-      <FilePond
-        className={clsx("bg-default-50 rounded-xl overflow-hidden", className)}
-        files={files}
-        allowImageResize={resize}
-        disabled={isDisabled}
-        allowImageCrop={allowCrop}
-        maxFileSize={maxFileSize}
-        stylePanelLayout="integrated"
-        acceptedFileTypes={["image/*"]}
-        labelMaxFileSizeExceeded={t("max-file-size-exceeded-error")}
-        labelMaxFileSize={`${t("max-file-size-error")} {filesize}`}
-        labelFileTypeNotAllowed={t("file-type-not-allowed-error")}
-        fileValidateTypeLabelExpectedTypes={t("file-type-expected-types-error")}
-        onupdatefiles={(files) => {
-          const transformedFiles = files
-            .map((file) => file.file as File)
-            .filter((file) => file.type.includes("image"));
-          setFiles(transformedFiles);
-        }}
-        labelIdle={`${t("upload-input-dragndrop-text")} <span class="filepond--label-action">${t("upload-input-browse-text")}</span><span class="text-red-500 ${isRequired ? "" : "hidden"}">*</span>`}
-        {...(resize ? additionalProps : {})}
-      />
+      <Skeleton className="w-full rounded-xl" isLoaded={!isLoading}>
+        <FilePond
+          className={clsx(
+            "bg-default-50 rounded-xl overflow-hidden",
+            className,
+          )}
+          files={files}
+          allowImageResize={resize}
+          disabled={isDisabled}
+          allowImageCrop={allowCrop}
+          maxFileSize="2MB"
+          stylePanelLayout="integrated"
+          acceptedFileTypes={["image/*"]}
+          labelMaxFileSizeExceeded={t("max-file-size-exceeded-error")}
+          labelMaxFileSize={`${t("max-file-size-error")} {filesize}`}
+          labelFileTypeNotAllowed={t("file-type-not-allowed-error")}
+          fileValidateTypeLabelExpectedTypes={t(
+            "file-type-expected-types-error",
+          )}
+          onupdatefiles={(files) => {
+            const transformedFiles = files
+              .map((file) => file.file as File)
+              .filter((file) => file.type.includes("image"));
+            setFiles(transformedFiles);
+          }}
+          labelIdle={`${t("upload-input-dragndrop-text")} <span class="filepond--label-action">${t("upload-input-browse-text")}</span><span class="text-red-500 ${isRequired ? "" : "hidden"}">*</span>`}
+          {...(resize ? additionalProps : {})}
+        />
+      </Skeleton>
       {legend && (
-        <p className="text-default-500 text-xs text-center pt-6">{legend}</p>
+        <p className="text-default-500 text-xs text-center pt-3">{legend}</p>
       )}
     </div>
   );

@@ -1,5 +1,3 @@
-import { parseDate } from "@internationalized/date";
-
 import { Announcement } from "@/types/announcement.types";
 
 export const transformAnnouncementToDefaultValues = async (

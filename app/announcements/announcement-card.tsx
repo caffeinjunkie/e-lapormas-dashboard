@@ -4,6 +4,7 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
+import { getLocalTimeZone, today } from "@internationalized/date";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -28,6 +29,10 @@ export const AnnouncementCard = ({
     startDate: formatNormalDate(item.start_date),
     endDate: formatNormalDate(item.end_date),
   };
+  const now = new Date();
+  const startDate = new Date(item.start_date);
+  startDate.setHours(0, 0, 0, 0);
+  const isLocked = startDate < now;
 
   return (
     <Card shadow="sm">
@@ -68,6 +73,7 @@ export const AnnouncementCard = ({
               color="primary"
               className="w-full border-none outline-none"
               onPress={() => onEditPress(item.id)}
+              isDisabled={isLocked}
               size="lg"
               isIconOnly
               startContent={<PencilSquareIcon className="w-5 h-5" />}
@@ -77,6 +83,7 @@ export const AnnouncementCard = ({
               variant="ghost"
               className="w-full border-none outline-none"
               onPress={() => onDeletePress(item.id)}
+              isDisabled={isLocked}
               color="danger"
               size="lg"
               isIconOnly
