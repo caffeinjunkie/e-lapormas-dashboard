@@ -4,13 +4,13 @@ export const transformAnnouncementToDefaultValues = async (
   item: Announcement,
 ) => {
   const { filename = "image", mimeType = "image/jpeg" } = getFileNameAndType(
-    item.url,
+    item.img,
   );
-  const image = await urlToFile(item.url, filename, mimeType);
+  const image = await urlToFile(item.img, filename, mimeType);
 
   return {
     title: item.title,
-    description: item.description,
+    url: item.url,
     period: {
       start: item.start_date.split("T")[0],
       end: item.end_date.split("T")[0],
@@ -19,8 +19,8 @@ export const transformAnnouncementToDefaultValues = async (
   };
 };
 
-function getFileNameAndType(url: string) {
-  const filename = decodeURIComponent(url.split("announcements/")[1])
+function getFileNameAndType(imgUrl: string) {
+  const filename = decodeURIComponent(imgUrl.split("announcements/")[1])
     .split("?c")[0]
     .toString();
   const fileExtension = filename?.split(".").pop() || "jpg".toLowerCase();
@@ -28,9 +28,9 @@ function getFileNameAndType(url: string) {
   return { filename, mimeType };
 }
 
-async function urlToFile(url: string, filename: string, mimeType: string) {
+async function urlToFile(imgUrl: string, filename: string, mimeType: string) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(imgUrl);
 
     const blob = await response.blob();
 

@@ -87,7 +87,7 @@ export type Database = {
         Row: {
           id: string;
           title: string;
-          description: string;
+          img: string;
           url: string;
           is_auto_delete: boolean;
           created_at: string;
@@ -97,7 +97,7 @@ export type Database = {
         Insert: {
           id: string;
           title: string;
-          description: string;
+          img: string;
           url: string;
           is_auto_delete: boolean;
           created_at: string;
@@ -107,7 +107,7 @@ export type Database = {
         Update: {
           id: string;
           title: string;
-          description: string;
+          img: string;
           url: string;
           is_auto_delete: boolean;
           created_at: string;

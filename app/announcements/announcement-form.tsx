@@ -33,13 +33,6 @@ interface AnnouncementFormProps extends FormProps {
   ) => void;
 }
 
-type DefaultValues = {
-  title: string;
-  description: string;
-  period: RangeValue<CalendarDate | CalendarDateTime | ZonedDateTime>;
-  images: File[];
-};
-
 export const AnnouncementForm = ({
   onSubmitAnnouncement,
   id,
@@ -106,9 +99,7 @@ export const AnnouncementForm = ({
           <Input
             label={t("announcement-form-title-input-label")}
             type="text"
-            isDisabled={
-              isLoadLoading || isSubmitLoading || id === "edit-announcement"
-            }
+            isDisabled={isLoadLoading || isSubmitLoading}
             name="title"
             isRequired
             maxLength={100}
@@ -117,20 +108,12 @@ export const AnnouncementForm = ({
           />
         </Skeleton>
         <Skeleton className="w-full rounded-xl" isLoaded={!isLoadLoading}>
-          <Textarea
-            label={t("announcement-form-description-input-label")}
+          <Input
+            label={t("announcement-form-url-input-label")}
+            type="text"
             isDisabled={isLoadLoading || isSubmitLoading}
-            name="description"
-            isRequired
-            isClearable
-            maxRows={3}
-            maxLength={250}
-            validate={(value) => validateIsRequired(t, value, "description")}
-            defaultValue={selectedAnnouncement?.description}
-            classNames={{
-              inputWrapper: "flex-grow h-fit overflow-hidden",
-              innerWrapper: "flex flex-col items-end pb-2",
-            }}
+            name="url"
+            defaultValue={selectedAnnouncement?.url}
           />
         </Skeleton>
         <Skeleton className="w-full rounded-xl" isLoaded={!isLoadLoading}>
@@ -152,7 +135,11 @@ export const AnnouncementForm = ({
           isDisabled={isLoadLoading || isSubmitLoading}
           name="is_auto_delete_switch"
           size="sm"
-          defaultSelected={id === "edit-announcement" ? selectedAnnouncement?.is_auto_delete : true}
+          defaultSelected={
+            id === "edit-announcement"
+              ? selectedAnnouncement?.is_auto_delete
+              : true
+          }
         >
           {t("announcement-form-auto-delete-switch-label")}
         </Switch>

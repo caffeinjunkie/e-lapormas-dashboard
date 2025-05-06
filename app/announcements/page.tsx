@@ -71,7 +71,7 @@ export default function AnnouncementsPage() {
     closeModal();
     const imagePath = announcements?.data
       ?.find((item) => item.id === selectedAnnonouncement)
-      ?.url.split("announcements/")[1]
+      ?.img.split("announcements/")[1]
       .split("?c")[0];
 
     await deleteAnnouncementById(
@@ -100,7 +100,7 @@ export default function AnnouncementsPage() {
       images: files,
       isAutoDelete: formData.get("is_auto_delete_switch") as unknown as boolean,
       title: formData.get("title") as string,
-      description: formData.get("description") as string,
+      url: formData.get("url") as string,
     };
     await createNewAnnouncement(data, setIsSubmitLoading, closeModal);
     await mutateAnnouncements();
@@ -120,8 +120,9 @@ export default function AnnouncementsPage() {
       startDate,
       endDate,
       images: files,
+      title: formData.get("title") as string,
       isAutoDelete: formData.get("is_auto_delete_switch") as unknown as boolean,
-      description: formData.get("description") as string,
+      url: formData.get("url") as string,
     };
     const oldData = announcements?.data?.find(
       (item) => item.id === selectedAnnonouncement,
