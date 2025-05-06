@@ -40,13 +40,13 @@ const sidebarMenuItems = [
       <ChartPieIcon className={iconClassname} {...props} />
     ),
   },
-  // {
-  //   label: "navbar-announcements-label",
-  //   href: "/announcements",
-  //   Icon: (props: IconSvgProps) => (
-  //     <MegaphoneIcon className={iconClassname} {...props} />
-  //   ),
-  // },
+  {
+    label: "navbar-announcements-label",
+    href: "/announcements",
+    Icon: (props: IconSvgProps) => (
+      <MegaphoneIcon className={iconClassname} {...props} />
+    ),
+  },
   {
     label: "navbar-admin-management-label",
     href: "/admin-management",

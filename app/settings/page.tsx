@@ -333,6 +333,7 @@ export default function SettingsPage() {
             files={files}
             imageType="profile"
             isDisabled={isUploading}
+            className="h-64"
             setFiles={setFiles}
             legend={t("upload-profile-picture-disclaimer-label")}
           />

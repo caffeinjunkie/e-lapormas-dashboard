@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImageCrop from "filepond-plugin-image-crop";
@@ -24,6 +25,8 @@ interface FileUploaderProps {
   resize?: boolean;
   imageType: "profile" | "task" | "announcement";
   legend?: string;
+  className?: string;
+  isRequired?: boolean;
   isDisabled?: boolean;
 }
 
@@ -32,6 +35,8 @@ export const FileUploader = ({
   setFiles,
   resize = true,
   imageType,
+  className,
+  isRequired = false,
   isDisabled = false,
   legend,
 }: FileUploaderProps) => {
@@ -48,7 +53,7 @@ export const FileUploader = ({
   return (
     <div>
       <FilePond
-        className="h-64"
+        className={clsx("bg-default-50 rounded-xl overflow-hidden", className)}
         files={files}
         allowImageResize={resize}
         disabled={isDisabled}
@@ -66,11 +71,11 @@ export const FileUploader = ({
             .filter((file) => file.type.includes("image"));
           setFiles(transformedFiles);
         }}
-        labelIdle={`${t("upload-input-dragndrop-text")} <span class="filepond--label-action">${t("upload-input-browse-text")}</span>`}
+        labelIdle={`${t("upload-input-dragndrop-text")} <span class="filepond--label-action">${t("upload-input-browse-text")}</span><span class="text-red-500 ${isRequired ? "" : "hidden"}">*</span>`}
         {...(resize ? additionalProps : {})}
       />
       {legend && (
-        <p className="text-default-500 text-xs text-center pt-10">{legend}</p>
+        <p className="text-default-500 text-xs text-center pt-6">{legend}</p>
       )}
     </div>
   );

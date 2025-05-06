@@ -8,7 +8,9 @@ import { Skeleton } from "@heroui/skeleton";
 import {
   CalendarDateTime,
   ZonedDateTime,
+  getLocalTimeZone,
   parseDate,
+  today,
 } from "@internationalized/date";
 import { I18nProvider } from "@react-aria/i18n";
 import { RangeValue } from "@react-types/shared";
@@ -254,6 +256,7 @@ export const FilterModal = ({
               pageBehavior="single"
               aria-label="Date Range Picker"
               firstDayOfWeek="mon"
+              maxValue={today(getLocalTimeZone())}
               value={dateRange}
               onChange={setDateRange}
               visibleMonths={isWideScreen ? 2 : 1}
