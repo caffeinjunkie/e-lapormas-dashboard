@@ -38,7 +38,7 @@ export const AnnouncementCard = ({
 
   return (
     <Card shadow="sm">
-      <CardBody className="overflow-visible p-0">
+      <CardBody className="overflow-visible p-1">
         {!imgError && (
           <Image
             alt={item.title}
