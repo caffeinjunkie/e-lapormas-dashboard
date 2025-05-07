@@ -33,7 +33,8 @@ export const AnnouncementCard = ({
   const startDate = new Date(item.start_date);
   startDate.setHours(0, 0, 0, 0);
   const isLocked = startDate < now;
-  const link = item.url && item.url.startsWith("http") ? item.url : "https://" + item.url;
+  const link =
+    item.url && item.url.startsWith("http") ? item.url : "https://" + item.url;
 
   return (
     <Card shadow="sm">
