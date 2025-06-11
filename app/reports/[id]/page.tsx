@@ -260,7 +260,13 @@ export default function ReportDetailPage() {
               ref={bodyRef}
               className="flex flex-col flex-1 max-h-[90vh] px-6 pb-0 lg:pb-6 lg:pr-6"
             >
-              <ReportDetail report={data?.report} className="pb-5" />
+              <ReportDetail
+                report={data?.report}
+                className="pb-5"
+                isEditable
+                forceUpdate={mutate}
+                setLoading={setIsUpdateLoading}
+              />
             </div>
             <div
               ref={tabsRef}

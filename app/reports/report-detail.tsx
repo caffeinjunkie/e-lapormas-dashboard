@@ -3,28 +3,52 @@ import {
   CheckBadgeIcon,
   FolderOpenIcon,
   MapPinIcon,
+  PencilIcon,
   PresentationChartLineIcon,
 } from "@heroicons/react/24/outline";
+import { Button } from "@heroui/button";
 import { Chip } from "@heroui/chip";
+import { Select, SelectItem } from "@heroui/select";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useState } from "react";
 
-import { PriorityChipColor, StatusChipColor } from "@/app/reports/config";
+import { updatePriority } from "./[id]/handlers";
+
+import {
+  PriorityChipColor,
+  StatusChipColor,
+  priorityOptions,
+} from "@/app/reports/config";
 import { Description } from "@/app/reports/description";
 import { Info } from "@/app/reports/info";
+import { FloppyIcon } from "@/components/icons";
 import { Report } from "@/types/report.types";
 import { formatLocaleDate } from "@/utils/date";
 
 interface ReportDetailProps {
   report: Report;
   className?: string;
+  isEditable?: boolean;
+  forceUpdate?: () => void;
+  setLoading?: (loading: boolean) => void;
 }
 
-export const ReportDetail = ({ report, className }: ReportDetailProps) => {
+export const ReportDetail = ({
+  report,
+  className,
+  isEditable = false,
+  forceUpdate,
+  setLoading,
+}: ReportDetailProps) => {
   const t = useTranslations("ReportsPage");
+  const [isEditActive, setIsEditActive] = useState(false);
   const followUpQuestions = report?.data?.follow_up_questions || [];
   const fullDate = formatLocaleDate(report?.created_at || "", "long");
+  const [selectedPriority, setSelectedPriority] = useState<Set<string>>(
+    new Set([report.priority.toLowerCase()]),
+  );
   const { category, priority, status, address } = report || {};
   const fullAddress =
     address?.full_address || address?.village || address?.district || "";
@@ -37,6 +61,22 @@ export const ReportDetail = ({ report, className }: ReportDetailProps) => {
   const mapQuery = lat && lng ? latLng : address?.full_address || "";
   const hasNoAddress = !lat || !lng || !fullAddress || !mapQuery;
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+
+  const savePriority = async () => {
+    setLoading && setLoading(true);
+    try {
+      await updatePriority(
+        report.tracking_id,
+        selectedPriority.values().next().value?.toUpperCase() as string,
+      );
+      forceUpdate && forceUpdate();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading && setLoading(false);
+      setIsEditActive(false);
+    }
+  };
 
   return (
     <>
@@ -73,18 +113,81 @@ export const ReportDetail = ({ report, className }: ReportDetailProps) => {
           Icon={PresentationChartLineIcon}
           label="priority"
         >
-          <Chip
-            size="sm"
-            variant="flat"
-            classNames={{
-              content: "font-semibold",
-            }}
-            color={
-              PriorityChipColor[priority as keyof typeof PriorityChipColor]
-            }
-          >
-            {priorityLabel}
-          </Chip>
+          <div className="flex items-center gap-1 flex-row">
+            {isEditActive || (
+              <Chip
+                size="sm"
+                variant="flat"
+                classNames={{
+                  content: "font-semibold",
+                }}
+                color={
+                  PriorityChipColor[priority as keyof typeof PriorityChipColor]
+                }
+              >
+                {priorityLabel}
+              </Chip>
+            )}
+            {isEditActive && (
+              <Select
+                className="w-full"
+                classNames={{
+                  trigger: "h-fit pr-4",
+                  popoverContent: "w-30",
+                }}
+                radius="lg"
+                variant="bordered"
+                size="sm"
+                renderValue={(items) => {
+                  const colorKey = (items[0].key as string).toUpperCase();
+                  return (
+                    <div className="flex flex-wrap gap-2">
+                      <Chip
+                        size="sm"
+                        key={items[0].key}
+                        variant="flat"
+                        color={
+                          PriorityChipColor[
+                            colorKey as keyof typeof PriorityChipColor
+                          ]
+                        }
+                      >
+                        {t(`priority-${items[0].key}`)}
+                      </Chip>
+                    </div>
+                  );
+                }}
+                name="priority"
+                selectionMode="single"
+                isMultiline
+                selectedKeys={selectedPriority}
+                items={priorityOptions}
+                onSelectionChange={(keys) =>
+                  setSelectedPriority(keys as Set<string>)
+                }
+              >
+                {(item) => <SelectItem>{t(item.labelKey)}</SelectItem>}
+              </Select>
+            )}
+            {isEditable && (
+              <Button
+                isIconOnly
+                size="sm"
+                onPress={
+                  isEditActive ? savePriority : () => setIsEditActive(true)
+                }
+                radius="lg"
+                color={isEditActive ? "primary" : "warning"}
+                startContent={
+                  isEditActive ? (
+                    <FloppyIcon color="white" className="size-4" />
+                  ) : (
+                    <PencilIcon color="white" className="size-4" />
+                  )
+                }
+              />
+            )}
+          </div>
         </Info>
         <Info Icon={FolderOpenIcon} className="items-center" label="category">
           <Chip
