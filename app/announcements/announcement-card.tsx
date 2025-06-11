@@ -31,8 +31,9 @@ export const AnnouncementCard = ({
   };
   const now = new Date();
   const startDate = new Date(item.start_date);
+  const endDate = new Date(item.end_date);
   startDate.setHours(0, 0, 0, 0);
-  const isLocked = startDate < now;
+  const isLocked = now > startDate && now < endDate;
   const link =
     item.url && item.url.startsWith("http") ? item.url : "https://" + item.url;
 

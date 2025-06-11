@@ -92,3 +92,9 @@ export const updateReport = async (
     } as ToastProps);
   }
 };
+
+export const updatePriority = async (id: string, priority: string) => {
+  return updateTaskByTrackingId(id, {
+    priority,
+  });
+};
