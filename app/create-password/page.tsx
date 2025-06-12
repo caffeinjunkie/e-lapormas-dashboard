@@ -226,7 +226,7 @@ export default function CreatePasswordPage() {
           )}
         </Card>
         <Modal isOpen={isOpen} title={modalProps.title} onClose={onCloseModal}>
-          <ModalHeader className="text-black">{modalProps.title}</ModalHeader>
+          <ModalHeader className="text-current">{modalProps.title}</ModalHeader>
           <ModalBody className="text-default-500">
             {modalProps.message}
           </ModalBody>
