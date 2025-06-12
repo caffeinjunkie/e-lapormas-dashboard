@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardBody } from "@heroui/card";
+import { Image } from "@heroui/image";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Tab, Tabs } from "@heroui/tabs";
 import { motion } from "framer-motion";
@@ -12,7 +13,7 @@ import { FormEvent, useState } from "react";
 import { handleLogin, handleResetPassword } from "@/app/login/handlers";
 import { LoginForm } from "@/app/login/login-form";
 import { ResetPasswordForm } from "@/app/login/reset-password-form";
-import { Logo } from "@/components/icons";
+import { LogoHorizontal } from "@/components/icons";
 import { Modal } from "@/components/modal";
 import { siteConfig } from "@/config/site";
 import { buildFormData } from "@/utils/form";
@@ -92,6 +93,14 @@ export default function LoginPage() {
         height={1536}
         className="w-full h-full object-cover absolute top-0 left-0"
       />
+      <div className="absolute top-8 left-8">
+        <Image
+          src={`${siteConfig.storagePath}/app-assets//kabmimika.png`}
+          height={64}
+          className="object-contain"
+          alt="Logo"
+        />
+      </div>
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -99,7 +108,7 @@ export default function LoginPage() {
         className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen"
       >
         <div className="w-full flex justify-center items-center gap-1">
-          <Logo width={200} height={72} animated />
+          <LogoHorizontal width={240} height={120} />
         </div>
         <Card isBlurred className="max-w-md w-full min-w-[320px]">
           <CardBody

@@ -1,5 +1,6 @@
 "use client";
 
+import { Image } from "@heroui/image";
 import { ModalHeader } from "@heroui/modal";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
@@ -8,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Logo } from "../icons";
+import { LogoSquare } from "../icons";
 import { MobileNavbar } from "./navbar-mobile";
 import { Sidebar } from "./navbar-sidebar";
 
@@ -137,13 +138,21 @@ export const Navbar = () => {
       >
         <div className="flex justify-center px-6 pt-4 w-full">
           <div className="flex flex-col justify-center animate-drop">
-            <Logo
-              color={siteConfig.sidebarTheme.secondary}
-              fill={siteConfig.sidebarTheme.text}
-            />
+            <div className="flex items-center gap-2 mt-4">
+              <Image
+                src={`${siteConfig.storagePath}/app-assets//kabmimika.png`}
+                height={60}
+                className="object-contain"
+                alt="Logo"
+              />
+              <LogoSquare
+                color={siteConfig.sidebarTheme.secondary}
+                fill="#eadec4"
+              />
+            </div>
             <p
               className={clsx(
-                "text-[10px] mt-[-16px] text-center transition-opacity duration-3000 ease-in-out",
+                "text-[10px] mt-1 text-center transition-opacity duration-3000 ease-in-out",
                 !isNavbarFullyLoaded ? "opacity-0 h-[15px]" : "animate-appear",
               )}
             >

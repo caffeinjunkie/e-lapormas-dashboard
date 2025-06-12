@@ -77,6 +77,8 @@ export const siteConfig = {
   backgroundImageSrcs: [
     "https://chnpxcvhzxlwdaqhbhqp.supabase.co/storage/v1/object/public/photos//Firefly%20generate%20image%20on%20indonesian%20landscape%200.jpg",
   ],
+  storagePath:
+    "https://wxgvhmukvwddeimmpcfg.supabase.co/storage/v1/object/public",
   sidebarTheme,
   menuItems: sidebarMenuItems,
   settingsItems: additionalMenuItems,

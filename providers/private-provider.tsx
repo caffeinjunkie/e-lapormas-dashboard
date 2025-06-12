@@ -4,7 +4,7 @@ import { Modal, ModalContent } from "@heroui/modal";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { Logo } from "@/components/icons";
+import { LogoSquare } from "@/components/icons";
 import { Navbar } from "@/components/navbar";
 import { privatePaths } from "@/config/site";
 import { getCookie } from "@/utils/cookie";
@@ -130,7 +130,7 @@ export function PrivateProvider({ children, locale }: PrivateLayoutProps) {
             className="bg-transparent shadow-none"
           >
             <ModalContent className="flex w-full justify-center items-center">
-              <Logo animated={true} width={320} height={128} />
+              <LogoSquare width={320} height={128} />
             </ModalContent>
           </Modal>
         </>
