@@ -3,9 +3,9 @@ import {
   CheckBadgeIcon,
   FolderOpenIcon,
   MapPinIcon,
-  PencilIcon,
   PresentationChartLineIcon,
 } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, PencilIcon } from "@heroicons/react/24/solid";
 import { Button } from "@heroui/button";
 import { Chip } from "@heroui/chip";
 import { Select, SelectItem } from "@heroui/select";
@@ -23,7 +23,6 @@ import {
 } from "@/app/reports/config";
 import { Description } from "@/app/reports/description";
 import { Info } from "@/app/reports/info";
-import { FloppyIcon } from "@/components/icons";
 import { Report } from "@/types/report.types";
 import { formatLocaleDate } from "@/utils/date";
 
@@ -113,7 +112,7 @@ export const ReportDetail = ({
           Icon={PresentationChartLineIcon}
           label="priority"
         >
-          <div className="flex items-center gap-1 flex-row">
+          <div className="flex items-center flex-row">
             {isEditActive || (
               <Chip
                 size="sm"
@@ -177,12 +176,13 @@ export const ReportDetail = ({
                   isEditActive ? savePriority : () => setIsEditActive(true)
                 }
                 radius="lg"
-                color={isEditActive ? "primary" : "warning"}
+                variant="solid"
+                className="bg-white"
                 startContent={
                   isEditActive ? (
-                    <FloppyIcon color="white" className="size-4" />
+                    <CheckCircleIcon className="size-6 text-primary" />
                   ) : (
-                    <PencilIcon color="white" className="size-4" />
+                    <PencilIcon className="size-4 text-default-500" />
                   )
                 }
               />
