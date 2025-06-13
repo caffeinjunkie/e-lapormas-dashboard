@@ -3,6 +3,7 @@
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
+import clsx from "clsx";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
@@ -215,7 +216,8 @@ export const MainMetrics = ({
             selectedKeys={selected}
             selectionMode="single"
             disabledKeys={selected}
-            className="w-full max-w-40 text-default-700"
+            isDisabled={data.length === 0}
+            className={clsx("w-full max-w-40 text-default-700")}
             onSelectionChange={setSelected as (keys: SharedSelection) => void}
           >
             {(item) => (

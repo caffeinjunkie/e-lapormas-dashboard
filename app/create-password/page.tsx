@@ -152,7 +152,7 @@ export default function CreatePasswordPage() {
         className="w-full h-full object-cover absolute top-0 left-0"
       />
       <div className="relative flex flex-col items-center justify-center py-6 px-6 w-full gap-8 h-screen">
-        <Card className="max-w-md w-full min-w-[360px] overflow-scroll">
+        <Card className="max-w-md w-full min-w-[360px] overflow-scroll no-scrollbar">
           {tokenError && (
             <CardHeader className="flex p-4 gap-2 items-center justify-center">
               <p className="text-lg font-semibold">
