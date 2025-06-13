@@ -107,7 +107,7 @@ export const saveAllSettings = async (
 
     if (fullName) {
       await updateAuthUser({
-        data: { full_name: fullName as string, fullName: fullName as string },
+        data: { full_name: fullName as string, fullName: fullName as string, email: formData.get("email") as string },
       });
     }
 
