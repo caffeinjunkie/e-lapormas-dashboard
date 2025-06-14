@@ -7,6 +7,7 @@ import { Pagination } from "@heroui/pagination";
 import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { ToastProps, addToast } from "@heroui/toast";
+import { Tooltip } from "@heroui/tooltip";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import React, {
@@ -35,6 +36,7 @@ import {
   transformAdmins,
 } from "@/app/admin-management/utils";
 import { setCookie } from "@/app/admin-management/utils";
+import { AdminIcon, SuperAdminIcon } from "@/components/icons";
 import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
@@ -347,10 +349,7 @@ export default function AdminManagementPage() {
         searchValue={filterValue}
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
-        isAdminsSlotAvailable={
-          admins.filter((item) => !item.is_super_admin).length <
-          appConfig?.subscription.admins
-        }
+        isAdminsSlotAvailable={admins.length < appConfig?.subscription.admins}
         selectedStatusFilterValue={selectedStatusFilterValue}
         selectedStatusFilterKeys={selectedStatusFilterKeys}
         onStatusFilterChange={
@@ -406,22 +405,43 @@ export default function AdminManagementPage() {
       title={t("title")}
       classNames={{ header: "gap-4" }}
     >
-      {isAppConfigValidating ? (
-        <Spinner />
-      ) : (
-        <div className="flex flex-row gap-2 w-full items-center justify-end pr-6 pb-2">
-          <div>
-            <p>{`${admins.filter((item) => item.is_super_admin).length}/${appConfig.subscription.super_admins} `}</p>
-          </div>
-          <div>{`${admins.filter((item) => !item.is_super_admin).length}/${appConfig.subscription.admins}`}</div>
-        </div>
-      )}
       <div
         className={clsx(
-          "flex mb-1",
+          "flex mb-1 flex-col",
           isMobile ? "pb-20 pt-28 md:pt-48 px-4" : " px-6 pb-2",
         )}
       >
+        {isAppConfigValidating ? (
+          <Spinner />
+        ) : (
+          <div className="flex flex-row text-sm font-semibold gap-3 w-full items-center justify-center md:justify-end pb-2">
+            <div className="flex flex-row gap-1 items-center">
+              <Tooltip content="Super Admin">
+                <SuperAdminIcon size={18} stroke="#000000" />
+              </Tooltip>
+              <p
+                className={clsx(
+                  admins.filter((item) => item.is_super_admin).length >=
+                    appConfig?.subscription?.super_admins
+                    ? "text-default-700"
+                    : "text-default-500",
+                )}
+              >{`${admins.filter((item) => item.is_super_admin).length}/${appConfig.subscription.super_admins} `}</p>
+            </div>
+            <div className="flex flex-row gap-1 items-center">
+              <Tooltip content="Admin">
+                <AdminIcon size={18} stroke="#000000" />
+              </Tooltip>
+              <p
+                className={clsx(
+                  admins.length >= appConfig.subscription.admins
+                    ? "text-default-700"
+                    : "text-default-500",
+                )}
+              >{`${admins.length}/${appConfig.subscription.admins}`}</p>
+            </div>
+          </div>
+        )}
         <Table
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}
