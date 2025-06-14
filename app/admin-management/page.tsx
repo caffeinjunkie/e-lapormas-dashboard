@@ -4,6 +4,7 @@ import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
+import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { ToastProps, addToast } from "@heroui/toast";
 import clsx from "clsx";
@@ -16,11 +17,14 @@ import React, {
   useRef,
   useState,
 } from "react";
+import useSWR from "swr";
 
+import { swrConfig } from "../config";
 import { AdminCell } from "./admin-cell";
 import { TopContent } from "./top-content";
 
 import { checkIsUserAlreadyInvited, upsertAdmins } from "@/api/admin";
+import { fetchAppConfig } from "@/api/app-config";
 import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { columns } from "@/app/admin-management/config";
@@ -70,6 +74,12 @@ export default function AdminManagementPage() {
   const selectedStatusFilterValue = useMemo(
     () => Array.from(selectedStatusFilterKeys).join(", ").replace(/_/g, ""),
     [selectedStatusFilterKeys],
+  );
+
+  const { data: appConfig, isValidating: isAppConfigValidating } = useSWR(
+    ["app-config"],
+    () => fetchAppConfig(),
+    swrConfig,
   );
 
   const fetchAdmins = async () => {
@@ -337,6 +347,10 @@ export default function AdminManagementPage() {
         searchValue={filterValue}
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
+        isAdminsSlotAvailable={
+          admins.filter((item) => !item.is_super_admin).length <
+          appConfig?.subscription.admins
+        }
         selectedStatusFilterValue={selectedStatusFilterValue}
         selectedStatusFilterKeys={selectedStatusFilterKeys}
         onStatusFilterChange={
@@ -363,6 +377,10 @@ export default function AdminManagementPage() {
         columnKey={columnKey}
         user={user}
         admins={admins}
+        isSuperAdminSlotAvailable={
+          admins.filter((item) => item.is_super_admin).length <
+          appConfig.subscription.super_admins
+        }
         isMobile={isMobile}
         isLast={isLast ?? false}
         selfId={selfId}
@@ -388,6 +406,16 @@ export default function AdminManagementPage() {
       title={t("title")}
       classNames={{ header: "gap-4" }}
     >
+      {isAppConfigValidating ? (
+        <Spinner />
+      ) : (
+        <div className="flex flex-row gap-2 w-full items-center justify-end pr-6 pb-2">
+          <div>
+            <p>{`${admins.filter((item) => item.is_super_admin).length}/${appConfig.subscription.super_admins} `}</p>
+          </div>
+          <div>{`${admins.filter((item) => !item.is_super_admin).length}/${appConfig.subscription.admins}`}</div>
+        </div>
+      )}
       <div
         className={clsx(
           "flex mb-1",

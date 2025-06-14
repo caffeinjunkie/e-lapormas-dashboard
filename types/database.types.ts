@@ -72,6 +72,7 @@ export type Database = {
           id: number;
           org_name: string;
           timezone: string;
+          subscription: Json | null;
         };
         Insert: {
           org_name?: string;

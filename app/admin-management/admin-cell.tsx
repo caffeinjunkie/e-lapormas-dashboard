@@ -31,6 +31,7 @@ interface AdminCellProps {
   isMobile: boolean;
   onSuperAdminToggle: ChangeEventHandler<HTMLInputElement>;
   onDeleteUser: () => void;
+  isSuperAdminSlotAvailable: boolean;
   isLast: boolean;
   admins: AdminData[];
 }
@@ -41,6 +42,7 @@ export const AdminCell = ({
   isMobile,
   isLast,
   selfId,
+  isSuperAdminSlotAvailable,
   admins,
   onSuperAdminToggle,
   onDeleteUser,
@@ -152,7 +154,11 @@ export const AdminCell = ({
 
             <div className="flex flex-col items-end gap-2">
               <Switch
-                isDisabled={selfId === user?.user_id || !user.is_verified}
+                isDisabled={
+                  selfId === user?.user_id ||
+                  !user.is_verified ||
+                  (!isSuperAdminSlotAvailable && !user.is_super_admin)
+                }
                 onChange={onSuperAdminToggle}
                 isSelected={user.is_super_admin}
                 size="sm"
@@ -211,7 +217,11 @@ export const AdminCell = ({
       return (
         <div className="flex flex-col items-center">
           <Switch
-            isDisabled={selfId === user?.user_id || !user.is_verified}
+            isDisabled={
+              selfId === user?.user_id ||
+              !user.is_verified ||
+              (!isSuperAdminSlotAvailable && !user.is_super_admin)
+            }
             onChange={onSuperAdminToggle}
             isSelected={user.is_super_admin}
             size="sm"

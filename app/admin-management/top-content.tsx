@@ -16,6 +16,7 @@ interface TopContentProps {
   selectedStatusFilterKeys: Set<string>;
   onStatusFilterChange: (keys: SharedSelection) => void;
   isSaveButtonLoading: boolean;
+  isAdminsSlotAvailable: boolean;
   isSaveButtonDisabled: boolean;
   onInviteUser: () => void;
   onSave: () => void;
@@ -30,6 +31,7 @@ export const TopContent = ({
   selectedStatusFilterKeys,
   onStatusFilterChange,
   isMobile,
+  isAdminsSlotAvailable,
   isSaveButtonLoading,
   isSaveButtonDisabled,
   onInviteUser,
@@ -80,6 +82,7 @@ export const TopContent = ({
           color="warning"
           isIconOnly={isMobile}
           radius="md"
+          isDisabled={!isAdminsSlotAvailable}
           className="text-white w-full lg:w-fit"
           startContent={<UserPlusIcon className="size-5" />}
           onPress={onInviteUser}
