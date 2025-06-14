@@ -4,8 +4,10 @@ import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { ModalBody, ModalHeader } from "@heroui/modal";
 import { Pagination } from "@heroui/pagination";
+import { Spinner } from "@heroui/spinner";
 import { SharedSelection } from "@heroui/system";
 import { ToastProps, addToast } from "@heroui/toast";
+import { Tooltip } from "@heroui/tooltip";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import React, {
@@ -16,11 +18,14 @@ import React, {
   useRef,
   useState,
 } from "react";
+import useSWR from "swr";
 
+import { swrConfig } from "../config";
 import { AdminCell } from "./admin-cell";
 import { TopContent } from "./top-content";
 
 import { checkIsUserAlreadyInvited, upsertAdmins } from "@/api/admin";
+import { fetchAppConfig } from "@/api/app-config";
 import { createAuthUser } from "@/api/auth";
 import { deleteAuthUser } from "@/api/users";
 import { columns } from "@/app/admin-management/config";
@@ -31,6 +36,7 @@ import {
   transformAdmins,
 } from "@/app/admin-management/utils";
 import { setCookie } from "@/app/admin-management/utils";
+import { AdminIcon, SuperAdminIcon } from "@/components/icons";
 import { Layout } from "@/components/layout";
 import { Modal, ModalButtonProps } from "@/components/modal";
 import { SingleSelectDropdown } from "@/components/single-select-dropdown";
@@ -70,6 +76,12 @@ export default function AdminManagementPage() {
   const selectedStatusFilterValue = useMemo(
     () => Array.from(selectedStatusFilterKeys).join(", ").replace(/_/g, ""),
     [selectedStatusFilterKeys],
+  );
+
+  const { data: appConfig, isValidating: isAppConfigValidating } = useSWR(
+    ["app-config"],
+    () => fetchAppConfig(),
+    swrConfig,
   );
 
   const fetchAdmins = async () => {
@@ -337,6 +349,7 @@ export default function AdminManagementPage() {
         searchValue={filterValue}
         onSearchChange={onSearchChange}
         onSearchClear={onClear}
+        isAdminsSlotAvailable={admins.length < appConfig?.subscription.admins}
         selectedStatusFilterValue={selectedStatusFilterValue}
         selectedStatusFilterKeys={selectedStatusFilterKeys}
         onStatusFilterChange={
@@ -363,6 +376,10 @@ export default function AdminManagementPage() {
         columnKey={columnKey}
         user={user}
         admins={admins}
+        isSuperAdminSlotAvailable={
+          admins.filter((item) => item.is_super_admin).length <
+          appConfig.subscription.super_admins
+        }
         isMobile={isMobile}
         isLast={isLast ?? false}
         selfId={selfId}
@@ -390,10 +407,41 @@ export default function AdminManagementPage() {
     >
       <div
         className={clsx(
-          "flex mb-1",
+          "flex mb-1 flex-col",
           isMobile ? "pb-20 pt-28 md:pt-48 px-4" : " px-6 pb-2",
         )}
       >
+        {isAppConfigValidating ? (
+          <Spinner />
+        ) : (
+          <div className="flex flex-row text-sm font-semibold gap-3 w-full items-center justify-center md:justify-end pb-2">
+            <div className="flex flex-row gap-1 items-center">
+              <Tooltip content="Super Admin">
+                <SuperAdminIcon size={18} stroke="#000000" />
+              </Tooltip>
+              <p
+                className={clsx(
+                  admins.filter((item) => item.is_super_admin).length >=
+                    appConfig?.subscription?.super_admins
+                    ? "text-default-700"
+                    : "text-default-500",
+                )}
+              >{`${admins.filter((item) => item.is_super_admin).length}/${appConfig.subscription.super_admins} `}</p>
+            </div>
+            <div className="flex flex-row gap-1 items-center">
+              <Tooltip content="Admin">
+                <AdminIcon size={18} stroke="#000000" />
+              </Tooltip>
+              <p
+                className={clsx(
+                  admins.length >= appConfig.subscription.admins
+                    ? "text-default-700"
+                    : "text-default-500",
+                )}
+              >{`${admins.length}/${appConfig.subscription.admins}`}</p>
+            </div>
+          </div>
+        )}
         <Table
           layout={isMobile ? "auto" : "fixed"}
           columns={isMobile ? [{ name: "NAME", uid: "display_name" }] : columns}
