@@ -72,7 +72,7 @@ export const privatePaths = [...sidebarMenuItems, additionalMenuItems[0]].map(
 );
 
 export const siteConfig = {
-  name: "LaporID Dashboard",
+  name: "Mimika Center Dashboard",
   description: "Dashboard Pelaporan Elektronik",
   backgroundImageSrcs: [
     "https://chnpxcvhzxlwdaqhbhqp.supabase.co/storage/v1/object/public/photos//Firefly%20generate%20image%20on%20indonesian%20landscape%200.jpg",
