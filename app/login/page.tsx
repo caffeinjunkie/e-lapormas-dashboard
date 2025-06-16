@@ -97,7 +97,7 @@ export default function LoginPage() {
         <Image
           src={`${siteConfig.storagePath}/app-assets//kabmimika.png`}
           height={64}
-          className="object-contain"
+          className="object-contain rounded-none"
           alt="Logo"
         />
       </div>
