@@ -77,6 +77,6 @@ export enum StatusChipColor {
 
 export const swrConfig = {
   dedupingInterval: 60000,
-  revalidateOnFocus: true,
-  revalidateOnReconnect: true,
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
 };
