@@ -109,7 +109,12 @@ function ReportsPage() {
           pic,
         },
       }),
-    swrConfig,
+    { 
+      revalidateOnFocus: true, 
+      revalidateOnReconnect: true, 
+      dedupingInterval: 0, 
+      refreshInterval: 1000 
+    },
   );
 
   const columnsBasedOnScreen = useMemo(() => {
