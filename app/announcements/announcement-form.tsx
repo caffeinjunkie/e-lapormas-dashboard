@@ -2,9 +2,8 @@ import { Button } from "@heroui/button";
 import { CalendarDate, RangeValue } from "@heroui/calendar";
 import { DateRangePicker } from "@heroui/date-picker";
 import { Form, FormProps } from "@heroui/form";
-import { Input, Textarea } from "@heroui/input";
+import { Input } from "@heroui/input";
 import { Skeleton } from "@heroui/skeleton";
-import { Switch } from "@heroui/switch";
 import {
   CalendarDateTime,
   ZonedDateTime,
@@ -131,18 +130,6 @@ export const AnnouncementForm = ({
             isRequired
           />
         </Skeleton>
-        <Switch
-          isDisabled={isLoadLoading || isSubmitLoading}
-          name="is_auto_delete_switch"
-          size="sm"
-          defaultSelected={
-            id === "edit-announcement"
-              ? selectedAnnouncement?.is_auto_delete
-              : true
-          }
-        >
-          {t("announcement-form-auto-delete-switch-label")}
-        </Switch>
         <div className="flex flex-col gap-2 items-center justify-center">
           <FileUploader
             files={files}

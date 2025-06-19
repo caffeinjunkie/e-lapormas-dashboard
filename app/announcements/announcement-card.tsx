@@ -29,9 +29,7 @@ export const AnnouncementCard = ({
     startDate: formatNormalDate(item.start_date),
     endDate: formatNormalDate(item.end_date),
   };
-  const now = new Date();
   const startDate = new Date(item.start_date);
-  const endDate = new Date(item.end_date);
   startDate.setHours(0, 0, 0, 0);
   const link =
     item.url && item.url.startsWith("http") ? item.url : "https://" + item.url;
