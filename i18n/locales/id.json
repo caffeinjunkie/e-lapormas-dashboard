@@ -86,6 +86,8 @@
     "priority-high-short": "TIN",
     "priority-mid-short": "SDG",
     "priority-low-short": "RDH",
+    "export-button-text": "Ekspor ke .csv",
+    "export-short-button-text": "Ekspor",
     "category-kebijakan-publik": "Kebijakan Publik",
     "category-kondisi-jalan": "Kondisi Jalan",
     "category-fasilitas-umum": "Fasilitas Umum",

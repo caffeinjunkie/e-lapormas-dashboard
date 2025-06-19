@@ -1,4 +1,5 @@
 import {
+  ArrowDownOnSquareIcon,
   BarsArrowDownIcon,
   BarsArrowUpIcon,
   FunnelIcon,
@@ -92,16 +93,26 @@ export const TopContent = ({
             closeOnSelect
             buttonStartContent={
               descending ? (
-                <BarsArrowDownIcon className="size-5" />
+                <BarsArrowDownIcon className="flex-none size-5" />
               ) : (
-                <BarsArrowUpIcon className="size-5" />
+                <BarsArrowUpIcon className="flex-none size-5" />
               )
             }
             selectedKeys={selectedSortKeys}
             onSelectionChange={(keys) => onSortChange(keys as Set<string>)}
           >
-            <p>{t(`sort-${selectedSortValue}`)}</p>
+            <p className="line-clamp-1">{t(`sort-${selectedSortValue}`)}</p>
           </SingleSelectDropdown>
+          <Button
+            color="success"
+            isIconOnly={isMobile}
+            radius="md"
+            className="text-white w-full lg:w-fit"
+            startContent={<ArrowDownOnSquareIcon className="size-5" />}
+            onPress={() => {}}
+          >
+            {isMobile ? t("export-short-button-text") : t("export-button-text")}
+          </Button>
         </div>
       </div>
       <Tabs
