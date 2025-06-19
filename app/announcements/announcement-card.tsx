@@ -33,7 +33,6 @@ export const AnnouncementCard = ({
   const startDate = new Date(item.start_date);
   const endDate = new Date(item.end_date);
   startDate.setHours(0, 0, 0, 0);
-  const isLocked = now > startDate && now < endDate;
   const link =
     item.url && item.url.startsWith("http") ? item.url : "https://" + item.url;
 
@@ -85,7 +84,6 @@ export const AnnouncementCard = ({
               color="primary"
               className="w-full border-none outline-none"
               onPress={() => onEditPress(item.id)}
-              isDisabled={isLocked}
               size="lg"
               isIconOnly
               startContent={<PencilSquareIcon className="w-5 h-5" />}
@@ -95,7 +93,6 @@ export const AnnouncementCard = ({
               variant="ghost"
               className="w-full border-none outline-none"
               onPress={() => onDeletePress(item.id)}
-              isDisabled={isLocked}
               color="danger"
               size="lg"
               isIconOnly
